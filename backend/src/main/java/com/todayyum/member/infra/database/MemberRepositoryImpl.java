@@ -14,13 +14,21 @@ public class MemberRepositoryImpl implements MemberRepository {
     private final JpaMemberRepository jpaMemberRepository;
 
     @Override
-    public void save(Member member) {
+    public Long save(Member member) {
         MemberEntity memberEntity = member.createEntity();
-        jpaMemberRepository.save(memberEntity).getId();
+        return jpaMemberRepository.save(memberEntity).getId();
     }
 
     @Override
     public boolean existsByEmail(String email) {
         return jpaMemberRepository.existsByEmail(email);
+    }
+
+    @Override
+    public Member findById(Long memberId) {
+        MemberEntity memberEntity = jpaMemberRepository.findById(memberId)
+                .orElseThrow();
+
+        return Member.createMember(memberEntity);
     }
 }

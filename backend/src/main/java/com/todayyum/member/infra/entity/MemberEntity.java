@@ -28,10 +28,10 @@ public class MemberEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String nickname;
 
-    @Column
+    @Column(length = 30)
     private String comment;
 
     @Column

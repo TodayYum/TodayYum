@@ -18,17 +18,17 @@ public class AddMemberUseCase {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void addMember(MemberAddRequest memberAddRequest) {
+    public Long addMember(MemberAddRequest memberAddRequest) {
         Member member = Member.createMember(memberAddRequest);
 
         //TODO 예외 처리
         if(memberRepository.existsByEmail(member.getEmail())) {
-            return;
+            throw new IllegalArgumentException();
         }
 
         member.changePassword(bCryptPasswordEncoder.encode(member.getPassword()));
 
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
 

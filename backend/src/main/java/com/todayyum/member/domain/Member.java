@@ -27,6 +27,18 @@ public class Member {
                 .build();
     }
 
+    public static Member createMember(MemberEntity memberEntity) {
+        return Member.builder()
+                .id(memberEntity.getId())
+                .email(memberEntity.getEmail())
+                .password(memberEntity.getPassword())
+                .nickname(memberEntity.getNickname())
+                .comment(memberEntity.getComment())
+                .profile(memberEntity.getProfile())
+                .createdAt(memberEntity.getCreatedAt())
+                .build();
+    }
+
     public MemberEntity createEntity() {
         return MemberEntity.builder()
                 .id(this.id)
