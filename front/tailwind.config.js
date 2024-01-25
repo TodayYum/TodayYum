@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
@@ -15,8 +16,7 @@ module.exports = {
       'gray-light': '#d3dce6',
     },
     fontFamily: {
-      sans: ['Graphik', 'sans-serif'],
-      serif: ['Merriweather', 'serif'],
+      ggTitle: ['GGTitle', 'sans-serif'],
     },
     extend: {
       colors: {
@@ -33,8 +33,12 @@ module.exports = {
         '8xl': '96rem',
         '9xl': '128rem',
       },
+      padding: {
+        normal: '15px',
+      },
       borderRadius: {
-        '4xl': '2rem',
+        small: '4px',
+        large: '16px',
       },
     },
   },
