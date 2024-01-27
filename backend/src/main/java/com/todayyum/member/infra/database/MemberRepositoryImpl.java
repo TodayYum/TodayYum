@@ -27,8 +27,13 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public Member findById(Long memberId) {
         MemberEntity memberEntity = jpaMemberRepository.findById(memberId)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException());
 
         return Member.createMember(memberEntity);
+    }
+
+    @Override
+    public Member findByEmail(String email) {
+        return jpaMemberRepository.findByEmail(email).map(Member::createMember).orElse(null);
     }
 }

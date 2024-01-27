@@ -1,5 +1,6 @@
 package com.todayyum.member.infra.entity;
 
+import com.todayyum.member.domain.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -36,6 +37,9 @@ public class MemberEntity {
 
     @Column
     private String profile;
+
+    @Column
+    private Role role;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)
