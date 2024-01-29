@@ -13,6 +13,8 @@ public class CustomUserDetails implements UserDetails {
     private String email;
     private String password;
     private Role role;
+    private Long memberId;
+    private String nickname;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -38,6 +40,10 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return email;
     }
+
+    public Long getMemberId() { return memberId; }
+
+    public String getNickname() { return nickname; }
 
     @Override
     public boolean isAccountNonExpired() {
