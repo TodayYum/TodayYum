@@ -2,6 +2,7 @@ package com.todayyum.member.controller;
 
 import com.todayyum.member.application.AddMemberUseCase;
 import com.todayyum.member.application.FindMemberUseCase;
+import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
 import com.todayyum.member.dto.request.MemberAddRequest;
 import org.junit.jupiter.api.*;
@@ -21,7 +22,7 @@ class MemberControllerTest {
     @Autowired
     AddMemberUseCase addMemberUseCase;
     @Autowired
-    FindMemberUseCase findMemberUseCase;
+    MemberRepository memberRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -45,7 +46,7 @@ class MemberControllerTest {
 
         Long memberId = addMemberUseCase.addMember(memberAddRequest);
 
-        Member member = findMemberUseCase.findMember(memberId);
+        Member member = memberRepository.findById(memberId);
 
         Assertions.assertEquals(member.getEmail(), memberAddRequest.getEmail());
         Assertions.assertTrue(bCryptPasswordEncoder.matches(memberAddRequest.getPassword(), member.getPassword()));
