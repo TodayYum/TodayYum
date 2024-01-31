@@ -7,6 +7,8 @@ export interface IInputText {
   isSuccess: number;
   disabled?: boolean;
   setValue: (value: string) => void;
+  hasButton?: boolean;
+  onClickUpload?: () => void;
 }
 
 export interface ISupoortText {
