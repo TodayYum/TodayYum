@@ -2,6 +2,7 @@ package com.todayyum.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -27,7 +27,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-    private final Long accessTokenValidTime = Duration.ofMinutes(30).toMillis();
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -58,9 +57,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJWT(email, role, accessTokenValidTime);
+        String accessToken = jwtUtil.createAccessToken(email, role);
+        String refreshToken = jwtUtil.createRefreshToken(email);
 
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("Authorization", "Bearer " + accessToken);
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setMaxAge(14 * 60 * 60 * 24);
+
+        response.addCookie(refreshTokenCookie);
+
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("memberId", customUserDetails.getMemberId());
         body.put("nickname", customUserDetails.getNickname());

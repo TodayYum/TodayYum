@@ -38,7 +38,7 @@ public class MemberEntity {
     @Column
     private String profile;
 
-    @Column
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @CreatedDate
