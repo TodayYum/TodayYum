@@ -1,6 +1,5 @@
-package com.todayyum.security;
+package com.todayyum.auth.controller;
 
-import com.todayyum.member.dto.request.MemberAddRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +22,8 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> tokenRefresh(HttpServletRequest request, HttpServletResponse response) {
+
+
         return null;
     }
 
@@ -35,6 +36,7 @@ public class AuthController {
             refreshTokenCookie.get().setMaxAge(0);
             response.addCookie(refreshTokenCookie.get());
         }
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

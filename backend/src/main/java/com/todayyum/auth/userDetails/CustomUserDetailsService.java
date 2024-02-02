@@ -1,4 +1,4 @@
-package com.todayyum.security;
+package com.todayyum.auth.userDetails;
 
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;

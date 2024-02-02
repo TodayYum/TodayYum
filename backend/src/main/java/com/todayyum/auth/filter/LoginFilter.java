@@ -1,6 +1,9 @@
-package com.todayyum.security;
+package com.todayyum.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.todayyum.auth.application.repository.TokenRepository;
+import com.todayyum.auth.userDetails.CustomUserDetails;
+import com.todayyum.auth.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,9 +59,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
 
         String role = auth.getAuthority();
-
         String accessToken = jwtUtil.createAccessToken(email, role);
-        String refreshToken = jwtUtil.createRefreshToken(email);
+
+        Long memberId = customUserDetails.getMemberId();
+        String refreshToken = jwtUtil.createRefreshToken(memberId);
 
         response.addHeader("Authorization", "Bearer " + accessToken);
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);

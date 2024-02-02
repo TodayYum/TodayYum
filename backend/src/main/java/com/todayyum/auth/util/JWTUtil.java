@@ -1,6 +1,9 @@
-package com.todayyum.security;
+package com.todayyum.auth.util;
 
+import com.todayyum.auth.application.repository.TokenRepository;
+import com.todayyum.auth.domain.Token;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +19,12 @@ public class JWTUtil {
     private SecretKey secretKey;
     private final Long accessTokenValidTime = Duration.ofMinutes(30).toMillis();
     private final Long refreshTokenValidTime = Duration.ofDays(14).toMillis();
+    private final TokenRepository tokenRepository;
 
-    public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
+
+    public JWTUtil(@Value("${spring.jwt.secret}")String secret, @Autowired TokenRepository tokenRepository) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.tokenRepository = tokenRepository;
     }
 
     public String getEmail(String token) {
@@ -43,13 +49,15 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String createRefreshToken(String email) {
-        return Jwts.builder()
-                .claim("email", email)
+    public String createRefreshToken(Long memberId) {
+        String refreshToken = Jwts.builder()
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + refreshTokenValidTime))
                 .signWith(secretKey)
                 .compact();
+        tokenRepository.save(new Token(refreshToken, memberId));
+
+        return refreshToken;
     }
 
 }

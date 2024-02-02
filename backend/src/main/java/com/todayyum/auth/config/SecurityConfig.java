@@ -1,9 +1,11 @@
-package com.todayyum.security;
+package com.todayyum.auth.config;
 
+import com.todayyum.auth.filter.JWTFilter;
+import com.todayyum.auth.filter.LoginFilter;
+import com.todayyum.auth.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,7 +42,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
 //                        .requestMatchers("/api/members/join").permitAll()
-//                        .requestMatchers("/api/members/*").authenticated()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/api/members/*").authenticated()
                         .anyRequest().permitAll());
 
         http

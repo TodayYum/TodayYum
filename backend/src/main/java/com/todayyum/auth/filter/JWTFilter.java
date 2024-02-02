@@ -1,6 +1,8 @@
-package com.todayyum.security;
+package com.todayyum.auth.filter;
 
 import com.todayyum.member.domain.Role;
+import com.todayyum.auth.userDetails.CustomUserDetails;
+import com.todayyum.auth.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,28 +27,28 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("Authorization");
 
-        if(authorization == null || ! authorization.startsWith("Bearer ")) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
 
             log.info("token null");
             filterChain.doFilter(request, response);
 
             return;
         }
-
         log.info("authorization now");
 
-        String token = authorization.split(" ")[1];
+        String accessToken = authorization.split(" ")[1];
 
-        if(jwtUtil.isExpired(token)) {
+        if (jwtUtil.isExpired(accessToken)) {
 
-            log.info("token expired");
+            log.info("aceessToken expired");
+
             filterChain.doFilter(request, response);
-
             return;
         }
 
-        String email = jwtUtil.getEmail(token);
-        String role = jwtUtil.getRole(token);
+        String email = jwtUtil.getEmail(accessToken);
+
+        String role = jwtUtil.getRole(accessToken);
 
         CustomUserDetails customUserDetails = CustomUserDetails.builder()
                 .email(email)

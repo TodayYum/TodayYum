@@ -1,4 +1,4 @@
-package com.todayyum.security;
+package com.todayyum.auth.userDetails;
 
 import com.todayyum.member.domain.Role;
 import lombok.Builder;

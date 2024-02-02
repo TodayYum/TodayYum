@@ -1,7 +1,6 @@
 package com.todayyum.member.domain;
 
 import com.todayyum.member.dto.request.MemberAddRequest;
-import com.todayyum.member.dto.response.MemberDetailResponse;
 import com.todayyum.member.infra.entity.MemberEntity;
 import lombok.Builder;
 import lombok.Getter;
