@@ -22,8 +22,9 @@ public class TokenRepositoryImpl implements TokenRepository {
 
     @Override
     public Token findByRefreshToken(String refreshToken) {
-        TokenEntity tokenEntity = redisTokenRepository.findByRefreshToken(refreshToken)
+        TokenEntity tokenEntity = redisTokenRepository.findById(refreshToken)
                 .orElseThrow(() -> new IllegalArgumentException());
+
         return Token.createToken(tokenEntity);
     }
 }

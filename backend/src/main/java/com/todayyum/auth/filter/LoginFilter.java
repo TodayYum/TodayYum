@@ -52,17 +52,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("login");
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        String email = customUserDetails.getUsername();
-
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
 
         String role = auth.getAuthority();
-        String accessToken = jwtUtil.createAccessToken(email, role);
 
         Long memberId = customUserDetails.getMemberId();
-        String refreshToken = jwtUtil.createRefreshToken(memberId);
+        String accessToken = jwtUtil.createAccessToken(memberId, role);
+        String refreshToken = jwtUtil.createRefreshToken(memberId, role);
 
         response.addHeader("Authorization", "Bearer " + accessToken);
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
