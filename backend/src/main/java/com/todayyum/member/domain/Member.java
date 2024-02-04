@@ -4,7 +4,6 @@ import com.todayyum.member.dto.request.MemberAddRequest;
 import com.todayyum.member.infra.entity.MemberEntity;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -18,12 +17,14 @@ public class Member {
     private String comment;
     private String profile;
     private LocalDateTime createdAt;
+    private Role role;
 
     public static Member createMember(MemberAddRequest memberAddRequest) {
         return Member.builder()
                 .email(memberAddRequest.getEmail())
                 .password(memberAddRequest.getPassword())
                 .nickname(memberAddRequest.getNickname())
+                .role(Role.USER)
                 .build();
     }
 
@@ -36,6 +37,7 @@ public class Member {
                 .comment(memberEntity.getComment())
                 .profile(memberEntity.getProfile())
                 .createdAt(memberEntity.getCreatedAt())
+                .role(memberEntity.getRole())
                 .build();
     }
 
@@ -47,6 +49,7 @@ public class Member {
                 .nickname(this.nickname)
                 .comment(this.comment)
                 .profile(this.profile)
+                .role(this.role)
                 .build();
     }
 

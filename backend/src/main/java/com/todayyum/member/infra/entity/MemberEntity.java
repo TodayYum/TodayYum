@@ -1,5 +1,6 @@
 package com.todayyum.member.infra.entity;
 
+import com.todayyum.member.domain.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,8 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "members")
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @ToString
 @EntityListeners(AuditingEntityListener.class)
@@ -28,7 +29,7 @@ public class MemberEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 10, unique = true)
     private String nickname;
 
     @Column(length = 30)
@@ -36,6 +37,9 @@ public class MemberEntity {
 
     @Column
     private String profile;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)

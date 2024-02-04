@@ -1,7 +1,7 @@
-package com.todayyum.member.controller;
+package com.todayyum.member;
 
 import com.todayyum.member.application.AddMemberUseCase;
-import com.todayyum.member.application.FindMemberUseCase;
+import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
 import com.todayyum.member.dto.request.MemberAddRequest;
 import org.junit.jupiter.api.*;
@@ -13,17 +13,17 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @SpringBootTest
-class MemberControllerTest {
+public class MemberControllerTest {
 
     @Autowired
-    PlatformTransactionManager transactionManager;
+    private PlatformTransactionManager transactionManager;
     TransactionStatus status;
     @Autowired
-    AddMemberUseCase addMemberUseCase;
+    private AddMemberUseCase addMemberUseCase;
     @Autowired
-    FindMemberUseCase findMemberUseCase;
+    private MemberRepository memberRepository;
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @BeforeEach
     void before() {
@@ -39,13 +39,13 @@ class MemberControllerTest {
     @Test
     void memberAdd() {
         MemberAddRequest memberAddRequest = new MemberAddRequest();
-        memberAddRequest.setEmail("asd1234@naver.com");
-        memberAddRequest.setPassword("a123456789");
-        memberAddRequest.setNickname("yonggkim");
+        memberAddRequest.setEmail("asd12@naver.com");
+        memberAddRequest.setPassword("a12345678");
+        memberAddRequest.setNickname("yonggk");
 
         Long memberId = addMemberUseCase.addMember(memberAddRequest);
 
-        Member member = findMemberUseCase.findMember(memberId);
+        Member member = memberRepository.findById(memberId);
 
         Assertions.assertEquals(member.getEmail(), memberAddRequest.getEmail());
         Assertions.assertTrue(bCryptPasswordEncoder.matches(memberAddRequest.getPassword(), member.getPassword()));
