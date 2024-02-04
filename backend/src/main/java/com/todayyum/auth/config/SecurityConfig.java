@@ -41,11 +41,11 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers("/api/members/join").permitAll()
-                        .requestMatchers("/auth/refresh").permitAll()
+                        .requestMatchers("/api/members/join").permitAll()
+                        .requestMatchers("/api/auth/refresh").permitAll()
+                        .requestMatchers("/api/auth/logout").permitAll()
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/api/members/*").authenticated()
-                        .anyRequest().permitAll());
+                        .anyRequest().authenticated());
 
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);

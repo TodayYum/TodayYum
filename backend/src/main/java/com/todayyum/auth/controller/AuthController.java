@@ -1,6 +1,7 @@
 package com.todayyum.auth.controller;
 
 import com.todayyum.auth.application.RefreshTokenUseCase;
+import com.todayyum.auth.application.RemoveTokenUseCase;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final RefreshTokenUseCase refreshTokenUseCase;
+    private final RemoveTokenUseCase removeTokenUseCase;
 
     @PostMapping("/refresh")
     public ResponseEntity<?> tokenRefresh(@CookieValue(name = "refreshToken", required = false) Cookie cookie,
@@ -37,6 +39,7 @@ public class AuthController {
         if(cookie != null) {
             cookie.setMaxAge(0);
             response.addCookie(cookie);
+            removeTokenUseCase.removeRefreshToken(cookie.getValue());
         }
 
         return new ResponseEntity<>(HttpStatus.OK);

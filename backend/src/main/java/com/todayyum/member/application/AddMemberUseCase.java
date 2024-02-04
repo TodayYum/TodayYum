@@ -28,7 +28,7 @@ public class AddMemberUseCase {
 
         member.changePassword(bCryptPasswordEncoder.encode(member.getPassword()));
 
-        return memberRepository.save(member);
+        return memberRepository.save(member).getId();
     }
 
 

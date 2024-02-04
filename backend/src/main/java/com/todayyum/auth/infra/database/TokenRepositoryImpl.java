@@ -27,4 +27,9 @@ public class TokenRepositoryImpl implements TokenRepository {
 
         return Token.createToken(tokenEntity);
     }
+
+    @Override
+    public void deleteByRefreshToken(String refreshToken) {
+        redisTokenRepository.deleteById(refreshToken);
+    }
 }

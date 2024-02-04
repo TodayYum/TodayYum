@@ -29,7 +29,7 @@ public class MemberEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 10, unique = true)
     private String nickname;
 
     @Column(length = 30)

@@ -8,4 +8,6 @@ public interface TokenRepository {
 
     public Token findByRefreshToken(String refreshToken);
 
+    public void deleteByRefreshToken(String refreshToken);
+
 }

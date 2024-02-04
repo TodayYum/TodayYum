@@ -9,5 +9,4 @@ public interface RedisTokenRepository extends CrudRepository<TokenEntity, String
 
     public TokenEntity save(TokenEntity tokenEntity);
 
-    public Optional<TokenEntity> findById(String refreshToken);
 }

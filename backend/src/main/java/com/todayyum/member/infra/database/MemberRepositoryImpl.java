@@ -14,9 +14,9 @@ public class MemberRepositoryImpl implements MemberRepository {
     private final JpaMemberRepository jpaMemberRepository;
 
     @Override
-    public Long save(Member member) {
+    public Member save(Member member) {
         MemberEntity memberEntity = member.createEntity();
-        return jpaMemberRepository.save(memberEntity).getId();
+        return Member.createMember(jpaMemberRepository.save(memberEntity));
     }
 
     @Override
