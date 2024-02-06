@@ -72,4 +72,8 @@ public class Member {
     public void changeProfile(String profile) {
         this.profile = profile;
     }
+
+    public void changeId(Long id) {
+        this.id = id;
+    }
 }

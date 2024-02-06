@@ -1,59 +1,103 @@
 package com.todayyum.member;
 
+import com.google.gson.Gson;
 import com.todayyum.member.application.AddMemberUseCase;
-import com.todayyum.member.application.repository.MemberRepository;
-import com.todayyum.member.domain.Member;
+import com.todayyum.member.application.FindMemberUseCase;
+import com.todayyum.member.controller.MemberController;
 import com.todayyum.member.dto.request.MemberAddRequest;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
+import com.todayyum.member.dto.response.MemberDetailResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
+@Transactional
 public class MemberControllerTest {
 
-    @Autowired
-    private PlatformTransactionManager transactionManager;
-    TransactionStatus status;
-    @Autowired
+    @Mock
     private AddMemberUseCase addMemberUseCase;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Mock
+    private FindMemberUseCase findMemberUseCase;
+    @InjectMocks
+    private MemberController memberController;
+    private MockMvc mockMvc;
 
     @BeforeEach
-    void before() {
-        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-    }
-
-    @AfterEach
-    void after() {
-        transactionManager.rollback(status);
-    }
-
-    @DisplayName("회원가입 테스트")
-    @Test
-    void memberAdd() {
-        MemberAddRequest memberAddRequest = new MemberAddRequest();
-        memberAddRequest.setEmail("asd12@naver.com");
-        memberAddRequest.setPassword("a12345678");
-        memberAddRequest.setNickname("yonggk");
-
-        Long memberId = addMemberUseCase.addMember(memberAddRequest);
-
-        Member member = memberRepository.findById(memberId);
-
-        Assertions.assertEquals(member.getEmail(), memberAddRequest.getEmail());
-        Assertions.assertTrue(bCryptPasswordEncoder.matches(memberAddRequest.getPassword(), member.getPassword()));
-        Assertions.assertEquals(member.getNickname(), memberAddRequest.getNickname());
+    public void init() {
+        mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
     }
 
     @Test
-    void memberDetail() {
+    @DisplayName("Member Cont - 회원 가입 테스트")
+    void addMember() throws Exception {
+
+        //given
+        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
+                .email("qwerasdf1234@naver.com")
+                .nickname("bonnnnnkim")
+                .password("a123456789")
+                .build();
+
+        MockMultipartFile dto = new MockMultipartFile("json", "",
+                "application/json", new Gson().toJson(memberAddRequest).getBytes());
+
+        Mockito.when(addMemberUseCase.addMember(Mockito.any(MemberAddRequest.class)))
+                .thenReturn(1000000L);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.multipart("/api/members")
+                        .file(dto)
+                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+        );
+
+        //then
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @WithMockUser
+    @Test
+    @DisplayName("Member Cont - 회원 조회 테스트")
+    void findMember() throws Exception {
+
+        //given
+        MemberDetailResponse memberDetailResponse = MemberDetailResponse.builder()
+                .memberId(1000000L)
+                .email("qwerasdf1234@naver.com")
+                .nickname("bonnnnnkim")
+                .build();
+
+        Mockito.when(findMemberUseCase.findMember(1000000L))
+                .thenReturn(memberDetailResponse);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/members/{id}", 1000000L)
+        );
+
+        //then
+        resultActions.andExpect(
+                MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.memberId")
+                        .value(memberDetailResponse.getMemberId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email")
+                        .value(memberDetailResponse.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nickname")
+                        .value(memberDetailResponse.getNickname()));
     }
 
 }
