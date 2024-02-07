@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -52,18 +51,14 @@ public class MemberControllerTest {
                 .password("a123456789")
                 .build();
 
-        MockMultipartFile dto = new MockMultipartFile("json", "",
-                "application/json", new Gson().toJson(memberAddRequest).getBytes());
-
         Mockito.when(addMemberUseCase.addMember(Mockito.any(MemberAddRequest.class)))
                 .thenReturn(1000000L);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.multipart("/api/members")
-                        .file(dto)
-                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-        );
+                MockMvcRequestBuilders.post("/api/members")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new Gson().toJson(memberAddRequest)));
 
         //then
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated());

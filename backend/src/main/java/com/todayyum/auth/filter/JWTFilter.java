@@ -46,12 +46,12 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        String email = jwtUtil.getEmail(accessToken);
+        Long memberId = jwtUtil.getMemberId(accessToken);
 
         String role = jwtUtil.getRole(accessToken, "access");
 
         CustomUserDetails customUserDetails = CustomUserDetails.builder()
-                .email(email)
+                .memberId(memberId)
                 .role(Role.valueOf(role))
                 .password("temppassword")
                 .build();
