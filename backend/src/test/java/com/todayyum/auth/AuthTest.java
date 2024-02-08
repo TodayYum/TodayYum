@@ -83,4 +83,5 @@ public class AuthTest {
                     assert cookie.getMaxAge() == 0; // 쿠키의 만료시간이 0인지 확인
                 });
     }
+
 }
