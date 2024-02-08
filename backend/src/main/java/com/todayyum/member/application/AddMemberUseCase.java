@@ -26,6 +26,11 @@ public class AddMemberUseCase {
             throw new IllegalArgumentException();
         }
 
+        //TODO 예외 처리
+        if(memberRepository.existsByNickname(member.getNickname())) {
+            throw new IllegalArgumentException();
+        }
+
         member.changePassword(bCryptPasswordEncoder.encode(member.getPassword()));
 
         return memberRepository.save(member).getId();

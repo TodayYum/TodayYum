@@ -6,24 +6,24 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
+@Transactional
 public class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
 
     @Test
-    @DisplayName("회원가입 테스트")
+    @DisplayName("MemberRepo - 회원 가입 테스트")
     void addMember() {
 
         //given
         Member member = Member.builder()
-                .email("asd1234@naver.com")
-                .nickname("yonggkim")
+                .email("qwerasdf1234@naver.com")
+                .nickname("bonnnnnkim")
                 .password("a123456789")
                 .build();
 
@@ -33,11 +33,28 @@ public class MemberRepositoryTest {
         //then
         Assertions.assertEquals(member.getEmail(), savedMember.getEmail());
         Assertions.assertEquals(member.getNickname(), savedMember.getNickname());
+        Assertions.assertEquals(member.getPassword(), savedMember.getPassword());
     }
 
     @Test
-    @DisplayName("회원검색 테스트")
+    @DisplayName("MemberRepo - 회원 조회 테스트")
     void findMember() {
 
+        //given
+        Member member = Member.builder()
+                .email("qwerasdf1234@naver.com")
+                .nickname("bonnnnnkim")
+                .password("a123456789")
+                .build();
+
+        Long memberId = memberRepository.save(member).getId();
+
+        //when
+        Member savedMember = memberRepository.findById(memberId);
+
+        //then
+        Assertions.assertEquals(member.getEmail(), savedMember.getEmail());
+        Assertions.assertEquals(member.getNickname(), savedMember.getNickname());
+        Assertions.assertEquals(member.getPassword(), savedMember.getPassword());
     }
 }

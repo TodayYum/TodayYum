@@ -2,8 +2,6 @@ package com.todayyum.auth.util;
 
 import com.todayyum.auth.application.repository.TokenRepository;
 import com.todayyum.auth.domain.Token;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.SignatureException;
 import java.time.Duration;
 import java.util.Date;
 
@@ -34,8 +31,8 @@ public class JWTUtil {
         this.tokenRepository = tokenRepository;
     }
 
-    public String getEmail(String token) {
-        return Jwts.parser().verifyWith(accessSecretKey).build().parseSignedClaims(token).getPayload().get("email", String.class);
+    public Long getMemberId(String token) {
+        return Jwts.parser().verifyWith(accessSecretKey).build().parseSignedClaims(token).getPayload().get("memberId", Long.class);
     }
 
     public String getRole(String token, String type) {
@@ -46,7 +43,7 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(accessSecretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    //todo 만료시간 늘려야 함
+    //TODO 만료시간 늘려야 함
     public String createAccessToken(Long memberId, String role) {
         return Jwts.builder()
                 .claim("memberId", memberId)

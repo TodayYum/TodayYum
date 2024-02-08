@@ -36,4 +36,9 @@ public class MemberRepositoryImpl implements MemberRepository {
     public Member findByEmail(String email) {
         return jpaMemberRepository.findByEmail(email).map(Member::createMember).orElse(null);
     }
+
+    @Override
+    public boolean existsByNickname(String nickname) {
+        return jpaMemberRepository.existsByNickname(nickname);
+    }
 }

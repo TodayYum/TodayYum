@@ -3,6 +3,8 @@ package com.todayyum.member.infra.entity;
 import com.todayyum.member.domain.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 @EntityListeners(AuditingEntityListener.class)
+@DynamicInsert
+@DynamicUpdate
 public class MemberEntity {
 
     @Id
