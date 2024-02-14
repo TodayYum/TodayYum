@@ -14,6 +14,7 @@ module.exports = {
       'gray-dark': '#787D85',
       gray: '#B2B0B0',
       'gray-light': '#d3dce6',
+      white: '#ffffff',
     },
     fontFamily: {
       ggTitle: ['GGTitle', 'sans-serif'],

@@ -1,5 +1,7 @@
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { IInputText, ISupoortText } from '../types/components/InputText.types';
-
 /**
  * @param props
  *
@@ -22,17 +24,33 @@ const SupportText = (props: ISupoortText) => {
 };
 
 function InputText(props: IInputText) {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleClickButton = () => {
+    if (props.onClickUpload) {
+      props.onClickUpload();
+    }
+  };
   return (
     <div className="px-normal">
-      <input
-        type={props.type}
-        placeholder={props.placeholder}
-        className="w-full placeholder:font-ggTitle placeholder:text-sm border-[1px] px-3 font-sm h-10 rounded-small border-gray focus:border-black focus:outline-none"
-        onChange={e => props.setValue(e.target.value)}
-        value={props.value}
-        alt={`${props.type} 입력창`}
-        disabled={props.disabled}
-      />
+      <div
+        className={`${isFocused ? 'border-black' : 'border-gray'} flex items-center px-3 rounded-small h-10 border-[1px]`}
+      >
+        <input
+          type={props.type}
+          placeholder={props.placeholder}
+          className="w-full placeholder:font-ggTitle placeholder:text-sm font-sm rounded-small border-none focus:outline-none"
+          onChange={e => props.setValue(e.target.value)}
+          value={props.value}
+          alt={`${props.type} 입력창`}
+          disabled={props.disabled}
+          onClick={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
+        {props.hasButton && (
+          <FontAwesomeIcon icon={faArrowUp} onClick={handleClickButton} />
+        )}
+      </div>
       <SupportText
         isSuccess={props.isSuccess}
         successText={props.successText}
