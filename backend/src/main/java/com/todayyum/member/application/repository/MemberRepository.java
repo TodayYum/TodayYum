@@ -13,4 +13,7 @@ public interface MemberRepository {
     public Member findByEmail(String email);
 
     public boolean existsByNickname(String nickname);
+
+    public void deleteById(Long memberId);
+
 }

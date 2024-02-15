@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByEmail(email);
 
         if(member == null) {
-            throw new UsernameNotFoundException("email이 없어요");
+            throw new UsernameNotFoundException("");
         }
 
         return CustomUserDetails.builder()

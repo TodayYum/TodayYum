@@ -1,12 +1,22 @@
 package com.todayyum.member.controller;
 
+import com.todayyum.auth.userDetails.CustomUserDetails;
+import com.todayyum.global.dto.response.BaseResponse;
+import com.todayyum.global.dto.response.ResponseCode;
+import com.todayyum.global.exception.CustomException;
 import com.todayyum.member.application.AddMemberUseCase;
 import com.todayyum.member.application.FindMemberUseCase;
+import com.todayyum.member.application.ModifyMemberUseCase;
+import com.todayyum.member.application.RemoveMemberUseCase;
+import com.todayyum.member.domain.ValidationResult;
 import com.todayyum.member.dto.request.MemberAddRequest;
+import com.todayyum.member.dto.request.NicknameModifyRequest;
+import com.todayyum.member.dto.request.PasswordModifyRequest;
+import com.todayyum.member.dto.request.ProfileModifyRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,15 +27,87 @@ public class MemberController {
 
     private final AddMemberUseCase addMemberUseCase;
     private final FindMemberUseCase findMemberUseCase;
+    private final ModifyMemberUseCase modifyMemberUseCase;
+    private final RemoveMemberUseCase removeMemberUseCase;
 
     @PostMapping
     public ResponseEntity<?> memberAdd(MemberAddRequest memberAddRequest) {
-        return new ResponseEntity<>(addMemberUseCase.addMember(memberAddRequest), HttpStatus.CREATED);
+        return BaseResponse.createResponseEntity(ResponseCode.CREATED, addMemberUseCase.addMember(memberAddRequest));
     }
 
     @GetMapping("/{memberId}")
     public ResponseEntity<?> memberDetail(@PathVariable Long memberId) {
-        return new ResponseEntity<>(findMemberUseCase.findMember(memberId), HttpStatus.OK);
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findMemberUseCase.findMember(memberId));
     }
 
+    @DeleteMapping
+    public ResponseEntity<?> memberRemove(Authentication authentication) {
+        removeMemberUseCase.removeMember(getUserDetails(authentication).getMemberId());
+        return BaseResponse.createResponseEntity(ResponseCode.OK);
+    }
+
+    @PatchMapping("/nicknames")
+    public ResponseEntity<?> nicknameModify(Authentication authentication, NicknameModifyRequest nicknameModifyRequest) {
+        nicknameModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
+        modifyMemberUseCase.modifyNickname(nicknameModifyRequest);
+        return BaseResponse.createResponseEntity(ResponseCode.OK);
+    }
+
+    @PatchMapping("/passwords")
+    public ResponseEntity<?> passwordModify(Authentication authentication, PasswordModifyRequest passwordModifyRequest) {
+        passwordModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
+        modifyMemberUseCase.modifyPassword(passwordModifyRequest);
+        return BaseResponse.createResponseEntity(ResponseCode.OK);
+    }
+
+    @PostMapping("/profiles")
+    public ResponseEntity<?> profileModify(Authentication authentication, ProfileModifyRequest profileModifyRequest) {
+        profileModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
+        modifyMemberUseCase.modifyProfile(profileModifyRequest);
+        return BaseResponse.createResponseEntity(ResponseCode.OK);
+    }
+
+    @GetMapping("/nicknames/validations")
+    public ResponseEntity<?> nicknameValidate(String nickname) {
+        if(nickname == null || nickname.isEmpty()) {
+            throw new CustomException(ResponseCode.EMPTY_INPUT);
+        }
+
+        ValidationResult validationResult = findMemberUseCase.checkNicknameDuplication(nickname);
+
+        switch (validationResult) {
+            case INVALID:
+                return BaseResponse.createResponseEntity(ResponseCode.INVALID_NICKNAME);
+            case DUPLICATED:
+                return BaseResponse.createResponseEntity(ResponseCode.DUPLICATE_NICKNAME);
+            case VALID:
+                return BaseResponse.createResponseEntity(ResponseCode.VALID_NICKNAME);
+            default:
+                return BaseResponse.createResponseEntity(ResponseCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/emails/validations")
+    public ResponseEntity<?> emailValidate(String email) {
+        if(email == null || email.isEmpty()) {
+            throw new CustomException(ResponseCode.EMPTY_INPUT);
+        }
+
+        ValidationResult validationResult = findMemberUseCase.checkEmailDuplication(email);
+
+        switch (validationResult) {
+            case INVALID:
+                return BaseResponse.createResponseEntity(ResponseCode.INVALID_EMAIL);
+            case DUPLICATED:
+                return BaseResponse.createResponseEntity(ResponseCode.DUPLICATE_EMAIL);
+            case VALID:
+                return BaseResponse.createResponseEntity(ResponseCode.VALID_EMAIL);
+            default:
+                return BaseResponse.createResponseEntity(ResponseCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public CustomUserDetails getUserDetails(Authentication authentication) {
+        return (CustomUserDetails) authentication.getPrincipal();
+    }
 }
