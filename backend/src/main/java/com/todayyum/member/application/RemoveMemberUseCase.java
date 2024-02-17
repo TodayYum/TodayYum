@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -15,7 +17,7 @@ public class RemoveMemberUseCase {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void removeMember(Long memberId) {
+    public void removeMember(UUID memberId) {
         memberRepository.deleteById(memberId);
     }
 }

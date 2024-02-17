@@ -3,6 +3,8 @@ package com.todayyum.auth.infra.database;
 import com.todayyum.auth.application.repository.TokenRepository;
 import com.todayyum.auth.domain.Token;
 import com.todayyum.auth.infra.entity.TokenEntity;
+import com.todayyum.global.dto.response.ResponseCode;
+import com.todayyum.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -23,7 +25,7 @@ public class TokenRepositoryImpl implements TokenRepository {
     @Override
     public Token findByRefreshToken(String refreshToken) {
         TokenEntity tokenEntity = redisTokenRepository.findById(refreshToken)
-                .orElseThrow(() -> new IllegalArgumentException());
+                .orElseThrow(() -> new CustomException(ResponseCode.INVALID_REFRESH_TOKEN));
 
         return Token.createToken(tokenEntity);
     }

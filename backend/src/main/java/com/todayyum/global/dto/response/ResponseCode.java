@@ -28,6 +28,7 @@ public enum ResponseCode {
 
     LOGIN_ERROR_CREDENTIALS_INVALID(HttpStatus.UNAUTHORIZED, "로그인 정보가 올바르지 않습니다."),
     REFRESH_TOKEN_MISSING(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 없습니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다.")
     ;
 
     private final HttpStatus status;

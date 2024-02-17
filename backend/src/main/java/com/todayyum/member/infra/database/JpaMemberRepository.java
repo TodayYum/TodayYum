@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
+import java.util.UUID;
 
-public interface JpaMemberRepository extends JpaRepository<MemberEntity, Long> {
+public interface JpaMemberRepository extends JpaRepository<MemberEntity, UUID> {
     boolean existsByEmail(String email);
 
     boolean existsByNickname(String nickname);
@@ -16,5 +17,5 @@ public interface JpaMemberRepository extends JpaRepository<MemberEntity, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE MemberEntity m SET m.isDeleted = TRUE WHERE m.id = :memberId")
-    void deleteById(Long memberId);
+    void deleteById(UUID memberId);
 }

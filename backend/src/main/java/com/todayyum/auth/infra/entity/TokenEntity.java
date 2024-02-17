@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
@@ -21,5 +22,5 @@ public class TokenEntity implements Serializable {
     @Id
     private String refreshToken;
 
-    private Long memberId;
+    private UUID memberId;
 }

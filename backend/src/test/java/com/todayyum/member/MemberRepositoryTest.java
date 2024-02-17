@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @SpringBootTest
 @Transactional
 public class MemberRepositoryTest {
@@ -47,7 +49,7 @@ public class MemberRepositoryTest {
                 .password("a123456789")
                 .build();
 
-        Long memberId = memberRepository.save(member).getId();
+        UUID memberId = memberRepository.save(member).getId();
 
         //when
         Member savedMember = memberRepository.findById(memberId);

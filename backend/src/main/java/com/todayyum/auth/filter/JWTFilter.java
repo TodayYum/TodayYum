@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 @RequiredArgsConstructor
@@ -46,7 +47,7 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        Long memberId = jwtUtil.getMemberId(accessToken);
+        UUID memberId = jwtUtil.getMemberId(accessToken);
 
         String role = jwtUtil.getRole(accessToken, "access");
 

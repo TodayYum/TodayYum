@@ -48,13 +48,6 @@ public class S3Util {
             throw new CustomException(ResponseCode.S3_UPLOAD_FAILED);
         }
 
-//        try {
-//            amazonS3.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), metadata)
-//                    .withCannedAcl(CannedAccessControlList.PublicRead));
-//        } catch (IOException e) {
-//            throw new CustomException(ResponseCode.S3_UPLOAD_FAILED);
-//        }
-
         return amazonS3.getUrl(bucket, fileName).toString();
     }
 

@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @ExtendWith(MockitoExtension.class)
 @Transactional
 public class MemberControllerTest {
@@ -52,7 +54,7 @@ public class MemberControllerTest {
                 .build();
 
         Mockito.when(addMemberUseCase.addMember(Mockito.any(MemberAddRequest.class)))
-                .thenReturn(1000000L);
+                .thenReturn(UUID.randomUUID());
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -70,28 +72,30 @@ public class MemberControllerTest {
     void findMember() throws Exception {
 
         //given
+        UUID memberId = UUID.randomUUID();
+
         MemberDetailResponse memberDetailResponse = MemberDetailResponse.builder()
-                .memberId(1000000L)
+                .memberId(memberId)
                 .email("qwerasdf1234@naver.com")
                 .nickname("bonnnnnkim")
                 .build();
 
-        Mockito.when(findMemberUseCase.findMember(1000000L))
+        Mockito.when(findMemberUseCase.findMember(memberId))
                 .thenReturn(memberDetailResponse);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/members/{id}", 1000000L)
+                MockMvcRequestBuilders.get("/api/members/{id}", memberId)
         );
 
         //then
         resultActions.andExpect(
                 MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.memberId")
-                        .value(memberDetailResponse.getMemberId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.memberId")
+                        .value(memberDetailResponse.getMemberId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.email")
                         .value(memberDetailResponse.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.nickname")
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result.nickname")
                         .value(memberDetailResponse.getNickname()));
     }
 

@@ -7,12 +7,13 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder
 @Getter
 @ToString
 public class Member {
-    private Long id;
+    private UUID id;
     private String email;
     private String password;
     private String nickname;
@@ -56,10 +57,6 @@ public class Member {
                 .build();
     }
 
-    public void changeEmail(String email) {
-        this.email = email;
-    }
-
     public void changePassword(String password) {
         this.password = password;
     }
@@ -76,7 +73,7 @@ public class Member {
         this.profile = profile;
     }
 
-    public void changeId(Long id) {
+    public void changeId(UUID id) {
         this.id = id;
     }
 }

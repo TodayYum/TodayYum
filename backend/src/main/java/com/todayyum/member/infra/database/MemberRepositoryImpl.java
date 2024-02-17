@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 @Slf4j
@@ -27,7 +29,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Member findById(Long memberId) {
+    public Member findById(UUID memberId) {
         MemberEntity memberEntity = jpaMemberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
@@ -45,7 +47,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public void deleteById(Long memberId) {
+    public void deleteById(UUID memberId) {
         jpaMemberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 

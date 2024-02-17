@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -17,7 +19,7 @@ public class FindMemberUseCase {
 
     private final MemberRepository memberRepository;
 
-    public MemberDetailResponse findMember(Long memberId) {
+    public MemberDetailResponse findMember(UUID memberId) {
         Member member = memberRepository.findById(memberId);
         return MemberDetailResponse.createResponse(member);
     }

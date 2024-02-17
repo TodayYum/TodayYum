@@ -4,11 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Setter
 @Getter
 @Builder
 public class PasswordModifyRequest {
 
-    private Long memberId;
+    private UUID memberId;
     private String password;
 }

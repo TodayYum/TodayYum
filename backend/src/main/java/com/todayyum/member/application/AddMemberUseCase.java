@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -20,7 +22,7 @@ public class AddMemberUseCase {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
-    public Long addMember(MemberAddRequest memberAddRequest) {
+    public UUID addMember(MemberAddRequest memberAddRequest) {
         Member member = Member.createMember(memberAddRequest);
 
         if(memberRepository.existsByEmail(member.getEmail())) {

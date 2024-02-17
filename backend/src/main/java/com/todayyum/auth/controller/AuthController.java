@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> tokenRefresh(@CookieValue(name = "refreshToken", required = false) Cookie cookie,
-                                          @RequestParam Long memberId, HttpServletResponse response) {
+                                          @RequestParam UUID memberId, HttpServletResponse response) {
 
         if(cookie == null) {
             return BaseResponse.createResponseEntity(ResponseCode.REFRESH_TOKEN_MISSING);

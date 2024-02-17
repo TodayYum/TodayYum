@@ -3,10 +3,11 @@ package com.todayyum.auth.application;
 import com.todayyum.auth.application.repository.TokenRepository;
 import com.todayyum.auth.domain.Token;
 import com.todayyum.auth.util.JWTUtil;
-import com.todayyum.member.domain.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -16,7 +17,7 @@ public class RefreshTokenUseCase {
     private final TokenRepository tokenRepository;
     private final JWTUtil jwtUtil;
 
-    public String refreshAccessToken(String refreshToken, Long memberId) {
+    public String refreshAccessToken(String refreshToken, UUID memberId) {
         System.out.println(refreshToken);
         Token token = tokenRepository.findByRefreshToken(refreshToken);
 

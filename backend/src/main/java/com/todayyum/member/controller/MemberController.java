@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
@@ -36,7 +38,7 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<?> memberDetail(@PathVariable Long memberId) {
+    public ResponseEntity<?> memberDetail(@PathVariable UUID memberId) {
         return BaseResponse.createResponseEntity(ResponseCode.OK, findMemberUseCase.findMember(memberId));
     }
 
