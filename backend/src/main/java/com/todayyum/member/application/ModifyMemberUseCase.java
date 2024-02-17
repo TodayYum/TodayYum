@@ -2,6 +2,7 @@ package com.todayyum.member.application;
 
 import com.todayyum.global.dto.response.ResponseCode;
 import com.todayyum.global.exception.CustomException;
+import com.todayyum.global.util.S3Util;
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
 import com.todayyum.member.dto.request.NicknameModifyRequest;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +23,10 @@ public class ModifyMemberUseCase {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final S3Util s3Util;
 
     public void modifyNickname(NicknameModifyRequest nicknameModifyRequest) {
         Member member = memberRepository.findById(nicknameModifyRequest.getMemberId());
-        log.info(member.toString());
 
         if(memberRepository.existsByNickname(nicknameModifyRequest.getNickname())) {
             throw new CustomException(ResponseCode.DUPLICATE_NICKNAME);
@@ -35,6 +37,14 @@ public class ModifyMemberUseCase {
     }
 
     public void modifyProfile(ProfileModifyRequest profileModifyRequest) {
+        Member member = memberRepository.findById(profileModifyRequest.getMemberId());
+
+        MultipartFile profile = profileModifyRequest.getProfile();
+
+        String profileUrl = s3Util.uploadFile(profile);
+
+        member.changeProfile(profileUrl);
+        memberRepository.save(member);
     }
 
     public void modifyPassword(PasswordModifyRequest passwordModifyRequest) {

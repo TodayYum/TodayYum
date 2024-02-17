@@ -22,6 +22,10 @@ public enum ResponseCode {
     MEMBER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "입력한 memberId에 해당하는 멤버가 없습니다."),
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "입력한 이메일에 해당하는 멤버가 없습니다."),
 
+    EMPTY_FILE(HttpStatus.BAD_REQUEST, "파일이 존재하지 않습니다."),
+    INVALID_FILE(HttpStatus.BAD_REQUEST, "유효하지 않은 파일 형식입니다."),
+    S3_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3 업로드에 실패했습니다."),
+
     LOGIN_ERROR_CREDENTIALS_INVALID(HttpStatus.UNAUTHORIZED, "로그인 정보가 올바르지 않습니다."),
     REFRESH_TOKEN_MISSING(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 없습니다."),
     ;
