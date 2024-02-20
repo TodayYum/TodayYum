@@ -5,6 +5,7 @@ import com.todayyum.global.exception.CustomException;
 import com.todayyum.global.util.S3Util;
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
+import com.todayyum.member.dto.request.CommentModifyRequest;
 import com.todayyum.member.dto.request.NicknameModifyRequest;
 import com.todayyum.member.dto.request.PasswordModifyRequest;
 import com.todayyum.member.dto.request.ProfileModifyRequest;
@@ -50,9 +51,14 @@ public class ModifyMemberUseCase {
     public void modifyPassword(PasswordModifyRequest passwordModifyRequest) {
         Member member = memberRepository.findById(passwordModifyRequest.getMemberId());
 
-        //TODO 비밀번호 형식 확인
-
         member.changePassword(bCryptPasswordEncoder.encode(passwordModifyRequest.getPassword()));
+        memberRepository.save(member);
+    }
+
+    public void modifyComment(CommentModifyRequest commentModifyRequest) {
+        Member member = memberRepository.findById(commentModifyRequest.getMemberId());
+
+        member.changeComment(commentModifyRequest.getComment());
         memberRepository.save(member);
     }
 

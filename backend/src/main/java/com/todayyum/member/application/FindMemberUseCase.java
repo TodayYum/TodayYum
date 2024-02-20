@@ -24,7 +24,7 @@ public class FindMemberUseCase {
         return MemberDetailResponse.createResponse(member);
     }
 
-    public ValidationResult checkEmailDuplication(String email) {
+    public ValidationResult validateEmail(String email) {
         if(!email.matches("^[A-Za-z0-9._]+@[A-Za-z0-9]+\\.[A-Za-z]{2,}$")) {
             return ValidationResult.INVALID;
         }
@@ -36,7 +36,7 @@ public class FindMemberUseCase {
         return ValidationResult.VALID;
     }
 
-    public ValidationResult checkNicknameDuplication(String nickname) {
+    public ValidationResult validateNickname(String nickname) {
         if(nickname.length() > 10) {
             return ValidationResult.INVALID;
         }

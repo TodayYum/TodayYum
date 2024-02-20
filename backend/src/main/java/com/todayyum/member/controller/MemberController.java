@@ -9,10 +9,8 @@ import com.todayyum.member.application.FindMemberUseCase;
 import com.todayyum.member.application.ModifyMemberUseCase;
 import com.todayyum.member.application.RemoveMemberUseCase;
 import com.todayyum.member.domain.ValidationResult;
-import com.todayyum.member.dto.request.MemberAddRequest;
-import com.todayyum.member.dto.request.NicknameModifyRequest;
-import com.todayyum.member.dto.request.PasswordModifyRequest;
-import com.todayyum.member.dto.request.ProfileModifyRequest;
+import com.todayyum.member.dto.request.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +31,7 @@ public class MemberController {
     private final RemoveMemberUseCase removeMemberUseCase;
 
     @PostMapping
-    public ResponseEntity<?> memberAdd(MemberAddRequest memberAddRequest) {
+    public ResponseEntity<?> memberAdd(@Valid MemberAddRequest memberAddRequest) {
         return BaseResponse.createResponseEntity(ResponseCode.CREATED, addMemberUseCase.addMember(memberAddRequest));
     }
 
@@ -44,28 +42,48 @@ public class MemberController {
 
     @DeleteMapping
     public ResponseEntity<?> memberRemove(Authentication authentication) {
+
         removeMemberUseCase.removeMember(getUserDetails(authentication).getMemberId());
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
     @PatchMapping("/nicknames")
-    public ResponseEntity<?> nicknameModify(Authentication authentication, NicknameModifyRequest nicknameModifyRequest) {
+    public ResponseEntity<?> nicknameModify(Authentication authentication,
+                                            @Valid NicknameModifyRequest nicknameModifyRequest) {
+
         nicknameModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
         modifyMemberUseCase.modifyNickname(nicknameModifyRequest);
+
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
     @PatchMapping("/passwords")
-    public ResponseEntity<?> passwordModify(Authentication authentication, PasswordModifyRequest passwordModifyRequest) {
+    public ResponseEntity<?> passwordModify(Authentication authentication,
+                                            @Valid PasswordModifyRequest passwordModifyRequest) {
+
         passwordModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
         modifyMemberUseCase.modifyPassword(passwordModifyRequest);
+
+        return BaseResponse.createResponseEntity(ResponseCode.OK);
+    }
+
+    @PatchMapping("/comments")
+    public ResponseEntity<?> commentModify(Authentication authentication,
+                                           @Valid CommentModifyRequest commentModifyRequest) {
+
+        commentModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
+        modifyMemberUseCase.modifyComment(commentModifyRequest);
+
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
     @PostMapping("/profiles")
-    public ResponseEntity<?> profileModify(Authentication authentication, ProfileModifyRequest profileModifyRequest) {
+    public ResponseEntity<?> profileModify(Authentication authentication,
+                                           @Valid ProfileModifyRequest profileModifyRequest) {
+
         profileModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
         modifyMemberUseCase.modifyProfile(profileModifyRequest);
+
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
@@ -75,7 +93,7 @@ public class MemberController {
             throw new CustomException(ResponseCode.EMPTY_INPUT);
         }
 
-        ValidationResult validationResult = findMemberUseCase.checkNicknameDuplication(nickname);
+        ValidationResult validationResult = findMemberUseCase.validateNickname(nickname);
 
         switch (validationResult) {
             case INVALID:
@@ -95,7 +113,7 @@ public class MemberController {
             throw new CustomException(ResponseCode.EMPTY_INPUT);
         }
 
-        ValidationResult validationResult = findMemberUseCase.checkEmailDuplication(email);
+        ValidationResult validationResult = findMemberUseCase.validateEmail(email);
 
         switch (validationResult) {
             case INVALID:
