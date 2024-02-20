@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Builder
 @Getter
 @AllArgsConstructor
 public class Token {
     private String refreshToken;
-    private Long memberId;
+    private UUID memberId;
 
     public TokenEntity createEntity() {
         return TokenEntity.builder()

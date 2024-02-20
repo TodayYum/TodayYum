@@ -57,7 +57,7 @@ public class AuthTest {
         formData.add("password", "a123456789");
 
         //when
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/login")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/auth/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(formData));
 

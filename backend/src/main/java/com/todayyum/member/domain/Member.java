@@ -4,13 +4,16 @@ import com.todayyum.member.dto.request.MemberAddRequest;
 import com.todayyum.member.infra.entity.MemberEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder
 @Getter
+@ToString
 public class Member {
-    private Long id;
+    private UUID id;
     private String email;
     private String password;
     private String nickname;
@@ -50,11 +53,8 @@ public class Member {
                 .comment(this.comment)
                 .profile(this.profile)
                 .role(this.role)
+                .createdAt(this.createdAt)
                 .build();
-    }
-
-    public void changeEmail(String email) {
-        this.email = email;
     }
 
     public void changePassword(String password) {
@@ -73,7 +73,7 @@ public class Member {
         this.profile = profile;
     }
 
-    public void changeId(Long id) {
+    public void changeId(UUID id) {
         this.id = id;
     }
 }

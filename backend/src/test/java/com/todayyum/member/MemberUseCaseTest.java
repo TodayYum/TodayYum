@@ -18,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 
 @ExtendWith(MockitoExtension.class)
 @Transactional
@@ -47,16 +49,17 @@ public class MemberUseCaseTest {
                 .build();
 
         Member member = Member.createMember(memberAddRequest);
-        member.changeId(1000000L);
+        UUID uuid = UUID.randomUUID();
+        member.changeId(uuid);
 
         Mockito.when(memberRepository.save(Mockito.any(Member.class)))
                 .thenReturn(member);
 
         //when
-        Long memberId = addMemberUseCase.addMember(memberAddRequest);
+        UUID memberId = addMemberUseCase.addMember(memberAddRequest);
 
         //then
-        Assertions.assertEquals(memberId, 1000000L);
+        Assertions.assertEquals(memberId, uuid);
         Mockito.verify(memberRepository, Mockito.times(1)).save(Mockito.any(Member.class));
     }
 
@@ -65,7 +68,7 @@ public class MemberUseCaseTest {
     void findMember() {
 
         //given
-        Long memberId = 1000000L;
+        UUID memberId = UUID.randomUUID();
 
         Member member = Member.builder()
                 .id(memberId)
@@ -84,7 +87,7 @@ public class MemberUseCaseTest {
         Assertions.assertEquals(member.getEmail(), memberDetailResponse.getEmail());
         Assertions.assertEquals(member.getNickname(), memberDetailResponse.getNickname());
 
-        Mockito.verify(memberRepository, Mockito.times(1)).findById(Mockito.any(Long.class));
+        Mockito.verify(memberRepository, Mockito.times(1)).findById(Mockito.any(UUID.class));
     }
 
 }

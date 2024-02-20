@@ -7,13 +7,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 @Builder
 public class CustomUserDetails implements UserDetails {
     private String email;
     private String password;
     private Role role;
-    private Long memberId;
+    private UUID memberId;
     private String nickname;
 
     @Override
@@ -41,7 +42,7 @@ public class CustomUserDetails implements UserDetails {
         return email;
     }
 
-    public Long getMemberId() { return memberId; }
+    public UUID getMemberId() { return memberId; }
 
     public String getNickname() { return nickname; }
 

@@ -1,4 +1,4 @@
-package com.todayyum.auth.config;
+package com.todayyum.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

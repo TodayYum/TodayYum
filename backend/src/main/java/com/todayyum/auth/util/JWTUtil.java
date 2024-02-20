@@ -13,6 +13,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -31,8 +32,8 @@ public class JWTUtil {
         this.tokenRepository = tokenRepository;
     }
 
-    public Long getMemberId(String token) {
-        return Jwts.parser().verifyWith(accessSecretKey).build().parseSignedClaims(token).getPayload().get("memberId", Long.class);
+    public UUID getMemberId(String token) {
+        return UUID.fromString(Jwts.parser().verifyWith(accessSecretKey).build().parseSignedClaims(token).getPayload().get("memberId", String.class));
     }
 
     public String getRole(String token, String type) {
@@ -43,8 +44,7 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(accessSecretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    //TODO 만료시간 늘려야 함
-    public String createAccessToken(Long memberId, String role) {
+    public String createAccessToken(UUID memberId, String role) {
         return Jwts.builder()
                 .claim("memberId", memberId)
                 .claim("role", role)
@@ -54,7 +54,7 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String createRefreshToken(Long memberId, String role) {
+    public String createRefreshToken(UUID memberId, String role) {
         String refreshToken = Jwts.builder()
                 .claim("memberId", memberId)
                 .claim("role", role)

@@ -3,6 +3,8 @@ package com.todayyum.auth.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todayyum.auth.userDetails.CustomUserDetails;
 import com.todayyum.auth.util.JWTUtil;
+import com.todayyum.global.dto.response.ErrorResponse;
+import com.todayyum.global.dto.response.ResponseCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,10 +18,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Slf4j
@@ -61,7 +60,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        Long memberId = customUserDetails.getMemberId();
+        UUID memberId = customUserDetails.getMemberId();
         String accessToken = jwtUtil.createAccessToken(memberId, role);
         String refreshToken = jwtUtil.createRefreshToken(memberId, role);
 
@@ -81,7 +80,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException {
         response.setStatus(401);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        ErrorResponse errorResponse = new ErrorResponse(ResponseCode.LOGIN_ERROR_CREDENTIALS_INVALID.getMessage());
+
+        new ObjectMapper().writeValue(response.getWriter(), errorResponse);
     }
 }
