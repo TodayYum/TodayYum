@@ -6,6 +6,7 @@ import com.todayyum.auth.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ public class RefreshTokenUseCase {
     private final TokenRepository tokenRepository;
     private final JWTUtil jwtUtil;
 
+    @Transactional(readOnly = true)
     public String refreshAccessToken(String refreshToken, UUID memberId) {
         System.out.println(refreshToken);
         Token token = tokenRepository.findByRefreshToken(refreshToken);

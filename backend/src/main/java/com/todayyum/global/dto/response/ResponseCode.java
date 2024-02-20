@@ -28,7 +28,12 @@ public enum ResponseCode {
 
     LOGIN_ERROR_CREDENTIALS_INVALID(HttpStatus.UNAUTHORIZED, "로그인 정보가 올바르지 않습니다."),
     REFRESH_TOKEN_MISSING(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 없습니다."),
-    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다.")
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다."),
+
+    EMAIL_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 전송에 실패했습니다."),
+    EMAIL_SEND_SUCCESS(HttpStatus.OK, "이메일 전송에 성공했습니다."),
+
+    EMAIL_VERIFICATION_FAILED(HttpStatus.BAD_REQUEST, "이메일 검증에 실패했습니다."),
     ;
 
     private final HttpStatus status;
