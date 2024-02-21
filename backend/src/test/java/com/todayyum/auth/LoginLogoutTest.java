@@ -20,10 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+/*
+TODO
+이메일 인증 번호 발송 테스트
+이메일 인증 번호 검증 테스트
+AuthTest 레이어 별로 나누기
+ */
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class AuthTest {
+public class LoginLogoutTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,6 +72,46 @@ public class AuthTest {
         resultActions.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.header().exists("Authorization"))
                 .andExpect(MockMvcResultMatchers.cookie().exists("refreshToken"));
+    }
+
+    @Test
+    @DisplayName("Auth - 로그인 실패 테스트(이메일 오류)")
+    public void loginFailByEmail() throws Exception {
+
+        //given
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("email", "qwerasdf123@naver.com");
+        formData.add("password", "a123456789");
+
+        //when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/auth/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(formData));
+
+        //then
+        resultActions.andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("로그인 정보가 올바르지 않습니다."));
+    }
+
+    @Test
+    @DisplayName("Auth - 로그인 실패 테스트(비밀번호 오류)")
+    public void loginFailByPassword() throws Exception {
+
+        //given
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("email", "qwerasdf1234@naver.com");
+        formData.add("password", "a12345678");
+
+        //when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/auth/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(formData));
+
+        //then
+        resultActions.andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("로그인 정보가 올바르지 않습니다."));
     }
 
     @Test

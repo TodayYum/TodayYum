@@ -8,6 +8,7 @@ import com.todayyum.global.exception.CustomException;
 import com.todayyum.member.application.repository.MemberRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Getter
 public class VerifyEmailUseCase {
 
     private final VerificationCodeRepository verificationCodeRepository;
@@ -25,7 +27,7 @@ public class VerifyEmailUseCase {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void sendEmail(String email) {
+    public String sendEmail(String email) {
         if(email == null || email.isEmpty()) {
             throw new CustomException(ResponseCode.EMPTY_INPUT);
         }
@@ -64,6 +66,7 @@ public class VerifyEmailUseCase {
             throw new CustomException(ResponseCode.EMAIL_SEND_FAILED);
         }
 
+        return code;
     }
 
     @Transactional
@@ -82,4 +85,5 @@ public class VerifyEmailUseCase {
 
         return String.valueOf(random);
     }
+
 }

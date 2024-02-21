@@ -57,14 +57,11 @@ public class AuthController {
 
     @PostMapping("/verification-code")
     public ResponseEntity<?> sendVerificationCode(@RequestParam String email) {
-
-        verifyEmailUseCase.sendEmail(email);
-
-        return BaseResponse.createResponseEntity(ResponseCode.CREATED);
+        return BaseResponse.createResponseEntity(ResponseCode.CREATED, verifyEmailUseCase.sendEmail(email));
     }
 
     @GetMapping("/verification-code")
-    public ResponseEntity<?> checkVerificationCode(CodeVerifyRequest codeVerifyRequest) {
+    public ResponseEntity<?> verifyVerificationCode(CodeVerifyRequest codeVerifyRequest) {
         boolean result = verifyEmailUseCase.verifyCode(codeVerifyRequest);
 
         if(result) return BaseResponse.createResponseEntity(ResponseCode.OK);

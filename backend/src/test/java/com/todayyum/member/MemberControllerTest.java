@@ -85,8 +85,7 @@ public class MemberControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/members/{id}", memberId)
-        );
+                MockMvcRequestBuilders.get("/api/members/{id}", memberId));
 
         //then
         resultActions.andExpect(
