@@ -12,18 +12,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @Transactional
@@ -49,21 +53,21 @@ public class MemberControllerTest {
         //given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
                 .email("qwerasdf1234@naver.com")
-                .nickname("bonnnnnkim")
+                .nickname("bonnnkim")
                 .password("a123456789")
                 .build();
 
-        Mockito.when(addMemberUseCase.addMember(Mockito.any(MemberAddRequest.class)))
+        when(addMemberUseCase.addMember(any(MemberAddRequest.class)))
                 .thenReturn(UUID.randomUUID());
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/members")
+                post("/api/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(memberAddRequest)));
 
         //then
-        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
+        resultActions.andExpect(status().isCreated());
     }
 
     @WithMockUser
@@ -80,7 +84,7 @@ public class MemberControllerTest {
                 .nickname("bonnnnnkim")
                 .build();
 
-        Mockito.when(findMemberUseCase.findMember(memberId))
+        when(findMemberUseCase.findMember(memberId))
                 .thenReturn(memberDetailResponse);
 
         //when
@@ -89,12 +93,12 @@ public class MemberControllerTest {
 
         //then
         resultActions.andExpect(
-                MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result.memberId")
+                status().isOk())
+                .andExpect(jsonPath("$.result.memberId")
                         .value(memberDetailResponse.getMemberId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result.email")
+                .andExpect(jsonPath("$.result.email")
                         .value(memberDetailResponse.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result.nickname")
+                .andExpect(jsonPath("$.result.nickname")
                         .value(memberDetailResponse.getNickname()));
     }
 

@@ -31,7 +31,7 @@ public class MemberController {
     private final RemoveMemberUseCase removeMemberUseCase;
 
     @PostMapping
-    public ResponseEntity<?> memberAdd(@Valid MemberAddRequest memberAddRequest) {
+    public ResponseEntity<?> memberAdd(@RequestBody @Valid MemberAddRequest memberAddRequest) {
         return BaseResponse.createResponseEntity(ResponseCode.CREATED, addMemberUseCase.addMember(memberAddRequest));
     }
 

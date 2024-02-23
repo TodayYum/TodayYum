@@ -19,7 +19,7 @@ public class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
-    @DisplayName("MemberRepo - 회원 가입 테스트")
+    @DisplayName("Member Repo - 회원 가입 테스트")
     void addMember() {
 
         //given
@@ -39,7 +39,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("MemberRepo - 회원 조회 테스트")
+    @DisplayName("Member Repo - 회원 조회 테스트")
     void findMember() {
 
         //given

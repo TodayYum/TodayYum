@@ -38,7 +38,7 @@ public class VerifyEmailUseCase {
 
         String code = generateVerificationCode();
         VerificationCode verificationCode = new VerificationCode(email, code);
-        verificationCodeRepository.save(verificationCode);
+        verificationCode = verificationCodeRepository.save(verificationCode);
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
@@ -66,7 +66,7 @@ public class VerifyEmailUseCase {
             throw new CustomException(ResponseCode.EMAIL_SEND_FAILED);
         }
 
-        return code;
+        return verificationCode.getCode();
     }
 
     @Transactional
