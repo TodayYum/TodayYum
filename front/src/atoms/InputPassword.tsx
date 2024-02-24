@@ -43,7 +43,7 @@ const CheckArea = ({
 
 function InputPassword(props: IInputPassword) {
   return (
-    <div className="px-normal">
+    <div className={`${props.customClass} w-full`}>
       <input
         type="password"
         placeholder="비밀번호"
