@@ -8,7 +8,9 @@ export interface IInputText {
   disabled?: boolean;
   setValue: (value: string) => void;
   hasButton?: boolean;
+  hasSupport: boolean;
   onClickUpload?: () => void;
+  customClass?: string;
 }
 
 export interface ISupoortText {

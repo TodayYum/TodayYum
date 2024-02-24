@@ -7,6 +7,7 @@ import { IInputText, ISupoortText } from '../types/components/InputText.types';
  *
  * SupportText : 입력값 성공, 실패 유무에 따라 보조 텍스트를 보여주는 컴포넌트
  * InputTextBox : 이메일 등 텍스트 입력 받는 컴포넌트
+ * customClass : 외부에서 조절하고 싶은 tailwindCSS 전달
  */
 
 const SupportText = (props: ISupoortText) => {
@@ -32,9 +33,9 @@ function InputText(props: IInputText) {
     }
   };
   return (
-    <div className="px-normal">
+    <div className={`${props.customClass} w-full`}>
       <div
-        className={`${isFocused ? 'border-black' : 'border-gray'} flex items-center px-3 rounded-small h-10 border-[1px]`}
+        className={`${isFocused ? 'border-black' : 'border-gray'} flex items-center px-3 rounded-small h-10 border-[1px] bg-white`}
       >
         <input
           type={props.type}
@@ -51,11 +52,13 @@ function InputText(props: IInputText) {
           <FontAwesomeIcon icon={faArrowUp} onClick={handleClickButton} />
         )}
       </div>
-      <SupportText
-        isSuccess={props.isSuccess}
-        successText={props.successText}
-        failText={props.failText}
-      />
+      {props.hasSupport && (
+        <SupportText
+          isSuccess={props.isSuccess}
+          successText={props.successText}
+          failText={props.failText}
+        />
+      )}
     </div>
   );
 }
