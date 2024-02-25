@@ -5,7 +5,7 @@ function RectangleButton(props: IRectangleButton) {
     <button
       type="button"
       onClick={props.onClick}
-      className={`${props.isCancle ? 'bg-gray' : 'bg-primary'} rounded-[4px] w-full h-[45px]`}
+      className={`${props.isCancle ? 'bg-gray' : 'bg-primary'} rounded-[4px] h-[45px] ${props.customClass}`}
     >
       <span
         className={`text-xl font-bold ${props.isCancle ? 'text-black' : 'text-white'}`}
