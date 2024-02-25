@@ -12,15 +12,15 @@ import { IInputText, ISupoortText } from '../types/components/InputText.types';
 
 const SupportText = (props: ISupoortText) => {
   if (props.isSuccess === -1) {
-    return <p />;
+    return <p className="mx-3 font-sm py-3 invisible">empty</p>;
   }
   if (props.isSuccess === 1) {
     return (
-      <p className="text-left font-sm text-correct mx-3 py-3">{`${props.successText}`}</p>
+      <p className="text-left font-sm text-correct mx-2 py-3">{`${props.successText}`}</p>
     );
   }
   return (
-    <p className="text-left font-sm text-error py-3">{`${props.failText}`}</p>
+    <p className="text-left font-sm text-error mx-2 py-3">{`${props.failText}`}</p>
   );
 };
 
@@ -40,7 +40,7 @@ function InputText(props: IInputText) {
         <input
           type={props.type}
           placeholder={props.placeholder}
-          className="w-full placeholder:font-ggTitle placeholder:text-sm font-sm rounded-small border-none focus:outline-none"
+          className="w-full placeholder:font-ggTitle placeholder:text-sm disabled:bg-white font-sm rounded-small border-none focus:outline-none"
           onChange={e => props.setValue(e.target.value)}
           value={props.value}
           alt={`${props.type} 입력창`}
@@ -54,9 +54,9 @@ function InputText(props: IInputText) {
       </div>
       {props.hasSupport && (
         <SupportText
-          isSuccess={props.isSuccess}
-          successText={props.successText}
-          failText={props.failText}
+          isSuccess={props.isSuccess ?? -1}
+          successText={props.successText ?? ''}
+          failText={props.failText ?? ''}
         />
       )}
     </div>
