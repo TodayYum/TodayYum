@@ -57,9 +57,13 @@ function LoginPage() {
       >
         아이디 또는 비밀번호 정보가 잘못되었습니다.
       </p>
-      <RectangleButton text="로그인" onClick={() => SubmitLogin()} />
+      <RectangleButton
+        text="로그인"
+        onClick={() => SubmitLogin()}
+        customClass="w-full"
+      />
       <div className="flex justify-center items-center my-[15px]">
-        <Link to="/" className="mr-4 text-sm">
+        <Link to="/sign-up" className="mr-4 text-sm">
           회원가입
         </Link>{' '}
         |{' '}

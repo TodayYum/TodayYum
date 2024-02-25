@@ -1,10 +1,10 @@
 export interface IInputText {
   type: string;
   placeholder: string;
-  successText: string;
-  failText: string;
+  successText?: string;
+  failText?: string;
   value?: string;
-  isSuccess: number;
+  isSuccess?: number;
   disabled?: boolean;
   setValue: (value: string) => void;
   hasButton?: boolean;
