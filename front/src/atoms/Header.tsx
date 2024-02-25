@@ -11,7 +11,7 @@ import { IHeader } from '../types/components/Header.types';
 function Header(props: IHeader) {
   const navigate = useNavigate();
   return (
-    <div className="fixed top-0 w-full py-[15px] flex">
+    <div className="fixed top-0 w-full py-[15px] flex bg-white">
       <FontAwesomeIcon
         icon={faAngleLeft}
         onClick={() => navigate(-1)}
