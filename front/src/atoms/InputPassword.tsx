@@ -4,7 +4,11 @@ import {
   ICheckArea,
   IInputPassword,
 } from '../types/components/InputPassword.types';
-
+import {
+  isLowerCase as isRightLowerCase,
+  isUpperCase as isRightUpperCase,
+  isSpecialCharacter as isRightSpecialCharacter,
+} from '../util/passwordCheck';
 /**
  * @param props
  * @returns
@@ -53,36 +57,12 @@ function InputPassword(props: IInputPassword) {
         alt="비밀번호 입력창"
       />
       <CheckArea
-        isLowerCase={isLowerCase(props.value)}
-        isSpecialCharacter={isSpecialCharacter(props.value)}
-        isUpperCase={isUpperCase(props.value)}
+        isLowerCase={isRightLowerCase(props.value)}
+        isSpecialCharacter={isRightSpecialCharacter(props.value)}
+        isUpperCase={isRightUpperCase(props.value)}
       />
     </div>
   );
 }
-
-const isUpperCase = (password: string | undefined) => {
-  if (password === undefined) return false;
-  // 정규표현식 /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/
-  const upperRegex = /^(?=.*[A-Z]).{1,}$/;
-
-  return upperRegex.test(password);
-};
-
-const isSpecialCharacter = (password: string | undefined) => {
-  if (password === undefined) return false;
-  // 정규표현식 /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/
-
-  const speciatlChacracterRegex = /^(?=.*[!@#$%^&*?_]).{1,}$/;
-  return speciatlChacracterRegex.test(password);
-};
-
-const isLowerCase = (password: string | undefined) => {
-  if (password === undefined) return false;
-  // 정규표현식 /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/
-
-  const lowerRegex = /^(?=.*[a-z]).{1,}$/;
-  return lowerRegex.test(password);
-};
 
 export default InputPassword;
