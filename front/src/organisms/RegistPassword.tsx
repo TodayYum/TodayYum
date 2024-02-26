@@ -12,15 +12,16 @@ import { isRightPassword } from '../util/passwordCheck';
 import {
   useSetPasswordAtom,
   useSetConfirmPasswordAtom,
-  useSetNicknameAtom,
+  // useSetNicknameAtom,
   useRegistDataAtom,
 } from '../jotai/signUpAtom';
+import { IRegistPassword } from '../types/organisms/RegistPassword.types';
 
-function RegistPassword() {
+function RegistPassword(props: IRegistPassword) {
   const registData = useRegistDataAtom();
   const setPassword = useSetPasswordAtom();
   const setConfirmPassword = useSetConfirmPasswordAtom();
-  const setNickname = useSetNicknameAtom();
+  // const setNickname = useSetNicknameAtom();
   const navigate = useNavigate();
   const handleSignUpButton = () => {
     // 닉네임 체크?
@@ -55,16 +56,18 @@ function RegistPassword() {
   };
   return (
     <div className="h-screen flex flex-col justify-center px-[30px]">
-      <p className="base-bold ml-1">이메일</p>
-      <InputText
-        type="text"
-        placeholder="아이디"
-        value={registData.email}
-        setValue={() => {}}
-        hasSupport={false}
-        disabled
-        customClass="mb-5"
-      />
+      {props.isSignUp && <p className="base-bold ml-1">이메일</p>}
+      {props.isSignUp && (
+        <InputText
+          type="text"
+          placeholder="아이디"
+          value={registData.email}
+          setValue={() => {}}
+          hasSupport={false}
+          disabled
+          customClass="mb-5"
+        />
+      )}
       <p className="base-bold mb-5 ml-1">
         새로 설정할 비밀번호를 입력해주세요.
       </p>
@@ -87,14 +90,14 @@ function RegistPassword() {
         setValue={setConfirmPassword}
         value={registData.confirmPassword}
       />
-      <p className="base-bold ml-1">닉네임</p>
+      {/* <p className="base-bold ml-1">닉네임</p>
       <InputText
         type="text"
         hasSupport={false}
         placeholder="닉네임"
         setValue={setNickname}
         value={registData.nickname}
-      />
+      /> */}
       <RectangleButton
         text="확인"
         onClick={handleSignUpButton}
