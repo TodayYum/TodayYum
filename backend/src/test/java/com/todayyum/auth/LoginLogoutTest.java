@@ -22,13 +22,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/*
-TODO
-이메일 인증 번호 발송 테스트
-이메일 인증 번호 검증 테스트
-AuthTest 레이어 별로 나누기
- */
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional

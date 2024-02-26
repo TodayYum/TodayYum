@@ -98,7 +98,6 @@ public class AuthUseCaseTest {
         VerificationCode verificationCode = VerificationCode.createVerificationCode(codeVerifyRequest);
         verificationCode.changeCode("123457");
 
-
         when(verificationCodeRepository.findByEmail(any(String.class)))
                 .thenReturn(verificationCode);
 

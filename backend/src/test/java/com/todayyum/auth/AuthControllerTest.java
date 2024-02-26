@@ -1,21 +1,22 @@
 package com.todayyum.auth;
 
+import com.todayyum.auth.application.RefreshTokenUseCase;
+import com.todayyum.auth.application.RemoveTokenUseCase;
 import com.todayyum.auth.application.VerifyEmailUseCase;
 import com.todayyum.auth.controller.AuthController;
 import com.todayyum.auth.dto.request.CodeVerifyRequest;
 import com.todayyum.global.dto.response.ResponseCode;
-import org.junit.jupiter.api.BeforeEach;
+import com.todayyum.member.WithMockMember;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -23,20 +24,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
-@Transactional
+@WebMvcTest(AuthController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@WithMockMember
 public class AuthControllerTest {
 
-    @Mock
+    @MockBean
     private VerifyEmailUseCase verifyEmailUseCase;
-    @InjectMocks
-    private AuthController authController;
+    @MockBean
+    private RefreshTokenUseCase refreshTokenUseCase;
+    @MockBean
+    private RemoveTokenUseCase removeTokenUseCase;
+    @MockBean
+    private JpaMetamodelMappingContext jpaMappingContext;
+    @Autowired
     private MockMvc mockMvc;
-
-    @BeforeEach
-    public void init() {
-        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
-    }
 
     @Test
     @DisplayName("Auth Cont - 이메일 발송 테스트")

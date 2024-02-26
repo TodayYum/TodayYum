@@ -6,6 +6,7 @@ import com.todayyum.auth.application.VerifyEmailUseCase;
 import com.todayyum.auth.dto.request.CodeVerifyRequest;
 import com.todayyum.global.dto.response.BaseResponse;
 import com.todayyum.global.dto.response.ResponseCode;
+import com.todayyum.global.exception.CustomException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class AuthController {
                                           @RequestParam UUID memberId, HttpServletResponse response) {
 
         if(cookie == null) {
-            return BaseResponse.createResponseEntity(ResponseCode.REFRESH_TOKEN_MISSING);
+            throw new CustomException(ResponseCode.REFRESH_TOKEN_MISSING);
         }
 
         String accessToken = refreshTokenUseCase.refreshAccessToken(cookie.getValue(), memberId);

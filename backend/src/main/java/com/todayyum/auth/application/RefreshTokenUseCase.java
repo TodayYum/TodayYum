@@ -20,7 +20,6 @@ public class RefreshTokenUseCase {
 
     @Transactional(readOnly = true)
     public String refreshAccessToken(String refreshToken, UUID memberId) {
-        System.out.println(refreshToken);
         Token token = tokenRepository.findByRefreshToken(refreshToken);
 
         if(token.getMemberId() != memberId) {

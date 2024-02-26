@@ -1,5 +1,7 @@
 package com.todayyum.member.application;
 
+import com.todayyum.global.dto.response.ResponseCode;
+import com.todayyum.global.exception.CustomException;
 import com.todayyum.member.application.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,10 @@ public class RemoveMemberUseCase {
 
     @Transactional
     public void removeMember(UUID memberId) {
+        if(memberId == null) {
+            throw new CustomException(ResponseCode.EMPTY_INPUT);
+        }
+
         memberRepository.deleteById(memberId);
     }
 }

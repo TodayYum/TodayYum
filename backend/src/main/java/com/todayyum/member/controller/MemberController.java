@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class MemberController {
     private final RemoveMemberUseCase removeMemberUseCase;
 
     @PostMapping
-    public ResponseEntity<?> memberAdd(@RequestBody @Valid MemberAddRequest memberAddRequest) {
+    public ResponseEntity<?> memberAdd(@Valid MemberAddRequest memberAddRequest) {
         return BaseResponse.createResponseEntity(ResponseCode.CREATED, addMemberUseCase.addMember(memberAddRequest));
     }
 
@@ -41,47 +41,47 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> memberRemove(Authentication authentication) {
+    public ResponseEntity<?> memberRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        removeMemberUseCase.removeMember(customUserDetails.getMemberId());
 
-        removeMemberUseCase.removeMember(getUserDetails(authentication).getMemberId());
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
     @PatchMapping("/nicknames")
-    public ResponseEntity<?> nicknameModify(Authentication authentication,
-                                            @Valid NicknameModifyRequest nicknameModifyRequest) {
+    public ResponseEntity<?> nicknameModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                            @Valid @RequestBody NicknameModifyRequest nicknameModifyRequest) {
 
-        nicknameModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
+        nicknameModifyRequest.setMemberId(customUserDetails.getMemberId());
         modifyMemberUseCase.modifyNickname(nicknameModifyRequest);
 
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
     @PatchMapping("/passwords")
-    public ResponseEntity<?> passwordModify(Authentication authentication,
-                                            @Valid PasswordModifyRequest passwordModifyRequest) {
+    public ResponseEntity<?> passwordModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                            @Valid @RequestBody PasswordModifyRequest passwordModifyRequest) {
 
-        passwordModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
+        passwordModifyRequest.setMemberId(customUserDetails.getMemberId());
         modifyMemberUseCase.modifyPassword(passwordModifyRequest);
 
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
     @PatchMapping("/comments")
-    public ResponseEntity<?> commentModify(Authentication authentication,
-                                           @Valid CommentModifyRequest commentModifyRequest) {
+    public ResponseEntity<?> commentModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                           @Valid @RequestBody CommentModifyRequest commentModifyRequest) {
 
-        commentModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
+        commentModifyRequest.setMemberId(customUserDetails.getMemberId());
         modifyMemberUseCase.modifyComment(commentModifyRequest);
 
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
     @PostMapping("/profiles")
-    public ResponseEntity<?> profileModify(Authentication authentication,
+    public ResponseEntity<?> profileModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @Valid ProfileModifyRequest profileModifyRequest) {
 
-        profileModifyRequest.setMemberId(getUserDetails(authentication).getMemberId());
+        profileModifyRequest.setMemberId(customUserDetails.getMemberId());
         modifyMemberUseCase.modifyProfile(profileModifyRequest);
 
         return BaseResponse.createResponseEntity(ResponseCode.OK);
@@ -125,9 +125,5 @@ public class MemberController {
             default:
                 return BaseResponse.createResponseEntity(ResponseCode.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    public CustomUserDetails getUserDetails(Authentication authentication) {
-        return (CustomUserDetails) authentication.getPrincipal();
     }
 }

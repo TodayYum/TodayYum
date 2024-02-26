@@ -15,7 +15,7 @@ public class CommentModifyRequest {
 
     private UUID memberId;
 
-    @NotNull
+    @NotNull(message = "소개글을 입력해주세요.")
     @Size(max = 30, message = "소개글은 최대 30자입니다.")
     private String comment;
 }
