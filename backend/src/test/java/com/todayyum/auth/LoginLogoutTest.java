@@ -39,8 +39,8 @@ public class LoginLogoutTest {
     @BeforeEach
     public void init() {
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
-                .email("qwerasdf1234@naver.com")
-                .nickname("bonnnnnkim")
+                .email("test@test.com")
+                .nickname("test")
                 .password(bCryptPasswordEncoder.encode("a123456789"))
                 .build();
 
@@ -55,7 +55,7 @@ public class LoginLogoutTest {
 
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("email", "qwerasdf1234@naver.com");
+        formData.add("email", "test@test.com");
         formData.add("password", "a123456789");
 
         //when
@@ -75,7 +75,7 @@ public class LoginLogoutTest {
 
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("email", "qwerasdf123@naver.com");
+        formData.add("email", "test2@test.com");
         formData.add("password", "a123456789");
 
         //when
@@ -95,7 +95,7 @@ public class LoginLogoutTest {
 
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("email", "qwerasdf1234@naver.com");
+        formData.add("email", "test@test.com");
         formData.add("password", "a12345678");
 
         //when
@@ -113,16 +113,28 @@ public class LoginLogoutTest {
     @DisplayName("Login/out - 로그아웃 테스트")
     public void logout() throws Exception {
 
-        //given & when
+        //given
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("email", "test@test.com");
+        formData.add("password", "a123456789");
+
+        Cookie refreshToken = mockMvc.perform(multipart("/api/auth/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(formData))
+                .andReturn()
+                .getResponse()
+                .getCookie("refreshToken");;
+
+        //when
         ResultActions resultActions = mockMvc.perform(post("/api/auth/logout")
-                .cookie(new Cookie("refreshToken", "tokenValue")));
+                .cookie(new Cookie("refreshToken", refreshToken.getValue())));
 
         //then
         resultActions.andExpect(status().isOk())
                 .andExpect(response -> {
                     Cookie cookie = response.getResponse().getCookie("refreshToken");
                     assert cookie != null;
-                    assert cookie.getMaxAge() == 0; // 쿠키의 만료시간이 0인지 확인
+                    assert cookie.getMaxAge() == 0;
                 });
     }
 
