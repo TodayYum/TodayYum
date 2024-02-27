@@ -8,6 +8,7 @@ import com.todayyum.member.application.FindMemberUseCase;
 import com.todayyum.member.application.ModifyMemberUseCase;
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
+import com.todayyum.member.domain.ValidationResult;
 import com.todayyum.member.dto.request.*;
 import com.todayyum.member.dto.response.MemberDetailResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -330,5 +331,83 @@ public class MemberUseCaseTest {
         //then
         assertEquals("프로필사진", member.getProfile());
         verify(memberRepository, times(1)).save(any(Member.class));
+    }
+
+    @Test
+    @DisplayName("Member UC - 이메일 검증 테스트")
+    void validateEmail() {
+
+        //given
+        String email = "test@test.com";
+
+        when(memberRepository.existsByEmail(email))
+                .thenReturn(false);
+
+        //when & then
+        assertEquals(ValidationResult.VALID, findMemberUseCase.validateEmail(email));
+    }
+
+    @Test
+    @DisplayName("Member UC - 이메일 정규식 검증 테스트")
+    void validateInvalidEmail() {
+
+        //given
+        String email = "test@test";
+
+        //when & then
+        assertEquals(ValidationResult.INVALID, findMemberUseCase.validateEmail(email));
+    }
+
+    @Test
+    @DisplayName("Member UC - 이메일 중복 검증 테스트")
+    void validateDuplicateEmail() {
+
+        //given
+        String email = "test@test.com";
+
+        when(memberRepository.existsByEmail(email))
+                .thenReturn(true);
+
+        //when & then
+        assertEquals(ValidationResult.DUPLICATED, findMemberUseCase.validateEmail(email));
+    }
+
+    @Test
+    @DisplayName("Member UC - 닉네임 검증 테스트")
+    void validateNickname() {
+
+        //given
+        String nickname = "yonggkim";
+
+        when(memberRepository.existsByNickname(nickname))
+                .thenReturn(false);
+
+        //when & then
+        assertEquals(ValidationResult.VALID, findMemberUseCase.validateNickname(nickname));
+    }
+
+    @Test
+    @DisplayName("Member UC - 닉네임 길이 검증 테스트")
+    void validateInvalidNickname() {
+
+        //given
+        String nickname = "yonggkimmmmm";
+
+        //when & then
+        assertEquals(ValidationResult.INVALID, findMemberUseCase.validateNickname(nickname));
+    }
+
+    @Test
+    @DisplayName("Member UC - 닉네임 중복 검증 테스트")
+    void validateDuplicateNickname() {
+
+        //given
+        String nickname = "yonggkim";
+
+        when(memberRepository.existsByNickname(nickname))
+                .thenReturn(true);
+
+        //when & then
+        assertEquals(ValidationResult.DUPLICATED, findMemberUseCase.validateNickname(nickname));
     }
 }
