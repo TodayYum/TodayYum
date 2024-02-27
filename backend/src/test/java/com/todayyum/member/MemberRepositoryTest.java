@@ -2,7 +2,6 @@ package com.todayyum.member;
 
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional
@@ -24,18 +25,18 @@ public class MemberRepositoryTest {
 
         //given
         Member member = Member.builder()
-                .email("qwerasdf1234@naver.com")
-                .nickname("bonnnnnkim")
-                .password("a123456789")
+                .email("test@test.com")
+                .nickname("test")
+                .password("testtest")
                 .build();
 
         //when
         Member savedMember = memberRepository.save(member);
 
         //then
-        Assertions.assertEquals(member.getEmail(), savedMember.getEmail());
-        Assertions.assertEquals(member.getNickname(), savedMember.getNickname());
-        Assertions.assertEquals(member.getPassword(), savedMember.getPassword());
+        assertEquals(member.getEmail(), savedMember.getEmail());
+        assertEquals(member.getNickname(), savedMember.getNickname());
+        assertEquals(member.getPassword(), savedMember.getPassword());
     }
 
     @Test
@@ -44,9 +45,9 @@ public class MemberRepositoryTest {
 
         //given
         Member member = Member.builder()
-                .email("qwerasdf1234@naver.com")
-                .nickname("bonnnnnkim")
-                .password("a123456789")
+                .email("test@test.com")
+                .nickname("test")
+                .password("testtest")
                 .build();
 
         UUID memberId = memberRepository.save(member).getId();
@@ -55,8 +56,8 @@ public class MemberRepositoryTest {
         Member savedMember = memberRepository.findById(memberId);
 
         //then
-        Assertions.assertEquals(member.getEmail(), savedMember.getEmail());
-        Assertions.assertEquals(member.getNickname(), savedMember.getNickname());
-        Assertions.assertEquals(member.getPassword(), savedMember.getPassword());
+        assertEquals(member.getEmail(), savedMember.getEmail());
+        assertEquals(member.getNickname(), savedMember.getNickname());
+        assertEquals(member.getPassword(), savedMember.getPassword());
     }
 }
