@@ -6,6 +6,7 @@ import com.todayyum.auth.application.VerifyEmailUseCase;
 import com.todayyum.auth.dto.request.CodeVerifyRequest;
 import com.todayyum.global.dto.response.BaseResponse;
 import com.todayyum.global.dto.response.ResponseCode;
+import com.todayyum.global.exception.CustomException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class AuthController {
                                           @RequestParam UUID memberId, HttpServletResponse response) {
 
         if(cookie == null) {
-            return BaseResponse.createResponseEntity(ResponseCode.REFRESH_TOKEN_MISSING);
+            throw new CustomException(ResponseCode.REFRESH_TOKEN_MISSING);
         }
 
         String accessToken = refreshTokenUseCase.refreshAccessToken(cookie.getValue(), memberId);
@@ -57,14 +58,11 @@ public class AuthController {
 
     @PostMapping("/verification-code")
     public ResponseEntity<?> sendVerificationCode(@RequestParam String email) {
-
-        verifyEmailUseCase.sendEmail(email);
-
-        return BaseResponse.createResponseEntity(ResponseCode.CREATED);
+        return BaseResponse.createResponseEntity(ResponseCode.CREATED, verifyEmailUseCase.sendEmail(email));
     }
 
     @GetMapping("/verification-code")
-    public ResponseEntity<?> checkVerificationCode(CodeVerifyRequest codeVerifyRequest) {
+    public ResponseEntity<?> verifyVerificationCode(CodeVerifyRequest codeVerifyRequest) {
         boolean result = verifyEmailUseCase.verifyCode(codeVerifyRequest);
 
         if(result) return BaseResponse.createResponseEntity(ResponseCode.OK);

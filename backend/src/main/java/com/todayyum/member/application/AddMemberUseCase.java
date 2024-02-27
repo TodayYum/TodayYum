@@ -38,5 +38,4 @@ public class AddMemberUseCase {
         return memberRepository.save(member).getId();
     }
 
-
 }

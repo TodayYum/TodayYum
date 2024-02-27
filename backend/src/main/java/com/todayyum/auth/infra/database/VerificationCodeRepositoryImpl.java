@@ -17,10 +17,11 @@ public class VerificationCodeRepositoryImpl implements VerificationCodeRepositor
     private final RedisVerificationCodeRepository redisVerificationCodeRepository;
 
     @Override
-    public void save(VerificationCode verificationCode) {
+    public VerificationCode save(VerificationCode verificationCode) {
         VerificationCodeEntity verificationCodeEntity = verificationCode.createEntity();
+        verificationCodeEntity = redisVerificationCodeRepository.save(verificationCodeEntity);
 
-        redisVerificationCodeRepository.save(verificationCodeEntity);
+        return VerificationCode.createVerificationCode(verificationCodeEntity);
     }
 
     @Override

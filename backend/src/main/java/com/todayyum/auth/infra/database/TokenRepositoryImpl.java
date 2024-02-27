@@ -32,6 +32,9 @@ public class TokenRepositoryImpl implements TokenRepository {
 
     @Override
     public void deleteByRefreshToken(String refreshToken) {
+        redisTokenRepository.findById(refreshToken)
+                .orElseThrow(() -> new CustomException(ResponseCode.INVALID_REFRESH_TOKEN));
+
         redisTokenRepository.deleteById(refreshToken);
     }
 }

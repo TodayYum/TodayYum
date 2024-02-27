@@ -19,7 +19,7 @@ public enum ResponseCode {
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "이미 사용 중인 닉네임입니다."),
     VALID_NICKNAME(HttpStatus.OK, "사용 가능한 닉네임입니다."),
 
-    MEMBER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "입력한 memberId에 해당하는 멤버가 없습니다."),
+    MEMBER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "입력한 식별자에 해당하는 멤버가 없습니다."),
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "입력한 이메일에 해당하는 멤버가 없습니다."),
 
     EMPTY_FILE(HttpStatus.BAD_REQUEST, "파일이 존재하지 않습니다."),

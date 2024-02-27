@@ -3,6 +3,8 @@ package com.todayyum.auth.application;
 import com.todayyum.auth.application.repository.TokenRepository;
 import com.todayyum.auth.domain.Token;
 import com.todayyum.auth.util.JWTUtil;
+import com.todayyum.global.dto.response.ResponseCode;
+import com.todayyum.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,10 @@ public class RefreshTokenUseCase {
 
     @Transactional(readOnly = true)
     public String refreshAccessToken(String refreshToken, UUID memberId) {
-        System.out.println(refreshToken);
         Token token = tokenRepository.findByRefreshToken(refreshToken);
 
         if(token.getMemberId() != memberId) {
-            throw new IllegalArgumentException();
+            throw new CustomException(ResponseCode.INVALID_REFRESH_TOKEN);
         }
 
         String role = jwtUtil.getRole(refreshToken, "refresh");

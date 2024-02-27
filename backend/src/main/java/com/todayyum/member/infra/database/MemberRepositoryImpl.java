@@ -24,11 +24,6 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return jpaMemberRepository.existsByEmail(email);
-    }
-
-    @Override
     public Member findById(UUID memberId) {
         MemberEntity memberEntity = jpaMemberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
@@ -42,15 +37,20 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public boolean existsByNickname(String nickname) {
-        return jpaMemberRepository.existsByNickname(nickname);
-    }
-
-    @Override
     public void deleteById(UUID memberId) {
         jpaMemberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
         jpaMemberRepository.deleteById(memberId);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return jpaMemberRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByNickname(String nickname) {
+        return jpaMemberRepository.existsByNickname(nickname);
     }
 }
