@@ -20,7 +20,7 @@ import java.util.UUID;
 public class TokenEntity implements Serializable {
 
     @Id
-    private String refreshToken;
-
     private UUID memberId;
+
+    private String refreshToken;
 }

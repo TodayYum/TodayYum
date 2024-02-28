@@ -32,6 +32,10 @@ public class VerifyEmailUseCase {
             throw new CustomException(ResponseCode.EMPTY_INPUT);
         }
 
+        if(!email.matches("^[A-Za-z0-9._]+@[A-Za-z0-9]+\\.[A-Za-z]{2,}$")) {
+            throw new CustomException(ResponseCode.INVALID_EMAIL);
+        }
+
         if(memberRepository.existsByEmail(email)) {
             throw new CustomException(ResponseCode.DUPLICATE_EMAIL);
         }

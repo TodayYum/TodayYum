@@ -22,9 +22,9 @@ public class RefreshTokenUseCase {
 
     @Transactional(readOnly = true)
     public String refreshAccessToken(String refreshToken, UUID memberId) {
-        Token token = tokenRepository.findByRefreshToken(refreshToken);
+        Token token = tokenRepository.findByMemberId(memberId);
 
-        if(token.getMemberId() != memberId) {
+        if(!token.getMemberId().equals(memberId)) {
             throw new CustomException(ResponseCode.INVALID_REFRESH_TOKEN);
         }
 

@@ -29,13 +29,13 @@ public class MemberEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 10, unique = true)
+    @Column(nullable = false, length = 10)
     private String nickname;
 
     @Column(length = 30)

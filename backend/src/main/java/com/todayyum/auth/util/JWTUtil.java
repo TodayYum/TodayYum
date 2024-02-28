@@ -32,8 +32,8 @@ public class JWTUtil {
         this.tokenRepository = tokenRepository;
     }
 
-    public UUID getMemberId(String token) {
-        return UUID.fromString(Jwts.parser().verifyWith(accessSecretKey).build().parseSignedClaims(token).getPayload().get("memberId", String.class));
+    public UUID getMemberId(String token, String type) {
+        return UUID.fromString(Jwts.parser().verifyWith(type.equals("access") ? accessSecretKey : refreshSecretKey).build().parseSignedClaims(token).getPayload().get("memberId", String.class));
     }
 
     public String getRole(String token, String type) {

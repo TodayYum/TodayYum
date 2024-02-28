@@ -2,12 +2,14 @@ package com.todayyum.auth.application.repository;
 
 import com.todayyum.auth.domain.Token;
 
+import java.util.UUID;
+
 public interface TokenRepository {
 
     public void save(Token token);
 
-    public Token findByRefreshToken(String refreshToken);
+    public Token findByMemberId(UUID memberId);
 
-    public void deleteByRefreshToken(String refreshToken);
+    public void deleteByMemberId(UUID memberId);
 
 }
