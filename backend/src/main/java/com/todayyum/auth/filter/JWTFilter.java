@@ -47,7 +47,7 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        UUID memberId = jwtUtil.getMemberId(accessToken);
+        UUID memberId = jwtUtil.getMemberId(accessToken, "access");
 
         String role = jwtUtil.getRole(accessToken, "access");
 

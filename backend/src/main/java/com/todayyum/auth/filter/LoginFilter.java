@@ -73,8 +73,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(refreshTokenCookie);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("memberId", customUserDetails.getMemberId());
-        body.put("nickname", customUserDetails.getNickname());
+        body.put("message", "정상적으로 로그인되었습니다.");
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("memberId", customUserDetails.getMemberId());
+        result.put("nickname", customUserDetails.getNickname());
+
+        body.put("result", result);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
         new ObjectMapper().writeValue(response.getOutputStream(), body);
     }

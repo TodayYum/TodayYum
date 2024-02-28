@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Repository
 @Slf4j
@@ -23,18 +25,18 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
-    public Token findByRefreshToken(String refreshToken) {
-        TokenEntity tokenEntity = redisTokenRepository.findById(refreshToken)
+    public Token findByMemberId(UUID memberId) {
+        TokenEntity tokenEntity = redisTokenRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ResponseCode.INVALID_REFRESH_TOKEN));
 
         return Token.createToken(tokenEntity);
     }
 
     @Override
-    public void deleteByRefreshToken(String refreshToken) {
-        redisTokenRepository.findById(refreshToken)
+    public void deleteByMemberId(UUID memberId) {
+        redisTokenRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ResponseCode.INVALID_REFRESH_TOKEN));
 
-        redisTokenRepository.deleteById(refreshToken);
+        redisTokenRepository.deleteById(memberId);
     }
 }
