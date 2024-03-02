@@ -12,18 +12,19 @@ import { isRightPassword } from '../util/passwordCheck';
 import {
   useSetPasswordAtom,
   useSetConfirmPasswordAtom,
-  // useSetNicknameAtom,
-  useRegistDataAtom,
-} from '../jotai/signUpAtom';
+  usePlusSignUpLevelAtom,
+  useSignInDataAtom,
+} from '../jotai/signInData';
 import { IRegistPassword } from '../types/organisms/RegistPassword.types';
 
 function RegistPassword(props: IRegistPassword) {
-  const registData = useRegistDataAtom();
+  const registData = useSignInDataAtom();
   const setPassword = useSetPasswordAtom();
   const setConfirmPassword = useSetConfirmPasswordAtom();
+  const plusSignUpLevelAtom = usePlusSignUpLevelAtom();
   // const setNickname = useSetNicknameAtom();
   const navigate = useNavigate();
-  const handleSignUpButton = () => {
+  const handleNextButton = () => {
     // 닉네임 체크?
     // 비밀번호 체크
     if (!isRightPassword(registData.password)) {
@@ -52,7 +53,11 @@ function RegistPassword(props: IRegistPassword) {
       });
       return;
     }
-    navigate('/login');
+    if (props.isSignUp) {
+      plusSignUpLevelAtom();
+    } else {
+      navigate('/login');
+    }
   };
   return (
     <div className="h-screen flex flex-col justify-center px-[30px]">
@@ -99,8 +104,8 @@ function RegistPassword(props: IRegistPassword) {
         value={registData.nickname}
       /> */}
       <RectangleButton
-        text="확인"
-        onClick={handleSignUpButton}
+        text="다음 단계로"
+        onClick={handleNextButton}
         customClass="fixed bottom-20 w-[calc(100%-60px)]"
       />
     </div>
