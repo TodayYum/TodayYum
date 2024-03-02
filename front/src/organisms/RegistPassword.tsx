@@ -12,17 +12,19 @@ import { isRightPassword } from '../util/passwordCheck';
 import {
   useSetPasswordAtom,
   useSetConfirmPasswordAtom,
-  useSetNicknameAtom,
-  useRegistDataAtom,
-} from '../jotai/signUpAtom';
+  usePlusSignUpLevelAtom,
+  useSignInDataAtom,
+} from '../jotai/signInData';
+import { IRegistPassword } from '../types/organisms/RegistPassword.types';
 
-function RegistPassword() {
-  const registData = useRegistDataAtom();
+function RegistPassword(props: IRegistPassword) {
+  const registData = useSignInDataAtom();
   const setPassword = useSetPasswordAtom();
   const setConfirmPassword = useSetConfirmPasswordAtom();
-  const setNickname = useSetNicknameAtom();
+  const plusSignUpLevelAtom = usePlusSignUpLevelAtom();
+  // const setNickname = useSetNicknameAtom();
   const navigate = useNavigate();
-  const handleSignUpButton = () => {
+  const handleNextButton = () => {
     // 닉네임 체크?
     // 비밀번호 체크
     if (!isRightPassword(registData.password)) {
@@ -51,20 +53,26 @@ function RegistPassword() {
       });
       return;
     }
-    navigate('/login');
+    if (props.isSignUp) {
+      plusSignUpLevelAtom();
+    } else {
+      navigate('/login');
+    }
   };
   return (
     <div className="h-screen flex flex-col justify-center px-[30px]">
-      <p className="base-bold ml-1">이메일</p>
-      <InputText
-        type="text"
-        placeholder="아이디"
-        value={registData.email}
-        setValue={() => {}}
-        hasSupport={false}
-        disabled
-        customClass="mb-5"
-      />
+      {props.isSignUp && <p className="base-bold ml-1">이메일</p>}
+      {props.isSignUp && (
+        <InputText
+          type="text"
+          placeholder="아이디"
+          value={registData.email}
+          setValue={() => {}}
+          hasSupport={false}
+          disabled
+          customClass="mb-5"
+        />
+      )}
       <p className="base-bold mb-5 ml-1">
         새로 설정할 비밀번호를 입력해주세요.
       </p>
@@ -87,17 +95,17 @@ function RegistPassword() {
         setValue={setConfirmPassword}
         value={registData.confirmPassword}
       />
-      <p className="base-bold ml-1">닉네임</p>
+      {/* <p className="base-bold ml-1">닉네임</p>
       <InputText
         type="text"
         hasSupport={false}
         placeholder="닉네임"
         setValue={setNickname}
         value={registData.nickname}
-      />
+      /> */}
       <RectangleButton
-        text="확인"
-        onClick={handleSignUpButton}
+        text="다음 단계로"
+        onClick={handleNextButton}
         customClass="fixed bottom-20 w-[calc(100%-60px)]"
       />
     </div>
