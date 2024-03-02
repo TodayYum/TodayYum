@@ -3,7 +3,6 @@ import { useState } from 'react';
 import InputPassword from '../atoms/InputPassword';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
-// import { useQuery } from '@tanstack/react-query';
 import { fetchLogin } from '../services/UserService';
 
 const TEST_CONTROL_LOGIN = false;
@@ -67,7 +66,7 @@ function LoginPage() {
           회원가입
         </Link>{' '}
         |{' '}
-        <Link to="/" className="ml-4 text-sm">
+        <Link to="/reset-password" className="ml-4 text-sm">
           비밀번호 찾기
         </Link>
       </div>
