@@ -1,15 +1,22 @@
-import Header from '../atoms/Header';
+import { useEffect } from 'react';
 import RegistEmail from '../organisms/RegistEmail';
-import { useRegistDataAtom } from '../jotai/signUpAtom';
+import { useSignInDataAtom, useInitSignInDataAtom } from '../jotai/signInData';
 import RegistPassword from '../organisms/RegistPassword';
+import RegistNickname from '../organisms/RegistNickname';
 
 function SignUpPage() {
-  const registData = useRegistDataAtom();
+  const registData = useSignInDataAtom();
+  const setInitSignInData = useInitSignInDataAtom();
+
+  useEffect(() => {
+    setInitSignInData();
+  }, []);
 
   return (
     <div className="bg-background">
-      <Header title="회원가입" />
-      {registData.signUpLevel < 2 ? <RegistEmail /> : <RegistPassword />}
+      {registData.signUpLevel < 2 && <RegistEmail isSignUp />}
+      {registData.signUpLevel === 2 && <RegistPassword isSignUp />}
+      {registData.signUpLevel === 3 && <RegistNickname />}
     </div>
   );
 }
