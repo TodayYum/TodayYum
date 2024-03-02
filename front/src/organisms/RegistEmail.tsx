@@ -5,18 +5,34 @@ import {
   useSetCodeAtom,
   useSetEmailAtom,
   usePlusSignUpLevelAtom,
-  useRegistDataAtom,
-} from '../jotai/signUpAtom';
+  useSignInDataAtom,
+} from '../jotai/signInData';
+import { IRegistEmail } from '../types/organisms/RegistEmail.types';
 
-function RegistEmail() {
-  const registData = useRegistDataAtom();
+function Basebold({ text }: { text: string }) {
+  return <p className="font-bold text-base mb-[18px] ml-1">{text}</p>;
+}
+
+function RegistEmail(props: IRegistEmail) {
+  const registData = useSignInDataAtom();
   const setEmail = useSetEmailAtom();
   const setCode = useSetCodeAtom();
   const plusSignUpLevel = usePlusSignUpLevelAtom();
 
+  const handleNextButton = () => {
+    if (registData.signUpLevel === 0) {
+      // 여기에 Swal2로 이메일 확인하라는 문구 넣기
+      plusSignUpLevel();
+      return;
+    }
+    if (isCodeRight()) {
+      plusSignUpLevel();
+    }
+  };
   return (
     <div className="h-screen flex flex-col justify-center px-[30px]">
-      <p className="font-bold text-base mb-[18px] ml-1"> 사용할 이메일</p>
+      <Basebold text={props.isSignUp ? '사용할 이메일' : '작성한 이메일'} />
+
       <InputText
         type="text"
         hasSupport={false}
@@ -39,11 +55,15 @@ function RegistEmail() {
       )}
       <RectangleButton
         text="다음 단계로"
-        onClick={plusSignUpLevel}
+        onClick={handleNextButton}
         customClass="fixed bottom-20 w-[calc(100%-60px)]"
       />
     </div>
   );
 }
+
+const isCodeRight = () => {
+  return true;
+};
 
 export default RegistEmail;
