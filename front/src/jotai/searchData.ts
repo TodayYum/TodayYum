@@ -20,13 +20,14 @@ const searchDataAtom = atom(
   get => get(searchData),
   (get, set, inputData: IUndefindableSearchData) => {
     const prevData = get(searchData);
+    const newSearchData = { ...prevData };
     Object.entries(inputData).forEach(entry => {
       const [keyName, value] = entry;
       if (value) {
-        prevData[keyName] = value;
+        newSearchData[keyName] = value;
       }
     });
-    set(searchData, prevData);
+    set(searchData, newSearchData);
   },
 );
 
