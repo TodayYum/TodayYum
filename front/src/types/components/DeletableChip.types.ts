@@ -1,5 +1,6 @@
 export interface IDeletableChip {
   text: string;
-  onClick: () => void;
+  onDeleteClick: () => void;
+  onSelectClick: () => void;
   dataId: string;
 }

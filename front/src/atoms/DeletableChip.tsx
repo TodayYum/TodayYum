@@ -14,9 +14,10 @@ function DeletableChip(props: IDeletableChip) {
       type="button"
       className="bg-secondary-container my-auto flex items-center
       rounded-full text-base py-[5px] px-2.5 border-secondary-container  border-[1.5px]"
+      onClick={props.onSelectClick}
     >
       <span className="text-base mr-2">{props.text}</span>
-      <FontAwesomeIcon icon={faXmark} onClick={props.onClick} />
+      <FontAwesomeIcon icon={faXmark} onClick={props.onDeleteClick} />
     </button>
   );
 }
