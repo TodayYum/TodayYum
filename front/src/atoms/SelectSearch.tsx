@@ -12,7 +12,7 @@ function SelectSearch() {
   return (
     <Link
       className="flex bg-white rounded items-center mx-[30px] px-3 py-3 gap-5"
-      to="/search"
+      to="/recent"
     >
       <p className="border-b-[1px] border-black w-full text-gray-dark pl-1 text-base">
         검색하기
