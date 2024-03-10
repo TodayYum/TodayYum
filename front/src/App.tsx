@@ -1,21 +1,31 @@
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import Test from './Test';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import HeaderOnlyLayout from './layout/HeaderOnlyLayout';
+import MainPage from './pages/MainPage';
+import NavBarLayout from './layout/NavBarLayout';
+import SearchLayout from './layout/SearchLayout';
+import RecentSearchPage from './pages/RecentSearchPage';
+import SearchResultPage from './pages/SearchResultPage';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Test />} />
+      <Route element={<NavBarLayout />}>
+        <Route path="/" element={<MainPage />} />
+      </Route>
       <Route path="/login" element={<LoginPage />} />
       <Route element={<HeaderOnlyLayout isSignUp />}>
         <Route path="/sign-up" element={<SignUpPage />} />
       </Route>
       <Route element={<HeaderOnlyLayout isSignUp={false} />}>
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+      </Route>
+      <Route element={<SearchLayout />}>
+        <Route path="/recent" element={<RecentSearchPage />} />
+        <Route path="/search-result" element={<SearchResultPage />} />
       </Route>
     </Routes>
   );
