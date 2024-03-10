@@ -9,6 +9,10 @@ import { IDeletableChip } from '../types/components/DeletableChip.types';
  */
 
 function DeletableChip(props: IDeletableChip) {
+  const handleDelete = (event: React.MouseEvent) => {
+    props.deleteSearchWord();
+    event.stopPropagation();
+  };
   return (
     <button
       type="button"
@@ -17,7 +21,7 @@ function DeletableChip(props: IDeletableChip) {
       onClick={props.onSelectClick}
     >
       <span className="text-base mr-2">{props.text}</span>
-      <FontAwesomeIcon icon={faXmark} onClick={props.onDeleteClick} />
+      <FontAwesomeIcon icon={faXmark} onClick={event => handleDelete(event)} />
     </button>
   );
 }
