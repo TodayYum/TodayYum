@@ -12,22 +12,22 @@ import {
 import useSearchDataAtom from '../jotai/searchData';
 
 const TEST_DUMMY: { dataId: string; text: string }[] = [
-  { dataId: '0', text: '테스트1' },
-  { dataId: '1', text: '테스트2' },
-  { dataId: '0', text: '테스트1' },
-  { dataId: '1', text: '테스트2fffffffff' },
-  { dataId: '0', text: '테스트1' },
-  { dataId: '1', text: '테스트2' },
+  { dataId: '0', text: '테스트0' },
+  { dataId: '1', text: '테스트1' },
+  { dataId: '2', text: '테스트2' },
+  { dataId: '3', text: '테스트3fffffffff' },
+  { dataId: '4', text: '테스트4' },
+  { dataId: '5', text: '테스트5' },
 ];
 // 페이지 진입 시 목록 받아오는 요청
 // 목록을 어디다 저장할 것인가 - 여기 vs jotai 근데 이 데이터는 여기 말고 쓸데가 없음. jotai로 안보내도 됨.
 
-function RecentSearch() {
+function RecentSearchPage() {
   const [searchWords, setSearchWords] =
     useState<{ dataId: string; text: string }[]>(TEST_DUMMY);
   const [, setSearchWord] = useSearchDataAtom();
 
-  const handleDeleteButton = (id: string) => {
+  const deleteSearchWord = (id: string) => {
     const deleteData = async () => {
       // 삭제에 대한 API 요청 보내기
       try {
@@ -38,7 +38,8 @@ function RecentSearch() {
           element => element.dataId === id,
         );
         const copyOfSearchWords = JSON.parse(JSON.stringify(searchWords));
-        setSearchWords(copyOfSearchWords.slice(targetIdx, 1));
+        copyOfSearchWords.splice(targetIdx, 1);
+        setSearchWords(copyOfSearchWords);
         console.log(response);
       } catch {
         console.log('error');
@@ -68,11 +69,12 @@ function RecentSearch() {
           dataId={element.dataId}
           text={element.text}
           onSelectClick={() => handleSelectButton(element.text)}
-          onDeleteClick={() => handleDeleteButton(element.dataId)}
+          deleteSearchWord={() => deleteSearchWord(element.dataId)}
+          key={element.dataId}
         />
       ))}
     </div>
   );
 }
 
-export default RecentSearch;
+export default RecentSearchPage;
