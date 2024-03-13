@@ -4,10 +4,7 @@ import com.todayyum.auth.userDetails.CustomUserDetails;
 import com.todayyum.global.dto.response.BaseResponse;
 import com.todayyum.global.dto.response.ResponseCode;
 import com.todayyum.global.exception.CustomException;
-import com.todayyum.member.application.AddMemberUseCase;
-import com.todayyum.member.application.FindMemberUseCase;
-import com.todayyum.member.application.ModifyMemberUseCase;
-import com.todayyum.member.application.RemoveMemberUseCase;
+import com.todayyum.member.application.*;
 import com.todayyum.member.domain.ValidationResult;
 import com.todayyum.member.dto.request.*;
 import jakarta.validation.Valid;
@@ -29,6 +26,9 @@ public class MemberController {
     private final FindMemberUseCase findMemberUseCase;
     private final ModifyMemberUseCase modifyMemberUseCase;
     private final RemoveMemberUseCase removeMemberUseCase;
+    private final AddFollowUseCase addFollowUseCase;
+    private final FindFollowUseCase findFollowUseCase;
+    private final RemoveFollowUseCase removeFollowUseCase;
 
     @PostMapping
     public ResponseEntity<?> memberAdd(@Valid MemberAddRequest memberAddRequest) {
@@ -125,5 +125,31 @@ public class MemberController {
             default:
                 return BaseResponse.createResponseEntity(ResponseCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/follow/{followId}")
+    public ResponseEntity<?> followAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                       @PathVariable UUID followId) {
+
+        return BaseResponse.createResponseEntity(ResponseCode.CREATED,
+                addFollowUseCase.addFollow(customUserDetails.getMemberId(), followId));
+    }
+
+    @DeleteMapping("/follow/{followId}")
+    public ResponseEntity<?> followRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                          @PathVariable UUID followId) {
+
+        removeFollowUseCase.removeFollow(customUserDetails.getMemberId(), followId);
+        return BaseResponse.createResponseEntity(ResponseCode.OK);
+    }
+
+    @GetMapping("/{memberId}/followers")
+    public ResponseEntity<?> followerList(@PathVariable UUID memberId) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findFollowUseCase.listFollower(memberId));
+    }
+
+    @GetMapping("/{memberId}/followings")
+    public ResponseEntity<?> followingList(@PathVariable UUID memberId) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findFollowUseCase.listFollowing(memberId));
     }
 }

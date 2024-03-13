@@ -99,56 +99,6 @@ public class MemberControllerTest {
                 .value("이메일을 입력해주세요."));
     }
 
-//    @Test
-//    @DisplayName("Member Cont - 회원 가입 실패 테스트(이메일 중복 오류)")
-//    void addMemberFailByEmailDuplication() throws Exception {
-//
-//        //given
-//        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-//        formData.add("email", "test@test.com");
-//        formData.add("nickname", "test");
-//        formData.add("password", "a123456789");
-//
-//        when(addMemberUseCase.addMember(any(MemberAddRequest.class)))
-//                .thenThrow(new CustomException(ResponseCode.DUPLICATE_EMAIL));
-//
-//        //when
-//        ResultActions resultActions = mockMvc.perform(
-//                multipart("/api/members")
-//                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                        .params(formData));
-//
-//        //then
-//        resultActions.andExpect(status().isConflict())
-//                .andExpect(jsonPath("$.message")
-//                        .value(ResponseCode.DUPLICATE_EMAIL.getMessage()));
-//    }
-//
-//    @Test
-//    @DisplayName("Member Cont - 회원 가입 실패 테스트(닉네임 중복 오류)")
-//    void addMemberFailByNicknameDuplication() throws Exception {
-//
-//        //given
-//        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-//        formData.add("email", "test@test.com");
-//        formData.add("nickname", "test");
-//        formData.add("password", "a123456789");
-//
-//        when(addMemberUseCase.addMember(any(MemberAddRequest.class)))
-//                .thenThrow(new CustomException(ResponseCode.DUPLICATE_NICKNAME));
-//
-//        //when
-//        ResultActions resultActions = mockMvc.perform(
-//                multipart("/api/members")
-//                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                        .params(formData));
-//
-//        //then
-//        resultActions.andExpect(status().isConflict())
-//                .andExpect(jsonPath("$.message")
-//                        .value(ResponseCode.DUPLICATE_NICKNAME.getMessage()));
-//    }
-
     @Test
     @DisplayName("Member Cont - 회원 조회 테스트")
     void findMember() throws Exception {
