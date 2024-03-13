@@ -23,7 +23,7 @@ const searchDataAtom = atom(
     const newSearchData = { ...prevData };
     Object.entries(inputData).forEach(entry => {
       const [keyName, value] = entry;
-      if (value) {
+      if (value !== undefined) {
         newSearchData[keyName] = value;
       }
     });
