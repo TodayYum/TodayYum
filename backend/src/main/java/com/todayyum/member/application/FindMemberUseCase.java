@@ -1,5 +1,6 @@
 package com.todayyum.member.application;
 
+import com.todayyum.member.application.repository.FollowRepository;
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
 import com.todayyum.member.domain.ValidationResult;
@@ -18,10 +19,17 @@ import java.util.UUID;
 public class FindMemberUseCase {
 
     private final MemberRepository memberRepository;
+    private final FollowRepository followRepository;
 
     public MemberDetailResponse findMember(UUID memberId) {
         Member member = memberRepository.findById(memberId);
-        return MemberDetailResponse.createResponse(member);
+
+        MemberDetailResponse memberDetailResponse = MemberDetailResponse.createResponse(member);
+
+        memberDetailResponse.setFollowingCount(followRepository.countByFromMember(memberId));
+        memberDetailResponse.setFollowerCount(followRepository.countByToMember(memberId));
+
+        return memberDetailResponse;
     }
 
     public ValidationResult validateEmail(String email) {

@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -53,4 +54,10 @@ public class MemberEntity {
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
     private boolean isDeleted;
+
+    @OneToMany(mappedBy = "fromMember", fetch = FetchType.LAZY)
+    private Set<FollowEntity> followings;
+
+    @OneToMany(mappedBy = "toMember", fetch = FetchType.LAZY)
+    private Set<FollowEntity> followers;
 }
