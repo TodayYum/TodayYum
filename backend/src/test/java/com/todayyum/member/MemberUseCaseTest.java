@@ -410,4 +410,52 @@ public class MemberUseCaseTest {
         //when & then
         assertEquals(ValidationResult.DUPLICATED, findMemberUseCase.validateNickname(nickname));
     }
+
+    @Test
+    @DisplayName("Member UC - 팔로우 테스트")
+    void addFollow() {
+
+    }
+
+    @Test
+    @DisplayName("Member UC - 팔로우 실패 테스트(멤버 식별자 오류)")
+    void addFollowFailByMemberId() {
+
+    }
+
+    @Test
+    @DisplayName("Member UC - 언팔로우 테스트")
+    void removeFollow() {
+
+    }
+
+    @Test
+    @DisplayName("Member UC - 언팔로우 실패 테스트(멤버 식별자 오류)")
+    void removeFollowFailByMemberId() {
+
+    }
+
+    @Test
+    @DisplayName("Member UC - 팔로잉 리스트 테스트")
+    void listFollowing() {
+
+    }
+
+    @Test
+    @DisplayName("Member UC - 팔로잉 리스트 실패 테스트(멤버 식별자 오류)")
+    void listFollowingFailByMemberId() {
+
+    }
+
+    @Test
+    @DisplayName("Member UC - 팔로워 리스트 테스트")
+    void listFollower() {
+
+    }
+
+    @Test
+    @DisplayName("Member UC - 팔로워 리스트 실패 테스트(멤버 식별자 오류)")
+    void listFollowerFailByMemberId() {
+
+    }
 }

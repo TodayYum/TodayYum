@@ -3,13 +3,11 @@ package com.todayyum.member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todayyum.global.dto.response.ResponseCode;
 import com.todayyum.global.exception.CustomException;
-import com.todayyum.member.application.AddMemberUseCase;
-import com.todayyum.member.application.FindMemberUseCase;
-import com.todayyum.member.application.ModifyMemberUseCase;
-import com.todayyum.member.application.RemoveMemberUseCase;
+import com.todayyum.member.application.*;
 import com.todayyum.member.controller.MemberController;
 import com.todayyum.member.domain.ValidationResult;
 import com.todayyum.member.dto.request.*;
+import com.todayyum.member.dto.response.FollowListResponse;
 import com.todayyum.member.dto.response.MemberDetailResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,11 +23,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,6 +47,12 @@ public class MemberControllerTest {
     private RemoveMemberUseCase removeMemberUseCase;
     @MockBean
     private ModifyMemberUseCase modifyMemberUseCase;
+    @MockBean
+    private AddFollowUseCase addFollowUseCase;
+    @MockBean
+    private FindFollowUseCase findFollowUseCase;
+    @MockBean
+    private RemoveFollowUseCase removeFollowUseCase;
     @MockBean
     private JpaMetamodelMappingContext jpaMappingContext;
     @Autowired
@@ -414,6 +419,194 @@ public class MemberControllerTest {
                         status().isBadRequest())
                 .andExpect(jsonPath("$.message")
                         .value(ResponseCode.EMPTY_INPUT.getMessage()));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 팔로우 테스트")
+    void addFollow() throws Exception {
+        //given
+        Long id = 100000L;
+
+        when(addFollowUseCase.addFollow(any(UUID.class), any(UUID.class)))
+                .thenReturn(id);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/members/follow/{followId}", UUID.randomUUID()));
+
+        //then
+        resultActions.andExpect(
+                        status().isCreated())
+                .andExpect(jsonPath("$.message")
+                        .value(ResponseCode.CREATED.getMessage()))
+                .andExpect(jsonPath("$.result")
+                        .value(id));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 팔로우 실패 테스트(멤버 식별자 오류)")
+    void addFollowFailByMemberId() throws Exception {
+        //given
+        when(addFollowUseCase.addFollow(any(UUID.class), any(UUID.class)))
+                .thenThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/members/follow/{followId}", UUID.randomUUID()));
+
+        //then
+        resultActions.andExpect(
+                        status().isNotFound())
+                .andExpect(jsonPath("$.message")
+                        .value(ResponseCode.MEMBER_ID_NOT_FOUND.getMessage()));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 언팔로우 테스트")
+    void removeFollow() throws Exception {
+        //given
+        doNothing()
+                .when(removeFollowUseCase)
+                        .removeFollow(any(UUID.class), any(UUID.class));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/members/follow/{followId}", UUID.randomUUID()));
+
+        //then
+        resultActions.andExpect(
+                        status().isOk())
+                .andExpect(jsonPath("$.message")
+                        .value(ResponseCode.OK.getMessage()));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 언팔로우 실패 테스트(멤버 식별자 오류)")
+    void removeFollowFailByMemberId() throws Exception {
+        //given
+        doThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND))
+                .when(removeFollowUseCase)
+                .removeFollow(any(UUID.class), any(UUID.class));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/members/follow/{followId}", UUID.randomUUID()));
+
+        //then
+        resultActions.andExpect(
+                        status().isNotFound())
+                .andExpect(jsonPath("$.message")
+                        .value(ResponseCode.MEMBER_ID_NOT_FOUND.getMessage()));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 팔로잉 리스트 테스트")
+    void listFollowing() throws Exception {
+        //given
+        UUID memberId = UUID.randomUUID();
+        String nickname = "test";
+        String profile = "test.jpg";
+
+        FollowListResponse followListResponse = FollowListResponse.builder()
+                .memberId(memberId)
+                .nickname(nickname)
+                .profile(profile)
+                .build();
+
+        List<FollowListResponse> followListResponses = new ArrayList<>();
+        followListResponses.add(followListResponse);
+
+        when(findFollowUseCase.listFollowing(memberId))
+                .thenReturn(followListResponses);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/members/{memberId}/followings", memberId));
+
+        //then
+        resultActions.andExpect(
+                        status().isOk())
+                .andExpect(jsonPath("$.message")
+                        .value(ResponseCode.OK.getMessage()))
+                .andExpect(jsonPath("$.result.[0].memberId")
+                        .value(memberId.toString()))
+                .andExpect(jsonPath("$.result.[0].nickname")
+                        .value(nickname))
+                .andExpect(jsonPath("$.result.[0].profile")
+                        .value(profile));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 팔로잉 리스트 실패 테스트(멤버 식별자 오류)")
+    void listFollowingFailByMemberId() throws Exception {
+        //given
+        when(findFollowUseCase.listFollowing(any(UUID.class)))
+                .thenThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/members/{memberId}/followings", UUID.randomUUID()));
+
+        //then
+        resultActions.andExpect(
+                        status().isNotFound())
+                .andExpect(jsonPath("$.message")
+                        .value(ResponseCode.MEMBER_ID_NOT_FOUND.getMessage()));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 팔로워 리스트 테스트")
+    void listFollower() throws Exception {
+        //given
+        UUID memberId = UUID.randomUUID();
+        String nickname = "test";
+        String profile = "test.jpg";
+
+        FollowListResponse followListResponse = FollowListResponse.builder()
+                .memberId(memberId)
+                .nickname(nickname)
+                .profile(profile)
+                .build();
+
+        List<FollowListResponse> followListResponses = new ArrayList<>();
+        followListResponses.add(followListResponse);
+
+        when(findFollowUseCase.listFollower(memberId))
+                .thenReturn(followListResponses);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/members/{memberId}/followers", memberId));
+
+        //then
+        resultActions.andExpect(
+                        status().isOk())
+                .andExpect(jsonPath("$.message")
+                        .value(ResponseCode.OK.getMessage()))
+                .andExpect(jsonPath("$.result.[0].memberId")
+                        .value(memberId.toString()))
+                .andExpect(jsonPath("$.result.[0].nickname")
+                        .value(nickname))
+                .andExpect(jsonPath("$.result.[0].profile")
+                        .value(profile));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 팔로워 리스트 실패 테스트(멤버 식별자 오류)")
+    void listFollowerFailByMemberId() throws Exception {
+        //given
+        when(findFollowUseCase.listFollower(any(UUID.class)))
+                .thenThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/members/{memberId}/followers", UUID.randomUUID()));
+
+        //then
+        resultActions.andExpect(
+                        status().isNotFound())
+                .andExpect(jsonPath("$.message")
+                        .value(ResponseCode.MEMBER_ID_NOT_FOUND.getMessage()));
     }
 
 }

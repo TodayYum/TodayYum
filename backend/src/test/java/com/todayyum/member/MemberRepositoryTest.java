@@ -215,4 +215,52 @@ public class MemberRepositoryTest {
         //then
         assertFalse(result);
     }
+
+    @Test
+    @DisplayName("Member Repo - 팔로우 테스트")
+    void addFollow() {
+
+    }
+
+    @Test
+    @DisplayName("Member Repo - 팔로우 실패 테스트(멤버 식별자 오류)")
+    void addFollowFailByMemberId() {
+
+    }
+
+    @Test
+    @DisplayName("Member Repo - 언팔로우 테스트")
+    void removeFollow() {
+
+    }
+
+    @Test
+    @DisplayName("Member Repo - 언팔로우 실패 테스트(멤버 식별자 오류)")
+    void removeFollowFailByMemberId() {
+
+    }
+
+    @Test
+    @DisplayName("Member Repo - 팔로잉 리스트 테스트")
+    void listFollowing() {
+
+    }
+
+    @Test
+    @DisplayName("Member Repo - 팔로잉 리스트 실패 테스트(멤버 식별자 오류)")
+    void listFollowingFailByMemberId() {
+
+    }
+
+    @Test
+    @DisplayName("Member Repo - 팔로워 리스트 테스트")
+    void listFollower() {
+
+    }
+
+    @Test
+    @DisplayName("Member Repo - 팔로워 리스트 실패 테스트(멤버 식별자 오류)")
+    void listFollowerFailByMemberId() {
+
+    }
 }
