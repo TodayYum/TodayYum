@@ -8,7 +8,7 @@ import { IRectangleChip } from '../types/components/RectangleChip.types';
 
 function RectangleChip(props: IRectangleChip) {
   return (
-    <span className="bg-secondary my-auto rounded-small text-base py-[5px] px-2.5 border-secondary  border-[1.5px]">
+    <span className="bg-secondary-container my-auto rounded-small text-base py-[5px] px-2.5 border-secondary-container  border-[1.5px]">
       {props.text}
     </span>
   );

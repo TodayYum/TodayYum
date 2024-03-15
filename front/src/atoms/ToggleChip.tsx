@@ -12,8 +12,8 @@ function ToggleChip(props: IToggleChip) {
       type="button"
       onClick={props.onClick}
       className={`${
-        props.isClick ? 'bg-secondary' : 'bg-white'
-      } rounded-full text-base py-[5px] px-2.5 border-secondary  border-[1.5px]`}
+        props.isClick ? 'bg-secondary-container' : 'bg-white'
+      } rounded-full text-base py-[5px] px-2.5 border-secondary-container  border-[1.5px]`}
     >
       {props.text}
     </button>
