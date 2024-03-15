@@ -52,7 +52,6 @@ public class LoginLogoutTest {
     @Test
     @DisplayName("Login/out - 로그인 테스트")
     public void login() throws Exception {
-
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("email", "test@test.com");
@@ -72,7 +71,6 @@ public class LoginLogoutTest {
     @Test
     @DisplayName("Login/out - 로그인 실패 테스트(이메일 오류)")
     public void loginFailByEmail() throws Exception {
-
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("email", "test2@test.com");
@@ -92,7 +90,6 @@ public class LoginLogoutTest {
     @Test
     @DisplayName("Login/out - 로그인 실패 테스트(비밀번호 오류)")
     public void loginFailByPassword() throws Exception {
-
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("email", "test@test.com");
@@ -112,7 +109,6 @@ public class LoginLogoutTest {
     @Test
     @DisplayName("Login/out - 로그아웃 테스트")
     public void logout() throws Exception {
-
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("email", "test@test.com");

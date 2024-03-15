@@ -32,4 +32,8 @@ public class Follow {
                 .createdAt(followEntity.getCreatedAt())
                 .build();
     }
+
+    public void changeId(Long id) {
+        this.id = id;
+    }
 }

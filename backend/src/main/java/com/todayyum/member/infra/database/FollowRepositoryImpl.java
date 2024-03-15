@@ -24,11 +24,9 @@ public class FollowRepositoryImpl implements FollowRepository {
 
     @Override
     public Follow save(Follow follow) {
-        MemberEntity fromMember = jpaMemberRepository.findById(follow.getFromMemberId())
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+        MemberEntity fromMember = findMemberById(follow.getFromMemberId());
 
-        MemberEntity toMember = jpaMemberRepository.findById(follow.getToMemberId())
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+        MemberEntity toMember = findMemberById(follow.getToMemberId());
 
         FollowEntity followEntity = FollowEntity.builder()
                 .fromMember(fromMember)
@@ -40,60 +38,53 @@ public class FollowRepositoryImpl implements FollowRepository {
 
     @Override
     public boolean existsByFromMemberAndToMember(Follow follow) {
-        MemberEntity fromMember = jpaMemberRepository.findById(follow.getFromMemberId())
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+        MemberEntity fromMember = findMemberById(follow.getFromMemberId());
 
-        MemberEntity toMember = jpaMemberRepository.findById(follow.getToMemberId())
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+        MemberEntity toMember = findMemberById(follow.getToMemberId());
 
         return jpaFollowRepository.existsByFromMemberAndToMember(fromMember, toMember);
     }
 
     @Override
     public Long countByFromMember(UUID fromMemberId) {
-        MemberEntity fromMember = jpaMemberRepository.findById(fromMemberId)
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+        MemberEntity fromMember = findMemberById(fromMemberId);
 
         return jpaFollowRepository.countByFromMember(fromMember);
     }
 
     @Override
     public Long countByToMember(UUID toMemberId) {
-        MemberEntity toMember = jpaMemberRepository.findById(toMemberId)
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+        MemberEntity toMember = findMemberById(toMemberId);
 
         return jpaFollowRepository.countByToMember(toMember);
     }
 
     @Override
     public void deleteByFromMemberAndToMember(Follow follow) {
-        MemberEntity fromMember = jpaMemberRepository.findById(follow.getFromMemberId())
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+        MemberEntity fromMember = findMemberById(follow.getFromMemberId());
 
-        MemberEntity toMember = jpaMemberRepository.findById(follow.getToMemberId())
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
-
-        if(!jpaFollowRepository.existsByFromMemberAndToMember(fromMember, toMember)) {
-            throw new CustomException(ResponseCode.NOT_FOLLOWING);
-        }
+        MemberEntity toMember = findMemberById(follow.getToMemberId());
 
         jpaFollowRepository.deleteByFromMemberAndToMember(fromMember, toMember);
     }
 
     @Override
     public List<FollowListResponse> findByFromMember(UUID fromMemberId) {
-        MemberEntity fromMember = jpaMemberRepository.findById(fromMemberId)
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+        MemberEntity fromMember = findMemberById(fromMemberId);
 
         return jpaFollowRepository.findByFromMember(fromMember);
     }
 
     @Override
     public List<FollowListResponse> findByToMember(UUID toMemberId) {
-        MemberEntity toMember = jpaMemberRepository.findById(toMemberId)
-                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+        MemberEntity toMember = findMemberById(toMemberId);
 
         return jpaFollowRepository.findByToMember(toMember);
+    }
+
+    private MemberEntity findMemberById(UUID memberId) {
+        return jpaMemberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
     }
 
 }

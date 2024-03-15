@@ -43,7 +43,6 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Auth Cont - 이메일 발송 테스트")
     public void sendVerificationCode() throws Exception {
-
         //given
         String email = "test@test.com";
         String code = "123456";
@@ -67,7 +66,6 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Auth Cont - 이메일 검증 테스트")
     public void verifyVerificationCode() throws Exception {
-
         //given
         String email = "test@test.com";
         String code = "123456";
@@ -91,7 +89,6 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Auth Cont - 이메일 검증 실패 테스트")
     public void verifyVerificationCodeFail() throws Exception {
-
         //given
         String email = "test@test.com";
         String code = "123456";

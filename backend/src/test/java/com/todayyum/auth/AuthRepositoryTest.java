@@ -21,7 +21,6 @@ public class AuthRepositoryTest {
     @Test
     @DisplayName("Auth Repo - 이메일 발송 테스트")
     public void sendVerificationCode() {
-
         //given
         String email = "test@test.com";
         String code = "123456";
@@ -42,7 +41,6 @@ public class AuthRepositoryTest {
     @Test
     @DisplayName("Auth Repo - 이메일 검증 테스트")
     public void verifyVerificationCode() {
-
         //given
         String email = "test@test.com";
         String code = "123456";
@@ -65,7 +63,6 @@ public class AuthRepositoryTest {
     @Test
     @DisplayName("Auth Repo - 이메일 검증 실패 테스트")
     public void verifyVerificationCodeFail() {
-
         //given
         String email = "test@test.com";
         String code = "123456";

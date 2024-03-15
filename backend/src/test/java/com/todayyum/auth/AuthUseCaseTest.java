@@ -36,7 +36,6 @@ public class AuthUseCaseTest {
     @Test
     @DisplayName("Auth UC - 이메일 발송 테스트")
     public void sendVerificationCode() {
-
         //given
         String email = "test@test.com";
         String code = "123456";
@@ -61,7 +60,6 @@ public class AuthUseCaseTest {
     @Test
     @DisplayName("Auth UC - 이메일 검증 테스트")
     public void verifyVerificationCode() {
-
         //given
         String email = "test@test.com";
         String code = "123456";

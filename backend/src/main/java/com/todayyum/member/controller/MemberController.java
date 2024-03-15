@@ -127,19 +127,19 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/follow/{followId}")
+    @PostMapping("/{memberId}/follow")
     public ResponseEntity<?> followAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                       @PathVariable UUID followId) {
+                                       @PathVariable UUID memberId) {
 
         return BaseResponse.createResponseEntity(ResponseCode.CREATED,
-                addFollowUseCase.addFollow(customUserDetails.getMemberId(), followId));
+                addFollowUseCase.addFollow(customUserDetails.getMemberId(), memberId));
     }
 
-    @DeleteMapping("/follow/{followId}")
+    @DeleteMapping("/{memberId}/follow")
     public ResponseEntity<?> followRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                          @PathVariable UUID followId) {
+                                          @PathVariable UUID memberId) {
 
-        removeFollowUseCase.removeFollow(customUserDetails.getMemberId(), followId);
+        removeFollowUseCase.removeFollow(customUserDetails.getMemberId(), memberId);
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 

@@ -61,7 +61,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 회원 가입 테스트")
     void addMember() throws Exception {
-
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("email", "test@test.com");
@@ -86,7 +85,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 회원 가입 실패 테스트(입력 오류)")
     void addMemberFailByInput() throws Exception {
-
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("nickname", "test");
@@ -107,7 +105,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 회원 조회 테스트")
     void findMember() throws Exception {
-
         //given
         UUID memberId = UUID.randomUUID();
 
@@ -138,7 +135,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 회원 조회 실패 테스트(멤버 식별자 오류)")
     void findMemberFailByMemberId() throws Exception {
-
         //given
         UUID memberId = UUID.randomUUID();
 
@@ -159,7 +155,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 회원 탈퇴 테스트")
     void removeMember() throws Exception {
-
         //given
         doNothing()
                 .when(removeMemberUseCase)
@@ -179,7 +174,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 닉네임 변경 테스트")
     void modifyNickname() throws Exception {
-
         //given
         NicknameModifyRequest nicknameModifyRequest = NicknameModifyRequest.builder()
                 .nickname("yonggkimm")
@@ -225,7 +219,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 소개글 변경 테스트")
     void modifyComment() throws Exception {
-
         //given
         CommentModifyRequest commentModifyRequest = CommentModifyRequest.builder()
                 .comment("내가 누구?")
@@ -271,7 +264,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 비밀번호 변경 테스트")
     void modifyPassword() throws Exception {
-
         //given
         PasswordModifyRequest passwordModifyRequest = PasswordModifyRequest.builder()
                 .password("test12345")
@@ -318,7 +310,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 프로필 변경 테스트")
     void modifyProfile() throws Exception {
-
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 
@@ -342,7 +333,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 닉네임 검증 테스트")
     void validateNickname() throws Exception {
-
         //given
         String nickname = "yonggkimm";
 
@@ -364,7 +354,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 닉네임 검증 실패 테스트(입력 오류)")
     void validateNicknameFailByInput() throws Exception {
-
         //given
         String nickname = "";
 
@@ -383,7 +372,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 이메일 검증 테스트")
     void validateEmail() throws Exception {
-
         //given
         String email = "test@test.com";
 
@@ -405,7 +393,6 @@ public class MemberControllerTest {
     @Test
     @DisplayName("Member Cont - 이메일 검증 실패 테스트(입력 오류)")
     void validateEmailFailByInput() throws Exception {
-
         //given
         String email = "";
 
@@ -432,7 +419,7 @@ public class MemberControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/members/follow/{followId}", UUID.randomUUID()));
+                MockMvcRequestBuilders.post("/api/members/{memberId}/follow", UUID.randomUUID()));
 
         //then
         resultActions.andExpect(
@@ -444,21 +431,21 @@ public class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("Member Cont - 팔로우 실패 테스트(멤버 식별자 오류)")
+    @DisplayName("Member Cont - 팔로우 실패 테스트(중복 오류)")
     void addFollowFailByMemberId() throws Exception {
         //given
         when(addFollowUseCase.addFollow(any(UUID.class), any(UUID.class)))
-                .thenThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+                .thenThrow(new CustomException(ResponseCode.DUPLICATE_FOLLOW));
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/members/follow/{followId}", UUID.randomUUID()));
+                MockMvcRequestBuilders.post("/api/members/{memberId}/follow", UUID.randomUUID()));
 
         //then
         resultActions.andExpect(
-                        status().isNotFound())
+                        status().isConflict())
                 .andExpect(jsonPath("$.message")
-                        .value(ResponseCode.MEMBER_ID_NOT_FOUND.getMessage()));
+                        .value(ResponseCode.DUPLICATE_FOLLOW.getMessage()));
     }
 
     @Test
@@ -471,7 +458,7 @@ public class MemberControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.delete("/api/members/follow/{followId}", UUID.randomUUID()));
+                MockMvcRequestBuilders.delete("/api/members/{memberId}/follow", UUID.randomUUID()));
 
         //then
         resultActions.andExpect(
@@ -481,22 +468,22 @@ public class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("Member Cont - 언팔로우 실패 테스트(멤버 식별자 오류)")
-    void removeFollowFailByMemberId() throws Exception {
+    @DisplayName("Member Cont - 언팔로우 실패 테스트(팔로우 X 오류)")
+    void removeFollowFailByNotFollowing() throws Exception {
         //given
-        doThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND))
+        doThrow(new CustomException(ResponseCode.NOT_FOLLOW))
                 .when(removeFollowUseCase)
                 .removeFollow(any(UUID.class), any(UUID.class));
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.delete("/api/members/follow/{followId}", UUID.randomUUID()));
+                MockMvcRequestBuilders.delete("/api/members/{memberId}/follow", UUID.randomUUID()));
 
         //then
         resultActions.andExpect(
                         status().isNotFound())
                 .andExpect(jsonPath("$.message")
-                        .value(ResponseCode.MEMBER_ID_NOT_FOUND.getMessage()));
+                        .value(ResponseCode.NOT_FOLLOW.getMessage()));
     }
 
     @Test
