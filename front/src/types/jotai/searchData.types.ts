@@ -1,6 +1,6 @@
 export interface ISearchData {
   keyword: string;
-  category: number;
+  category: boolean[];
   sort: number;
   tab: number;
   [key: string]: any;
@@ -8,7 +8,7 @@ export interface ISearchData {
 
 export interface IUndefindableSearchData {
   keyword?: string;
-  category?: number;
+  category?: boolean[];
   sort?: number;
   tab?: number;
   [key: string]: any;

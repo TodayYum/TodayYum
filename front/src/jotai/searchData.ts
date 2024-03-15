@@ -11,7 +11,7 @@ import {
 
 const searchData = atom<ISearchData>({
   keyword: '',
-  category: 0,
+  category: Array(10).fill(false),
   sort: 0,
   tab: 0,
 });
