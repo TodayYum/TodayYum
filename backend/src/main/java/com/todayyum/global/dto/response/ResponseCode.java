@@ -36,7 +36,7 @@ public enum ResponseCode {
     EMAIL_VERIFICATION_FAILED(HttpStatus.BAD_REQUEST, "이메일 검증에 실패했습니다."),
 
     DUPLICATE_FOLLOW(HttpStatus.CONFLICT, "이미 팔로우 중인 사용자입니다."),
-    NOT_FOLLOWING(HttpStatus.NOT_FOUND, "팔로우 중이지 않은 사용자입니다."),
+    NOT_FOLLOW(HttpStatus.NOT_FOUND, "팔로우 중이지 않은 사용자입니다."),
     ;
 
     private final HttpStatus status;
