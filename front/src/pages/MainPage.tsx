@@ -5,11 +5,15 @@
  */
 
 import SelectSearch from '../atoms/SelectSearch';
+import SortCriteria from '../organisms/SortCriteria';
+import TodayYum from '../organisms/TodayYum';
 
 function MainPage() {
   return (
     <div className="bg-background h-screen py-3">
       <SelectSearch />
+      <TodayYum />
+      <SortCriteria />
     </div>
   );
 }
