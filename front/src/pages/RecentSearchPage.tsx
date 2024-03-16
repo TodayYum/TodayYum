@@ -63,16 +63,19 @@ function RecentSearchPage() {
     requsetSearch();
   };
   return (
-    <div className="bg-white my-3 mx-[30px] flex gap-4 p-3 flex-wrap rounded">
-      {searchWords.map(element => (
-        <DeletableChip
-          dataId={element.dataId}
-          text={element.text}
-          onSelectClick={() => handleSelectButton(element.text)}
-          deleteSearchWord={() => deleteSearchWord(element.dataId)}
-          key={element.dataId}
-        />
-      ))}
+    <div className="bg-white my-3 mx-[30px] rounded">
+      <p className="base-bold ml-4 pt-4">최근 검색어</p>
+      <div className="flex gap-4 p-3 flex-wrap">
+        {searchWords.map(element => (
+          <DeletableChip
+            dataId={element.dataId}
+            text={element.text}
+            onSelectClick={() => handleSelectButton(element.text)}
+            deleteSearchWord={() => deleteSearchWord(element.dataId)}
+            key={element.dataId}
+          />
+        ))}
+      </div>
     </div>
   );
 }

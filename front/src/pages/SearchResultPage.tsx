@@ -5,8 +5,22 @@
  * @returns
  */
 
+import SearchTab from '../organisms/SearchTab';
+import useSearchDataAtom from '../jotai/searchData';
+import UserList from '../organisms/UserList';
+import PolaroidList from '../organisms/PolaroidList';
+
+// const TAB_TAG = 0;
+// const TAB_REGION = 1;
+const TAB_ACCOUNT = 2;
 function SearchResultPage() {
-  return <div>asdf</div>;
+  const [{ tab }] = useSearchDataAtom();
+  return (
+    <div>
+      <SearchTab />
+      {tab === TAB_ACCOUNT ? <UserList /> : <PolaroidList />}
+    </div>
+  );
 }
 
 export default SearchResultPage;
