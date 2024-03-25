@@ -5,7 +5,7 @@ import com.todayyum.global.exception.CustomException;
 import com.todayyum.global.util.S3Util;
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
-import com.todayyum.member.dto.request.CommentModifyRequest;
+import com.todayyum.member.dto.request.IntroductionModifyRequest;
 import com.todayyum.member.dto.request.NicknameModifyRequest;
 import com.todayyum.member.dto.request.PasswordModifyRequest;
 import com.todayyum.member.dto.request.ProfileModifyRequest;
@@ -55,10 +55,10 @@ public class ModifyMemberUseCase {
         memberRepository.save(member);
     }
 
-    public void modifyComment(CommentModifyRequest commentModifyRequest) {
-        Member member = memberRepository.findById(commentModifyRequest.getMemberId());
+    public void modifyIntroduction(IntroductionModifyRequest introductionModifyRequest) {
+        Member member = memberRepository.findById(introductionModifyRequest.getMemberId());
 
-        member.changeComment(commentModifyRequest.getComment());
+        member.changeIntroduction(introductionModifyRequest.getIntroduction());
         memberRepository.save(member);
     }
 

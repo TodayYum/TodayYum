@@ -67,12 +67,12 @@ public class MemberController {
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
-    @PatchMapping("/comments")
-    public ResponseEntity<?> commentModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                           @Valid @RequestBody CommentModifyRequest commentModifyRequest) {
+    @PatchMapping("/introductions")
+    public ResponseEntity<?> introductionModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                           @Valid @RequestBody IntroductionModifyRequest introductionModifyRequest) {
 
-        commentModifyRequest.setMemberId(customUserDetails.getMemberId());
-        modifyMemberUseCase.modifyComment(commentModifyRequest);
+        introductionModifyRequest.setMemberId(customUserDetails.getMemberId());
+        modifyMemberUseCase.modifyIntroduction(introductionModifyRequest);
 
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }

@@ -218,21 +218,21 @@ public class MemberControllerTest {
 
     @Test
     @DisplayName("Member Cont - 소개글 변경 테스트")
-    void modifyComment() throws Exception {
+    void modifyIntroduction() throws Exception {
         //given
-        CommentModifyRequest commentModifyRequest = CommentModifyRequest.builder()
-                .comment("내가 누구?")
+        IntroductionModifyRequest introductionModifyRequest = IntroductionModifyRequest.builder()
+                .introduction("내가 누구?")
                 .build();
 
         doNothing()
                 .when(modifyMemberUseCase)
-                .modifyComment(any(CommentModifyRequest.class));
+                .modifyIntroduction(any(IntroductionModifyRequest.class));
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/api/members/comments")
+                MockMvcRequestBuilders.patch("/api/members/introductions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(commentModifyRequest)));
+                        .content(new ObjectMapper().writeValueAsString(introductionModifyRequest)));
 
         //then
         resultActions.andExpect(
@@ -243,16 +243,16 @@ public class MemberControllerTest {
 
     @Test
     @DisplayName("Member Cont - 소개글 변경 실패 테스트(입력 오류)")
-    void modifyCommentFailByInput() throws Exception {
+    void modifyIntroductionFailByInput() throws Exception {
         //given
-        CommentModifyRequest commentModifyRequest = CommentModifyRequest.builder()
+        IntroductionModifyRequest introductionModifyRequest = IntroductionModifyRequest.builder()
                 .build();
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/api/members/comments")
+                MockMvcRequestBuilders.patch("/api/members/introductions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(commentModifyRequest)));
+                        .content(new ObjectMapper().writeValueAsString(introductionModifyRequest)));
 
         //then
         resultActions.andExpect(

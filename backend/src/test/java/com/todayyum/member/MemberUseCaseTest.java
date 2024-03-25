@@ -283,27 +283,27 @@ public class MemberUseCaseTest {
 
     @Test
     @DisplayName("Member UC - 소개글 변경 테스트")
-    void modifyComment() {
+    void modifyIntroduction() {
         //given
         UUID memberId = UUID.randomUUID();
 
-        CommentModifyRequest commentModifyRequest = CommentModifyRequest.builder()
-                .comment("내가 누구??")
+        IntroductionModifyRequest introductionModifyRequest = IntroductionModifyRequest.builder()
+                .introduction("내가 누구??")
                 .memberId(memberId)
                 .build();
 
         Member member = Member.builder()
-                .comment("내가 누구?")
+                .introduction("내가 누구?")
                 .build();
 
         when(memberRepository.findById(memberId))
                 .thenReturn(member);
 
         //when
-        modifyMemberUseCase.modifyComment(commentModifyRequest);
+        modifyMemberUseCase.modifyIntroduction(introductionModifyRequest);
 
         //then
-        assertEquals(commentModifyRequest.getComment(), member.getComment());
+        assertEquals(introductionModifyRequest.getIntroduction(), member.getIntroduction());
         verify(memberRepository, times(1)).save(any(Member.class));
     }
 

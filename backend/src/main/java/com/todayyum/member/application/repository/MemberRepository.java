@@ -6,16 +6,16 @@ import java.util.UUID;
 
 public interface MemberRepository {
 
-    public Member save(Member member);
+    Member save(Member member);
 
-    public boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
 
-    public Member findById(UUID memberId);
+    Member findById(UUID memberId);
 
-    public Member findByEmail(String email);
+    Member findByEmail(String email);
 
-    public boolean existsByNickname(String nickname);
+    boolean existsByNickname(String nickname);
 
-    public void deleteById(UUID memberId);
+    void deleteById(UUID memberId);
 
 }

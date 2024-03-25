@@ -37,12 +37,15 @@ public enum ResponseCode {
 
     DUPLICATE_FOLLOW(HttpStatus.CONFLICT, "이미 팔로우 중인 사용자입니다."),
     NOT_FOLLOW(HttpStatus.NOT_FOUND, "팔로우 중이지 않은 사용자입니다."),
+
+    INVALID_MEAL_TIME(HttpStatus.BAD_REQUEST, "유효하지 않은 식사 시간입니다."),
+    INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "유효하지 않은 카테고리입니다."),
     ;
 
     private final HttpStatus status;
     private final String message;
 
-    private ResponseCode(HttpStatus status, final String message) {
+    ResponseCode(HttpStatus status, final String message) {
         this.status = status;
         this.message = message;
     }
