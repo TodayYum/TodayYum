@@ -3,13 +3,12 @@ package com.todayyum.board.infra.entity;
 import com.todayyum.board.domain.Category;
 import com.todayyum.board.domain.MealTime;
 import com.todayyum.member.infra.entity.MemberEntity;
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,7 +27,6 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @DynamicUpdate
-@Where(clause = "is_deleted = false")
 public class BoardEntity {
 
     @Id
@@ -37,6 +35,7 @@ public class BoardEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MemberEntity member;
 
     @Column(nullable = false, length = 100)
@@ -88,9 +87,6 @@ public class BoardEntity {
     @LastModifiedDate
     @Column(name = "modified_at", nullable = false)
     private LocalDateTime modifiedAt;
-
-    @Column(name = "is_deleted", columnDefinition = "boolean default false")
-    private boolean isDeleted;
 
     public void changeMember(MemberEntity memberEntity) {
         this.member = memberEntity;

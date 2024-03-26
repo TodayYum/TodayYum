@@ -38,10 +38,10 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public void deleteById(UUID memberId) {
-        jpaMemberRepository.findById(memberId)
+        MemberEntity memberEntity = jpaMemberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
-        jpaMemberRepository.deleteById(memberId);
+        jpaMemberRepository.delete(memberEntity);
     }
 
     @Override

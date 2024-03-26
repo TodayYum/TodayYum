@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,7 +25,7 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @DynamicUpdate
-@Where(clause = "is_deleted = false")
+//@Where(clause = "is_deleted = false")
 public class MemberEntity {
 
     @Id
@@ -70,6 +69,6 @@ public class MemberEntity {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "is_deleted", columnDefinition = "boolean default false")
-    private boolean isDeleted;
+//    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+//    private boolean isDeleted;
 }

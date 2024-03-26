@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface BoardRepository {
     Board save(Board board);
-
     List<BoardListResponse> findByMemberId(UUID memberId);
+    void deleteById(Long id);
+    Board findById(Long id);
 }

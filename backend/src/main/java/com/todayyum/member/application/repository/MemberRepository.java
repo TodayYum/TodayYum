@@ -17,5 +17,4 @@ public interface MemberRepository {
     boolean existsByNickname(String nickname);
 
     void deleteById(UUID memberId);
-
 }

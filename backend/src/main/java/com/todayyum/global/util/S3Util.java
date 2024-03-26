@@ -64,4 +64,14 @@ public class S3Util {
         }
     }
 
+    public void removeFile(String link) {
+        System.out.println("link: " + link);
+
+        String filename = link.split(".com/")[1];
+
+        System.out.println("filename: " + filename);
+
+        amazonS3.deleteObject(bucket, filename);
+    }
+
 }

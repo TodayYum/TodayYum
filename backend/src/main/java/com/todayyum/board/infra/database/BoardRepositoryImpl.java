@@ -42,4 +42,20 @@ public class BoardRepositoryImpl implements BoardRepository {
 
         return jpaBoardRepository.findByMemberId(memberEntity);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        BoardEntity boardEntity = jpaBoardRepository.findById(id)
+                        .orElseThrow(() -> new CustomException(ResponseCode.BOARD_ID_NOT_FOUND));
+
+        jpaBoardRepository.delete(boardEntity);
+    }
+
+    @Override
+    public Board findById(Long id) {
+        BoardEntity boardEntity = jpaBoardRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ResponseCode.BOARD_ID_NOT_FOUND));
+
+        return Board.createBoard(boardEntity);
+    }
 }

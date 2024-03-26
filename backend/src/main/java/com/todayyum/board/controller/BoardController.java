@@ -3,6 +3,7 @@ package com.todayyum.board.controller;
 import com.todayyum.auth.userDetails.CustomUserDetails;
 import com.todayyum.board.application.AddBoardUseCase;
 import com.todayyum.board.application.FindBoardUseCase;
+import com.todayyum.board.application.RemoveBoardUseCase;
 import com.todayyum.board.dto.request.BoardAddRequest;
 import com.todayyum.global.dto.response.BaseResponse;
 import com.todayyum.global.dto.response.ResponseCode;
@@ -23,6 +24,7 @@ public class BoardController {
 
     private final AddBoardUseCase addBoardUseCase;
     private final FindBoardUseCase findBoardUseCase;
+    private final RemoveBoardUseCase removeBoardUseCase;
 
     @PostMapping
     public ResponseEntity<?> boardAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -55,8 +57,11 @@ public class BoardController {
     }
 
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<?> boardRemove(@PathVariable Long boardId) {
-        return null;
+    public ResponseEntity<?> boardRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                         @PathVariable Long boardId) {
+        removeBoardUseCase.removeBoard(customUserDetails.getMemberId(), boardId);
+
+        return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
     @PostMapping("/{boardId}/comments")

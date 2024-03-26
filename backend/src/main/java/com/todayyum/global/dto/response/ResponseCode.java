@@ -21,6 +21,7 @@ public enum ResponseCode {
 
     MEMBER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "입력한 식별자에 해당하는 사용자가 없습니다."),
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "입력한 이메일에 해당하는 사용자가 없습니다."),
+    BOARD_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "입력한 식별자에 해당하는 게시글이 없습니다."),
 
     EMPTY_FILE(HttpStatus.BAD_REQUEST, "파일이 존재하지 않습니다."),
     INVALID_FILE(HttpStatus.BAD_REQUEST, "유효하지 않은 파일 형식입니다."),
@@ -40,6 +41,8 @@ public enum ResponseCode {
 
     INVALID_MEAL_TIME(HttpStatus.BAD_REQUEST, "유효하지 않은 식사 시간입니다."),
     INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "유효하지 않은 카테고리입니다."),
+
+    WRITER_USER_MISMATCH(HttpStatus.BAD_REQUEST, "작성자와 이용자가 일치하지 않습니다."),
     ;
 
     private final HttpStatus status;
