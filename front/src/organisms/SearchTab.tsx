@@ -20,7 +20,7 @@ const Tab = (props: ITab) => {
 function SearchTab() {
   const [searchData, setSearchData] = useSearchDataAtom();
   return (
-    <div className="font-bold text-xl flex justify-around bg-white leading-10">
+    <div className="font-bold text-xl flex justify-around bg-white leading-10 px-[30px]">
       {TAB_NAMES.map((element, idx) => (
         <Tab
           isSelected={searchData.tab === idx}

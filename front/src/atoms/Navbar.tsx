@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 function Navbar() {
   return (
-    <div className="text-primary w-full text-[35px] flex justify-around fixed bottom-0">
+    <div className="text-primary w-full text-[35px] flex justify-around fixed bottom-0 bg-white">
       <Link to="/">
         <FontAwesomeIcon icon={faMagnifyingGlass} />
       </Link>
