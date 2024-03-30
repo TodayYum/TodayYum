@@ -1,0 +1,56 @@
+import {
+  faChevronLeft,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
+import { IDetailPageCarousel } from '../types/components/DetailPageCarousel.types';
+
+function DetailPageCarousel(props: IDetailPageCarousel) {
+  const [carouselIdx, setCarouselIdx] = useState<number>(0);
+  const translateLevel = Array.from(
+    { length: props.imgs.length },
+    (v, i) => `-translate-x-[${i * 100}vw]`,
+  );
+  const handleChevronClick = (direction: number) => {
+    if (!translateLevel[carouselIdx + direction]) return;
+    setCarouselIdx(prev => prev + direction);
+  };
+  return (
+    <div className="w-[100vw]">
+      <div
+        className={`flex transition duration-1000 ${translateLevel[carouselIdx]}`}
+      >
+        {props.imgs.map(element => (
+          //   <div className="flex-[0_0_100vw]">
+          <img
+            src={element}
+            alt="#"
+            className="flex-[0_0_100vw] h-[110vw] object-cover"
+          />
+          //   </div>
+        ))}
+      </div>
+
+      <div className="absolute top-[50%] -translate-y-[100%] flex justify-between w-full px-4">
+        <div className="rounded-full bg-gray-dark/30 w-10 h-12 flex justify-center items-center">
+          <FontAwesomeIcon
+            icon={faChevronLeft}
+            onClick={() => handleChevronClick(-1)}
+            className="text-4xl text-white/70"
+          />
+        </div>
+
+        <div className="rounded-full bg-gray-dark/30 w-10 h-12 flex justify-center items-center">
+          <FontAwesomeIcon
+            icon={faChevronRight}
+            onClick={() => handleChevronClick(1)}
+            className="text-4xl text-white/70"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default DetailPageCarousel;
