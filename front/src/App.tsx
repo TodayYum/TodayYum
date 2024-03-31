@@ -9,6 +9,7 @@ import NavBarLayout from './layout/NavBarLayout';
 import SearchLayout from './layout/SearchLayout';
 import RecentSearchPage from './pages/RecentSearchPage';
 import SearchResultPage from './pages/SearchResultPage';
+import FilmDetailPage from './pages/FilmDetailPage';
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
       <Route element={<SearchLayout />}>
         <Route path="/recent" element={<RecentSearchPage />} />
         <Route path="/search-result" element={<SearchResultPage />} />
+      </Route>
+      <Route element={<NavBarLayout />}>
+        <Route path="/test" element={<FilmDetailPage />} />
       </Route>
     </Routes>
   );
