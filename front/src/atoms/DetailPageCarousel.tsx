@@ -8,27 +8,24 @@ import { IDetailPageCarousel } from '../types/components/DetailPageCarousel.type
 
 function DetailPageCarousel(props: IDetailPageCarousel) {
   const [carouselIdx, setCarouselIdx] = useState<number>(0);
-  const translateLevel = Array.from(
-    { length: props.imgs.length },
-    (v, i) => `-translate-x-[${i * 100}vw]`,
-  );
   const handleChevronClick = (direction: number) => {
-    if (!translateLevel[carouselIdx + direction]) return;
+    if (
+      carouselIdx + direction < 0 ||
+      carouselIdx + direction === props.imgs.length
+    )
+      return;
     setCarouselIdx(prev => prev + direction);
   };
   return (
     <div className="w-[100vw]">
       <div
-        className={`flex transition duration-1000 ${translateLevel[carouselIdx]}`}
+        className="flex transition duration-1000"
+        style={{ transform: `translate(-${carouselIdx * 100}vw)` }}
       >
         {props.imgs.map(element => (
-          //   <div className="flex-[0_0_100vw]">
-          <img
-            src={element}
-            alt="#"
-            className="flex-[0_0_100vw] h-[110vw] object-cover"
-          />
-          //   </div>
+          <div className="flex-[0_0_100vw]">
+            <img src={element} alt="#" className=" h-[110vw] object-cover" />
+          </div>
         ))}
       </div>
 
