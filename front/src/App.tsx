@@ -10,12 +10,15 @@ import SearchLayout from './layout/SearchLayout';
 import RecentSearchPage from './pages/RecentSearchPage';
 import SearchResultPage from './pages/SearchResultPage';
 import FilmDetailPage from './pages/FilmDetailPage';
+import UploadFicturesPage from './pages/UploadFicturesPage';
 
 function App() {
   return (
     <Routes>
       <Route element={<NavBarLayout />}>
         <Route path="/" element={<MainPage />} />
+        <Route path="/test" element={<FilmDetailPage />} />
+        <Route path="/create-board" element={<UploadFicturesPage />} />
       </Route>
       <Route path="/login" element={<LoginPage />} />
       <Route element={<HeaderOnlyLayout isSignUp />}>
@@ -27,9 +30,6 @@ function App() {
       <Route element={<SearchLayout />}>
         <Route path="/recent" element={<RecentSearchPage />} />
         <Route path="/search-result" element={<SearchResultPage />} />
-      </Route>
-      <Route element={<NavBarLayout />}>
-        <Route path="/test" element={<FilmDetailPage />} />
       </Route>
     </Routes>
   );
