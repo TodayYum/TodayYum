@@ -49,4 +49,8 @@ public class CommentEntity {
     @LastModifiedDate
     @Column(name = "modified_at", nullable = false)
     private LocalDateTime modifiedAt;
+
+    public void changeMember(MemberEntity memberEntity) { this.member = memberEntity; }
+
+    public void changeBoard(BoardEntity boardEntity) { this.board = boardEntity; }
 }

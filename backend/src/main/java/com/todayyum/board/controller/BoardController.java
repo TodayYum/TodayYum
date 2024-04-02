@@ -3,6 +3,7 @@ package com.todayyum.board.controller;
 import com.todayyum.auth.userDetails.CustomUserDetails;
 import com.todayyum.board.application.*;
 import com.todayyum.board.dto.request.BoardAddRequest;
+import com.todayyum.board.dto.request.CommentAddRequest;
 import com.todayyum.global.dto.response.BaseResponse;
 import com.todayyum.global.dto.response.ResponseCode;
 import jakarta.validation.Valid;
@@ -25,6 +26,8 @@ public class BoardController {
     private final RemoveBoardUseCase removeBoardUseCase;
     private final AddYummyUseCase addYummyUseCase;
     private final RemoveYummyUseCase removeYummyUseCase;
+    private final AddCommentUseCase addCommentUseCase;
+    private final RemoveCommentUseCase removeCommentUseCase;
 
     @PostMapping
     public ResponseEntity<?> boardAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -65,20 +68,26 @@ public class BoardController {
     }
 
     @PostMapping("/{boardId}/comments")
-    public ResponseEntity<?> commentAdd(@PathVariable Long boardId) {
+    public ResponseEntity<?> commentAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                        @PathVariable Long boardId,
+                                        @Valid CommentAddRequest commentAddRequest) {
+        commentAddRequest.setBoardId(boardId);
+        commentAddRequest.setMemberId(customUserDetails.getMemberId());
+
+        return BaseResponse.createResponseEntity(ResponseCode.CREATED, addCommentUseCase.addComment(commentAddRequest));
+    }
+
+    @PatchMapping("/comments/{commentId}")
+    public ResponseEntity<?> commentModify(@PathVariable Long commentId) {
         return null;
     }
 
-    @PatchMapping("/{boardId}/comments/{commentId}")
-    public ResponseEntity<?> commentModify(
-            @PathVariable Long boardId, @PathVariable Long commentId) {
-        return null;
-    }
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<?> commentRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                           @PathVariable Long commentId) {
+        removeCommentUseCase.removeComment(commentId, customUserDetails.getMemberId());
 
-    @DeleteMapping("/{boardId}/comments/{commentId}")
-    public ResponseEntity<?> commentRemove(
-            @PathVariable Long boardId, @PathVariable Long commentId) {
-        return null;
+        return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
     @GetMapping("/{boardId}/comments")
