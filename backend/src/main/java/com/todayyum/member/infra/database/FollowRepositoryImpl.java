@@ -60,7 +60,7 @@ public class FollowRepositoryImpl implements FollowRepository {
     }
 
     @Override
-    public void deleteByFromMemberAndToMember(Follow follow) {
+    public void delete(Follow follow) {
         MemberEntity fromMember = findMemberById(follow.getFromMemberId());
 
         MemberEntity toMember = findMemberById(follow.getToMemberId());

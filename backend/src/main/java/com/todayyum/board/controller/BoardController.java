@@ -1,9 +1,7 @@
 package com.todayyum.board.controller;
 
 import com.todayyum.auth.userDetails.CustomUserDetails;
-import com.todayyum.board.application.AddBoardUseCase;
-import com.todayyum.board.application.FindBoardUseCase;
-import com.todayyum.board.application.RemoveBoardUseCase;
+import com.todayyum.board.application.*;
 import com.todayyum.board.dto.request.BoardAddRequest;
 import com.todayyum.global.dto.response.BaseResponse;
 import com.todayyum.global.dto.response.ResponseCode;
@@ -25,6 +23,8 @@ public class BoardController {
     private final AddBoardUseCase addBoardUseCase;
     private final FindBoardUseCase findBoardUseCase;
     private final RemoveBoardUseCase removeBoardUseCase;
+    private final AddYummyUseCase addYummyUseCase;
+    private final RemoveYummyUseCase removeYummyUseCase;
 
     @PostMapping
     public ResponseEntity<?> boardAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -87,13 +87,18 @@ public class BoardController {
     }
 
     @PostMapping("/{boardId}/yummys")
-    public ResponseEntity<?> yummyAdd(@PathVariable Long boardId) {
-        return null;
+    public ResponseEntity<?> yummyAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      @PathVariable Long boardId) {
+        return BaseResponse.createResponseEntity(ResponseCode.CREATED,
+                addYummyUseCase.addYummy(customUserDetails.getMemberId(), boardId));
     }
 
     @DeleteMapping("/{boardId}/yummys")
-    public ResponseEntity<?> yummyRemove(@PathVariable Long boardId) {
-        return null;
+    public ResponseEntity<?> yummyRemove(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                         @PathVariable Long boardId) {
+        removeYummyUseCase.removeYummy(customUserDetails.getMemberId(), boardId);
+
+        return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
 }

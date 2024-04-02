@@ -454,7 +454,7 @@ public class MemberUseCaseTest {
 
         doNothing()
                 .when(followRepository)
-                .deleteByFromMemberAndToMember(any(Follow.class));
+                .delete(any(Follow.class));
 
         when(followRepository.existsByFromMemberAndToMember(any(Follow.class)))
                 .thenReturn(true);
@@ -463,7 +463,7 @@ public class MemberUseCaseTest {
         removeFollowUseCase.removeFollow(fromMemberId, toMemberId);
 
         //then
-        verify(followRepository, times(1)).deleteByFromMemberAndToMember(any(Follow.class));
+        verify(followRepository, times(1)).delete(any(Follow.class));
     }
 
     @Test

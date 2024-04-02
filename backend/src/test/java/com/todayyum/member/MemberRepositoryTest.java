@@ -278,7 +278,7 @@ public class MemberRepositoryTest {
         followRepository.save(follow);
 
         //when
-        followRepository.deleteByFromMemberAndToMember(follow);
+        followRepository.delete(follow);
 
         //then
         assertEquals(false, followRepository.existsByFromMemberAndToMember(follow));
@@ -292,7 +292,7 @@ public class MemberRepositoryTest {
 
         //when & then
         CustomException thrown = assertThrows(CustomException.class,
-                () -> followRepository.deleteByFromMemberAndToMember(follow));
+                () -> followRepository.delete(follow));
         assertEquals(ResponseCode.MEMBER_ID_NOT_FOUND, thrown.getResponseCode());
     }
 

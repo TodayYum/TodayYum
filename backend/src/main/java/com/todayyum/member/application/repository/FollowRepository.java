@@ -16,7 +16,7 @@ public interface FollowRepository {
 
     Long countByToMember(UUID toMemberId);
 
-    void deleteByFromMemberAndToMember(Follow follow);
+    void delete(Follow follow);
 
     List<FollowListResponse> findByFromMember(UUID fromMemberId);
 

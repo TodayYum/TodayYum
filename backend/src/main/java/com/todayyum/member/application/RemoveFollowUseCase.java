@@ -26,6 +26,6 @@ public class RemoveFollowUseCase {
             throw new CustomException(ResponseCode.NOT_FOLLOW);
         }
 
-        followRepository.deleteByFromMemberAndToMember(follow);
+        followRepository.delete(follow);
     }
 }

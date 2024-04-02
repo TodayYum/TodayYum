@@ -43,6 +43,9 @@ public enum ResponseCode {
     INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "유효하지 않은 카테고리입니다."),
 
     WRITER_USER_MISMATCH(HttpStatus.BAD_REQUEST, "작성자와 이용자가 일치하지 않습니다."),
+
+    DUPLICATE_YUMMY(HttpStatus.CONFLICT, "이미 야미 중인 게시글입니다."),
+    NOT_YUMMY(HttpStatus.NOT_FOUND, "야미 중이지 않은 게시글입니다."),
     ;
 
     private final HttpStatus status;

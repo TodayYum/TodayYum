@@ -12,13 +12,16 @@ public class BoardListResponse {
     private Long id;
 //    private Long yummyCount;
     private Float totalScore;
-//    private String thumbnail;
+    private String thumbnail;
     //태그 관련 변수
 
     public BoardListResponse(Long id, Float totalScore) {
         this.id = id;
 //        this.yummyCount = yummyCount;
         this.totalScore = totalScore;
-//        this.thumbnail = thumbnail;
+    }
+
+    public void changeThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

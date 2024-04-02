@@ -59,4 +59,10 @@ public class BoardImageRepositoryImpl implements BoardImageRepository {
                 .map(BoardImage::createBoardImage)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public BoardImage findThumbnailByBoardId(Long boardId) {
+        return jpaBoardImageRepository.findThumbnailByBoardId(boardId)
+                .map(BoardImage::createBoardImage).orElse(null);
+    }
 }

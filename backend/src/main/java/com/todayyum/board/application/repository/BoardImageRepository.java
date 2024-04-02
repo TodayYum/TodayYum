@@ -11,4 +11,6 @@ public interface BoardImageRepository {
     List<BoardImage> findByBoardId(Long boardId);
 
     List<BoardImage> findByMemberId(UUID memberId);
+
+    BoardImage findThumbnailByBoardId(Long boardId);
 }
