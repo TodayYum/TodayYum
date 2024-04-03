@@ -5,15 +5,21 @@ import {
   faMoneyBill1Wave,
   faChampagneGlasses,
 } from '@fortawesome/free-solid-svg-icons';
-import { ISelectScore } from '../types/components/SelectScore.types';
+import {
+  IScoreStar,
+  ISelectScore,
+} from '../types/components/SelectScore.types';
 
-const ScoreStar = ({ score }: { score: number | undefined }) => {
-  const scoreStar = Array.from({ length: 5 }, (v, i) => i < (score || 3));
+const ScoreStar = (props: IScoreStar) => {
+  const scoreStar = Array.from({ length: 5 }, (v, i) => i < props.score);
 
   const handleClickStar = (input: number) => {
-    if (!score) return;
-    // atom으로 가져온 score를 setScore
-    console.log(input);
+    if (!props.setScore) return;
+    if (props.score === input) {
+      props.setScore(0, props.type);
+    } else {
+      props.setScore(input, props.type);
+    }
   };
 
   return (
@@ -31,7 +37,7 @@ const ScoreStar = ({ score }: { score: number | undefined }) => {
 
 function SelectScore(props: ISelectScore) {
   return (
-    <div className={`flex flex-col gap- ${props.customCSS}"`}>
+    <div className={`flex flex-col gap-2 ${props.customCSS}`}>
       <div className="flex items-center justify-between">
         <span className="text-sm flex items-center">
           <FontAwesomeIcon
@@ -40,7 +46,7 @@ function SelectScore(props: ISelectScore) {
           />
           맛있어요!
         </span>
-        <ScoreStar score={props.score?.[0]} />
+        <ScoreStar score={props.score[0]} type={0} setScore={props.setScore} />
       </div>
       <div className="flex items-center justify-between">
         <span className="text-sm flex items-center">
@@ -50,7 +56,7 @@ function SelectScore(props: ISelectScore) {
           />
           가격이 괜찮아요!
         </span>
-        <ScoreStar score={props.score?.[1]} />
+        <ScoreStar score={props.score[1]} type={1} setScore={props.setScore} />
       </div>
       <div className="flex items-center justify-between">
         <span className="text-sm flex items-center">
@@ -60,7 +66,7 @@ function SelectScore(props: ISelectScore) {
           />
           분위기가 좋아요!
         </span>
-        <ScoreStar score={props.score?.[2]} />
+        <ScoreStar score={props.score[2]} type={2} setScore={props.setScore} />
       </div>
     </div>
   );
