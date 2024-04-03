@@ -40,7 +40,7 @@ public class BoardRepositoryImpl implements BoardRepository {
         MemberEntity memberEntity = jpaMemberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
-        return jpaBoardRepository.findByMemberId(memberEntity);
+        return jpaBoardRepository.findByMember(memberEntity);
     }
 
     @Override

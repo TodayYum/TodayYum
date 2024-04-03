@@ -7,6 +7,7 @@ import com.todayyum.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 public class AddYummyUseCase {
     private final YummyRepository yummyRepository;
 
+    @Transactional
     public Long addYummy(UUID memberId, Long boardId) {
         Yummy yummy = Yummy.createYummy(memberId, boardId);
 

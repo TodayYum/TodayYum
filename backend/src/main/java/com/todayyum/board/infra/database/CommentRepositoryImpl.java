@@ -2,6 +2,7 @@ package com.todayyum.board.infra.database;
 
 import com.todayyum.board.application.repository.CommentRepository;
 import com.todayyum.board.domain.Comment;
+import com.todayyum.board.dto.response.CommentListResponse;
 import com.todayyum.board.infra.entity.BoardEntity;
 import com.todayyum.board.infra.entity.CommentEntity;
 import com.todayyum.global.dto.response.ResponseCode;
@@ -11,6 +12,8 @@ import com.todayyum.member.infra.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -47,5 +50,13 @@ public class CommentRepositoryImpl implements CommentRepository {
                 .orElseThrow(() -> new CustomException(ResponseCode.COMMENT_ID_NOT_FOUND));
 
         return Comment.createComment(commentEntity);
+    }
+
+    @Override
+    public List<CommentListResponse> findByBoardId(Long boardId) {
+        BoardEntity boardEntity = jpaBoardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ResponseCode.COMMENT_ID_NOT_FOUND));
+
+        return jpaCommentRepository.findByBoard(boardEntity);
     }
 }

@@ -26,6 +26,7 @@ public class ModifyMemberUseCase {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final S3Util s3Util;
 
+    @Transactional
     public void modifyNickname(NicknameModifyRequest nicknameModifyRequest) {
         Member member = memberRepository.findById(nicknameModifyRequest.getMemberId());
 
@@ -37,6 +38,7 @@ public class ModifyMemberUseCase {
         memberRepository.save(member);
     }
 
+    @Transactional
     public void modifyProfile(ProfileModifyRequest profileModifyRequest) {
         Member member = memberRepository.findById(profileModifyRequest.getMemberId());
 
@@ -48,6 +50,7 @@ public class ModifyMemberUseCase {
         memberRepository.save(member);
     }
 
+    @Transactional
     public void modifyPassword(PasswordModifyRequest passwordModifyRequest) {
         Member member = memberRepository.findById(passwordModifyRequest.getMemberId());
 
@@ -55,6 +58,7 @@ public class ModifyMemberUseCase {
         memberRepository.save(member);
     }
 
+    @Transactional
     public void modifyIntroduction(IntroductionModifyRequest introductionModifyRequest) {
         Member member = memberRepository.findById(introductionModifyRequest.getMemberId());
 

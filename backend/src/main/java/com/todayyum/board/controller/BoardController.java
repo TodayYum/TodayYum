@@ -4,6 +4,7 @@ import com.todayyum.auth.userDetails.CustomUserDetails;
 import com.todayyum.board.application.*;
 import com.todayyum.board.dto.request.BoardAddRequest;
 import com.todayyum.board.dto.request.CommentAddRequest;
+import com.todayyum.board.dto.request.CommentModifyRequest;
 import com.todayyum.global.dto.response.BaseResponse;
 import com.todayyum.global.dto.response.ResponseCode;
 import jakarta.validation.Valid;
@@ -28,6 +29,8 @@ public class BoardController {
     private final RemoveYummyUseCase removeYummyUseCase;
     private final AddCommentUseCase addCommentUseCase;
     private final RemoveCommentUseCase removeCommentUseCase;
+    private final ModifyCommentUseCase modifyCommentUseCase;
+    private final FindCommentUseCase findCommentUseCase;
 
     @PostMapping
     public ResponseEntity<?> boardAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -42,21 +45,6 @@ public class BoardController {
     public ResponseEntity<?> boardListByMemberId(@PathVariable UUID memberId) {
         return BaseResponse.createResponseEntity(ResponseCode.OK,
                 findBoardUseCase.listBoardByMember(memberId));
-    }
-
-    @GetMapping
-    public ResponseEntity<?> boardList() {
-        return null;
-    }
-
-    @GetMapping("/{boardId}")
-    public ResponseEntity<?> boardDetail(@PathVariable Long boardId) {
-        return null;
-    }
-
-    @PostMapping("/{boardId}")
-    public ResponseEntity<?> boardModify(@PathVariable Long boardId) {
-        return null;
     }
 
     @DeleteMapping("/{boardId}")
@@ -74,12 +62,19 @@ public class BoardController {
         commentAddRequest.setBoardId(boardId);
         commentAddRequest.setMemberId(customUserDetails.getMemberId());
 
-        return BaseResponse.createResponseEntity(ResponseCode.CREATED, addCommentUseCase.addComment(commentAddRequest));
+        return BaseResponse.createResponseEntity(ResponseCode.CREATED,
+                addCommentUseCase.addComment(commentAddRequest));
     }
 
     @PatchMapping("/comments/{commentId}")
-    public ResponseEntity<?> commentModify(@PathVariable Long commentId) {
-        return null;
+    public ResponseEntity<?> commentModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                           @PathVariable Long commentId,
+                                           @Valid CommentModifyRequest commentModifyRequest) {
+        commentModifyRequest.setId(commentId);
+        commentModifyRequest.setMemberId(customUserDetails.getMemberId());
+
+        return BaseResponse.createResponseEntity(ResponseCode.OK,
+                modifyCommentUseCase.modifyComment(commentModifyRequest));
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -92,7 +87,7 @@ public class BoardController {
 
     @GetMapping("/{boardId}/comments")
     public ResponseEntity<?> commentList(@PathVariable Long boardId) {
-        return null;
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findCommentUseCase.listComment(boardId));
     }
 
     @PostMapping("/{boardId}/yummys")
@@ -108,6 +103,21 @@ public class BoardController {
         removeYummyUseCase.removeYummy(customUserDetails.getMemberId(), boardId);
 
         return BaseResponse.createResponseEntity(ResponseCode.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> boardList() {
+        return null;
+    }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<?> boardDetail(@PathVariable Long boardId) {
+        return null;
+    }
+
+    @PostMapping("/{boardId}")
+    public ResponseEntity<?> boardModify(@PathVariable Long boardId) {
+        return null;
     }
 
 }

@@ -7,6 +7,7 @@ import com.todayyum.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 public class RemoveCommentUseCase {
     private final CommentRepository commentRepository;
 
+    @Transactional
     public void removeComment(Long commentId, UUID memberId) {
         if(memberId == null) {
             throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
@@ -23,7 +25,7 @@ public class RemoveCommentUseCase {
 
         Comment comment = commentRepository.findById(commentId);
 
-        if(comment.getMemberId() != memberId) {
+        if(!comment.getMemberId().equals(memberId)) {
             throw new CustomException(ResponseCode.WRITER_USER_MISMATCH);
         }
 

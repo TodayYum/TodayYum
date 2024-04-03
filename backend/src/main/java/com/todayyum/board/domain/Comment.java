@@ -47,4 +47,6 @@ public class Comment {
                 .modifiedAt(this.modifiedAt)
                 .build();
     }
+
+    public void changeContent(String content) { this.content = content; }
 }

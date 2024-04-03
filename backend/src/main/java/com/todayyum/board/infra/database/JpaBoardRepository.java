@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface JpaBoardRepository extends JpaRepository<BoardEntity, Long> {
-    @Query("SELECT new com.todayyum.board.dto.response.BoardListResponse(b.id, b.totalScore) " +
+    @Query("SELECT new com.todayyum.board.dto.response.BoardListResponse(b.id, b.totalScore, b.yummyCount) " +
             "FROM BoardEntity b " +
             "WHERE b.member = :member")
-    List<BoardListResponse> findByMemberId(MemberEntity member);
+    List<BoardListResponse> findByMember(MemberEntity member);
 }

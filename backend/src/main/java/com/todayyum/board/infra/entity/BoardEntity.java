@@ -71,6 +71,9 @@ public class BoardEntity {
     @Column(name = "meal_time")
     private MealTime mealTime;
 
+    @Formula("(SELECT count(1) FROM yummys y WHERE y.board_id = id)")
+    private Long yummyCount;
+
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<CommentEntity> comments;
 
