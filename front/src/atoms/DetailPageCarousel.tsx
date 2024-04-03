@@ -17,7 +17,7 @@ function DetailPageCarousel(props: IDetailPageCarousel) {
     setCarouselIdx(prev => prev + direction);
   };
   return (
-    <div className="w-[100vw]">
+    <div className={`w-[100vw] ${props.customCSS}`} ref={props.divRef}>
       <div
         className="flex transition duration-1000"
         style={{ transform: `translate(-${carouselIdx * 100}vw)` }}
@@ -29,7 +29,7 @@ function DetailPageCarousel(props: IDetailPageCarousel) {
         ))}
       </div>
 
-      <div className="absolute top-[50%] -translate-y-[100%] flex justify-between w-full px-4">
+      <div className="absolute top-[50%] -translate-y-[50%] flex justify-between w-full px-4">
         <div className="rounded-full bg-gray-dark/30 w-10 h-12 flex justify-center items-center">
           <FontAwesomeIcon
             icon={faChevronLeft}
