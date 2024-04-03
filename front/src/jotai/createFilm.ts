@@ -10,7 +10,9 @@ import {
 
 const createFilm = atom<ICreateFile>({
   files: [],
+  fileURL: [],
   contents: '',
+  category: [],
   tags: [],
   score: [0, 0, 0],
 });
