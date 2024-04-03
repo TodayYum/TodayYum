@@ -71,7 +71,7 @@ function FilmDetailPage() {
             <span className="text-base mr-2"># {element}</span>
           ))}
           <p className="text-base my-5">서울특별시 강남구 테헤란로 212</p>
-          <SelectScore />
+          <SelectScore score={[0, 0, 0]} />
         </div>
       ) : (
         <CommentList

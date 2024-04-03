@@ -13,7 +13,7 @@ function Navbar() {
       <Link to="/">
         <FontAwesomeIcon icon={faMagnifyingGlass} />
       </Link>
-      <Link to="/">
+      <Link to="/create-board/select-fictures">
         <FontAwesomeIcon icon={faCirclePlus} />
       </Link>
       <Link to="/">
