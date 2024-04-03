@@ -11,6 +11,7 @@ import RecentSearchPage from './pages/RecentSearchPage';
 import SearchResultPage from './pages/SearchResultPage';
 import FilmDetailPage from './pages/FilmDetailPage';
 import UploadFicturesPage from './pages/UploadFicturesPage';
+import CreatePolaroidFilmPage from './pages/CreatePolaroidFilmPage';
 
 function App() {
   return (
@@ -18,7 +19,10 @@ function App() {
       <Route element={<NavBarLayout />}>
         <Route path="/" element={<MainPage />} />
         <Route path="/test" element={<FilmDetailPage />} />
-        <Route path="/create-board" element={<UploadFicturesPage />} />
+      </Route>
+      <Route path="/create-board" element={<NavBarLayout />}>
+        <Route path="select-fictures" element={<UploadFicturesPage />} />
+        <Route path="" element={<CreatePolaroidFilmPage />} />
       </Route>
       <Route path="/login" element={<LoginPage />} />
       <Route element={<HeaderOnlyLayout isSignUp />}>
