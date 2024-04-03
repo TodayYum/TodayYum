@@ -13,5 +13,12 @@
     // 함수 선언에서 화살표 함수 사용을 제한하기에 off
     "react/function-component-definition": "off",
     "@typescript-eslint/no-use-before-define": "off",
+    "no-continue": "off",
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelAttributes": ["htmlFor"],
+      },
+    ],
   },
 }
