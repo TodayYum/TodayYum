@@ -59,4 +59,13 @@ public class CommentRepositoryImpl implements CommentRepository {
 
         return jpaCommentRepository.findByBoard(boardEntity);
     }
+
+    @Override
+    public Comment findLastByBoardId(Long boardId) {
+        BoardEntity boardEntity = jpaBoardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ResponseCode.COMMENT_ID_NOT_FOUND));
+
+        return jpaCommentRepository.findFirstByBoardOrderByModifiedAtDesc(boardEntity)
+                .map(Comment::createComment).orElse(null);
+    }
 }

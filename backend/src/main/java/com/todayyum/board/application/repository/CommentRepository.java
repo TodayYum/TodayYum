@@ -10,4 +10,5 @@ public interface CommentRepository {
     void delete(Comment comment);
     Comment findById(Long commentId);
     List<CommentListResponse> findByBoardId(Long boardId);
+    Comment findLastByBoardId(Long boardId);
 }

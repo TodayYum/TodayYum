@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Repository
 @RequiredArgsConstructor
 @Slf4j
@@ -18,6 +21,12 @@ public class TagRepositoryImpl implements TagRepository {
         return jpaTagRepository.findByContent(content)
                 .map(Tag::createTag)
                 .orElse(null);
+    }
+
+    @Override
+    public List<Tag> findByBoardId(Long boardId) {
+        return jpaTagRepository.findByBoardId(boardId).stream()
+                .map(Tag::createTag).collect(Collectors.toList());
     }
 
     @Override

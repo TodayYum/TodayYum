@@ -3,6 +3,7 @@ package com.todayyum.board.controller;
 import com.todayyum.auth.userDetails.CustomUserDetails;
 import com.todayyum.board.application.*;
 import com.todayyum.board.dto.request.BoardAddRequest;
+import com.todayyum.board.dto.request.BoardModifyRequest;
 import com.todayyum.board.dto.request.CommentAddRequest;
 import com.todayyum.board.dto.request.CommentModifyRequest;
 import com.todayyum.global.dto.response.BaseResponse;
@@ -24,13 +25,14 @@ public class BoardController {
 
     private final AddBoardUseCase addBoardUseCase;
     private final FindBoardUseCase findBoardUseCase;
+    private final ModifyBoardUseCase modifyBoardUseCase;
     private final RemoveBoardUseCase removeBoardUseCase;
+    private final AddCommentUseCase addCommentUseCase;
+    private final FindCommentUseCase findCommentUseCase;
+    private final ModifyCommentUseCase modifyCommentUseCase;
+    private final RemoveCommentUseCase removeCommentUseCase;
     private final AddYummyUseCase addYummyUseCase;
     private final RemoveYummyUseCase removeYummyUseCase;
-    private final AddCommentUseCase addCommentUseCase;
-    private final RemoveCommentUseCase removeCommentUseCase;
-    private final ModifyCommentUseCase modifyCommentUseCase;
-    private final FindCommentUseCase findCommentUseCase;
 
     @PostMapping
     public ResponseEntity<?> boardAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -112,12 +114,17 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity<?> boardDetail(@PathVariable Long boardId) {
-        return null;
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findBoardUseCase.detailBoard(boardId));
     }
 
     @PostMapping("/{boardId}")
-    public ResponseEntity<?> boardModify(@PathVariable Long boardId) {
-        return null;
+    public ResponseEntity<?> boardModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                         @PathVariable Long boardId,
+                                         @Valid BoardModifyRequest boardModifyRequest) {
+        boardModifyRequest.setId(boardId);
+        boardModifyRequest.setMemberId(customUserDetails.getMemberId());
+
+        return BaseResponse.createResponseEntity(ResponseCode.OK, modifyBoardUseCase.modifyBoard(boardModifyRequest));
     }
 
 }

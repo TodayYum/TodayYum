@@ -1,6 +1,7 @@
 package com.todayyum.board.domain;
 
 import com.todayyum.board.dto.request.BoardAddRequest;
+import com.todayyum.board.dto.response.BoardDetailResponse;
 import com.todayyum.board.infra.entity.BoardEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Board {
     private Category category;
     private LocalDate ateAt;
     private MealTime mealTime;
+    private Long yummyCount;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -44,6 +46,7 @@ public class Board {
     public static Board createBoard(BoardEntity boardEntity) {
         return Board.builder()
                 .id(boardEntity.getId())
+                .memberId(boardEntity.getMember().getId())
                 .content(boardEntity.getContent())
                 .tasteScore(boardEntity.getTasteScore())
                 .priceScore(boardEntity.getPriceScore())
@@ -52,6 +55,7 @@ public class Board {
                 .category(boardEntity.getCategory())
                 .ateAt(boardEntity.getAteAt())
                 .mealTime(boardEntity.getMealTime())
+                .yummyCount(boardEntity.getYummyCount())
                 .createdAt(boardEntity.getCreatedAt())
                 .modifiedAt(boardEntity.getModifiedAt())
                 .build();
@@ -70,6 +74,22 @@ public class Board {
                 .mealTime(this.getMealTime())
                 .createdAt(this.getCreatedAt())
                 .modifiedAt(this.getModifiedAt())
+                .build();
+    }
+
+    public BoardDetailResponse createDetailResponse() {
+        return BoardDetailResponse.builder()
+                .id(this.id)
+                .content(this.content)
+                .memberId(this.memberId)
+                .category(this.category.name())
+                .mealTime(this.mealTime.name())
+                .tasteScore(this.tasteScore)
+                .priceScore(this.priceScore)
+                .moodScore(this.moodScore)
+                .totalScore(this.totalScore)
+                .ateAt(this.ateAt)
+                .yummyCount(this.yummyCount)
                 .build();
     }
 
