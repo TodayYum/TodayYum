@@ -1,10 +1,10 @@
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
-import { useSetNicknameAtom, useSignInDataAtom } from '../jotai/signInData';
+import { useSetNicknameAtom, useSignUpDataAtom } from '../jotai/signUpData';
 
 function RegistNickname() {
   const setNickname = useSetNicknameAtom();
-  const registData = useSignInDataAtom();
+  const registData = useSignUpDataAtom();
 
   const handleOverlapCheck = () => {};
 

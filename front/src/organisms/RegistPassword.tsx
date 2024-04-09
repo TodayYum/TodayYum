@@ -13,12 +13,12 @@ import {
   useSetPasswordAtom,
   useSetConfirmPasswordAtom,
   usePlusSignUpLevelAtom,
-  useSignInDataAtom,
-} from '../jotai/signInData';
+  useSignUpDataAtom,
+} from '../jotai/signUpData';
 import { IRegistPassword } from '../types/organisms/RegistPassword.types';
 
 function RegistPassword(props: IRegistPassword) {
-  const registData = useSignInDataAtom();
+  const registData = useSignUpDataAtom();
   const setPassword = useSetPasswordAtom();
   const setConfirmPassword = useSetConfirmPasswordAtom();
   const plusSignUpLevelAtom = usePlusSignUpLevelAtom();

@@ -5,8 +5,8 @@ import {
   useSetCodeAtom,
   useSetEmailAtom,
   usePlusSignUpLevelAtom,
-  useSignInDataAtom,
-} from '../jotai/signInData';
+  useSignUpDataAtom,
+} from '../jotai/signUpData';
 import { IRegistEmail } from '../types/organisms/RegistEmail.types';
 
 function Basebold({ text }: { text: string }) {
@@ -14,7 +14,7 @@ function Basebold({ text }: { text: string }) {
 }
 
 function RegistEmail(props: IRegistEmail) {
-  const registData = useSignInDataAtom();
+  const registData = useSignUpDataAtom();
   const setEmail = useSetEmailAtom();
   const setCode = useSetCodeAtom();
   const plusSignUpLevel = usePlusSignUpLevelAtom();
