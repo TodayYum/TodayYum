@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import RegistEmail from '../organisms/RegistEmail';
-import { useSignInDataAtom, useInitSignInDataAtom } from '../jotai/signInData';
+import { useSignUpDataAtom, useInitsignUpDataAtom } from '../jotai/signUpData';
 import RegistPassword from '../organisms/RegistPassword';
 import RegistNickname from '../organisms/RegistNickname';
 
 function SignUpPage() {
-  const registData = useSignInDataAtom();
-  const setInitSignInData = useInitSignInDataAtom();
+  const registData = useSignUpDataAtom();
+  const setInitsignUpData = useInitsignUpDataAtom();
 
   useEffect(() => {
-    setInitSignInData();
+    setInitsignUpData();
   }, []);
 
   return (
