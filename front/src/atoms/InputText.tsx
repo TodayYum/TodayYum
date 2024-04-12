@@ -1,7 +1,3 @@
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
-import { IInputText, ISupoortText } from '../types/components/InputText.types';
 /**
  * @param props
  *
@@ -9,6 +5,10 @@ import { IInputText, ISupoortText } from '../types/components/InputText.types';
  * InputTextBox : 이메일 등 텍스트 입력 받는 컴포넌트
  * customClass : 외부에서 조절하고 싶은 tailwindCSS 전달
  */
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { IInputText, ISupoortText } from '../types/components/InputText.types';
 
 const SupportText = (props: ISupoortText) => {
   if (props.isSuccess === -1) {
