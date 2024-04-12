@@ -3,8 +3,10 @@ export interface ICreateFile {
   fileURL: string[];
   contents: string;
   tags: string[];
-  category: boolean[];
+  category: number;
   score: number[];
+  date: number;
+  mealTime: number;
   [key: string]: any;
 }
 
@@ -12,7 +14,9 @@ export interface IUndefinedableCreateFile {
   files?: File[];
   fileURL?: string[];
   contents?: string;
-  category?: boolean[];
+  category?: number;
+  date?: number;
   tags?: string[];
+  mealTime?: number;
   score?: number[];
 }

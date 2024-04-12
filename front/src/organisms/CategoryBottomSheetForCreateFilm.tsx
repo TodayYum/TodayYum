@@ -8,14 +8,11 @@ function CategoryBottomSheetForCreateFilm(props: ISortBottomSheet) {
   const [createFilm, setCreateFilm] = useCreateFilmAtom();
   const modalRef = useRef<HTMLDivElement>(null);
   const handleClickChip = (idx: number) => {
-    let convertedList = [...createFilm.category];
-    if (idx === 0) {
-      convertedList = convertedList.map(() => false);
-    } else {
-      convertedList[0] = false;
+    if (createFilm.category === idx) {
+      setCreateFilm({ category: 0 });
+      return;
     }
-    convertedList[idx] = !convertedList[idx];
-    setCreateFilm({ category: convertedList });
+    setCreateFilm({ category: idx });
   };
   const handleModalClose = (e: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -40,14 +37,17 @@ function CategoryBottomSheetForCreateFilm(props: ISortBottomSheet) {
           카테고리 선택
         </p>
         <div className="flex px-[30px] flex-wrap gap-4 ">
-          {CATEGORY_LIST.map((element, idx) => (
-            <ToggleChip
-              dataId={`${idx}`}
-              text={element}
-              onClick={() => handleClickChip(idx)}
-              isClick={createFilm.category[idx]}
-            />
-          ))}
+          {CATEGORY_LIST.map(
+            (element, idx) =>
+              idx > 0 && (
+                <ToggleChip
+                  dataId={`${idx}`}
+                  text={element}
+                  onClick={() => handleClickChip(idx)}
+                  isClick={createFilm.category === idx}
+                />
+              ),
+          )}
         </div>
       </div>
     </div>

@@ -11,10 +11,12 @@ import {
 const createFilm = atom<ICreateFile>({
   files: [],
   fileURL: [],
+  date: 9,
   contents: '',
-  category: [],
+  category: -1,
   tags: [],
   score: [0, 0, 0],
+  mealTime: 3,
 });
 
 const createFilmAtom = atom(
