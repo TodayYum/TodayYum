@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faHeart, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import DetailPageCarousel from '../atoms/DetailPageCarousel';
 import Header from '../atoms/Header';
@@ -60,6 +60,13 @@ function FilmDetailPage() {
               <FontAwesomeIcon
                 icon={faPencil}
                 className="ml-2 text-gray-dark"
+                onClick={() => navigate('/edit-film')}
+              />
+            )}
+            {DUMMY_ISMINE && (
+              <FontAwesomeIcon
+                icon={faClose}
+                className="ml-2 text-gray-dark text-xl"
                 onClick={() => navigate('/edit-film')}
               />
             )}
