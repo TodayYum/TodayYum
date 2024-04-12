@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 import DetailPageCarousel from '../atoms/DetailPageCarousel';
 import Header from '../atoms/Header';
 import SelectScore from '../atoms/SelectScore';
@@ -12,13 +13,14 @@ function FilmDetailPage() {
   const fixedContentsRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(490);
   const [isMainContents, setIsMainContents] = useState(true);
+  const [commentInputValue, setCommentInputValue] = useState('');
+  const navigate = useNavigate();
   const resizeObserver = new ResizeObserver(entries => {
     // 하나만 observe할 것이므로 forEach를 사용하지 않는다.
     if (entries[0].target === fixedContentsRef.current) {
-      setHeight(entries[0].contentRect.height + 58);
+      setHeight(entries[0].contentRect.height);
     }
   });
-  const [commentInputValue, setCommentInputValue] = useState('');
   console.log(setIsMainContents);
   useEffect(() => {
     if (fixedContentsRef.current) {
@@ -54,6 +56,13 @@ function FilmDetailPage() {
           <div>
             <FontAwesomeIcon icon={faHeart} className="text-error mr-2" />
             <span className="text-base">35</span>
+            {DUMMY_ISMINE && (
+              <FontAwesomeIcon
+                icon={faPencil}
+                className="ml-2 text-gray-dark"
+                onClick={() => navigate('/edit-film')}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -108,4 +117,5 @@ const DUMMY_TAGLIST = [
   '네번째 태그',
 ];
 
+const DUMMY_ISMINE = true;
 export default FilmDetailPage;
