@@ -10,7 +10,7 @@ function CreatePolaroidFilmPage() {
   const [isFirst, setIsFirst] = useState(true);
   const [createFilm] = useCreateFilmAtom();
   const handleFirstNextButton = () => {
-    if (!createFilm.files.length || !createFilm.category.length) {
+    if (!createFilm.files.length || createFilm.category === -1) {
       // Swal 자리
       console.log('선택하지 않은 항목이 있습니다.');
       return;
@@ -24,6 +24,7 @@ function CreatePolaroidFilmPage() {
       console.log('선택하지 않은 항목이 있습니다.');
     }
   };
+
   return (
     <div>
       <Header title="글 작성" />

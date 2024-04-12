@@ -1,9 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 import CommentContainer from '../atoms/CommentContainer';
 import { ICommentList } from '../types/organisms/CommentList.types';
+import EditComment from '../atoms/EditComment';
 
 function CommentList(props: ICommentList) {
+  const [idxOfEditComment, setIdxOfEditComment] = useState(-1);
   return (
     <div
       className="bg-white rounded mx-[15px]"
@@ -18,12 +21,21 @@ function CommentList(props: ICommentList) {
         <p className="font-bold text-base">Comments</p>
       </div>
       <div>
-        {DUMMY_COMMENTLIST.map(element => (
-          <CommentContainer
-            comment={element.comment}
-            nickname={element.nickname}
-          />
-        ))}
+        {DUMMY_COMMENTLIST.map((element, idx) =>
+          idxOfEditComment === idx ? (
+            <EditComment
+              commentId={idx}
+              exitEdit={() => setIdxOfEditComment(-1)}
+              comment={element.comment}
+            />
+          ) : (
+            <CommentContainer
+              comment={element.comment}
+              nickname={element.nickname}
+              setEdit={() => setIdxOfEditComment(idx)}
+            />
+          ),
+        )}
       </div>
     </div>
   );
