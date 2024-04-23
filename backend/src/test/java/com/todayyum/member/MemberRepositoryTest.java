@@ -6,14 +6,15 @@ import com.todayyum.member.application.repository.FollowRepository;
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Follow;
 import com.todayyum.member.domain.Member;
-import com.todayyum.member.dto.response.FollowListResponse;
+import com.todayyum.member.dto.response.MemberListResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -89,7 +90,7 @@ public class MemberRepositoryTest {
                 .password("testtest")
                 .build();
 
-        UUID memberId = memberRepository.save(member).getId();
+        memberRepository.save(member).getId();
 
         //when
         Member savedMember = memberRepository.findByEmail(member.getEmail());
@@ -320,12 +321,15 @@ public class MemberRepositoryTest {
 
         followRepository.save(follow);
 
+        Pageable pageable = Pageable.ofSize(10);
+
         //when
-        List<FollowListResponse> followListResponseList = followRepository.findByFromMember(savedFromMember.getId());
+        Page<MemberListResponse> memberListResponses = memberRepository.findByFromMember(
+                pageable, savedFromMember.getId(), savedFromMember.getId());
 
         //then
-        assertEquals(savedToMember.getId(), followListResponseList.get(0).getMemberId());
-        assertEquals(savedToMember.getNickname(), followListResponseList.get(0).getNickname());
+        assertEquals(savedToMember.getId(), memberListResponses.getContent().get(0).getMemberId());
+        assertEquals(savedToMember.getNickname(), memberListResponses.getContent().get(0).getNickname());
     }
 
     @Test
@@ -334,9 +338,11 @@ public class MemberRepositoryTest {
         //given
         UUID memberId = UUID.randomUUID();
 
+        Pageable pageable = Pageable.ofSize(10);
+
         //when & then
         CustomException thrown = assertThrows(CustomException.class,
-                () -> followRepository.findByFromMember(memberId));
+                () -> memberRepository.findByFromMember(pageable, memberId, memberId));
         assertEquals(ResponseCode.MEMBER_ID_NOT_FOUND, thrown.getResponseCode());
     }
 
@@ -364,12 +370,15 @@ public class MemberRepositoryTest {
 
         followRepository.save(follow);
 
+        Pageable pageable = Pageable.ofSize(10);
+
         //when
-        List<FollowListResponse> followListResponseList = followRepository.findByToMember(savedToMember.getId());
+        Page<MemberListResponse> memberListResponses = memberRepository.findByToMember(
+                pageable, savedToMember.getId(), savedToMember.getId());
 
         //then
-        assertEquals(savedFromMember.getId(), followListResponseList.get(0).getMemberId());
-        assertEquals(savedFromMember.getNickname(), followListResponseList.get(0).getNickname());
+        assertEquals(savedFromMember.getId(), memberListResponses.getContent().get(0).getMemberId());
+        assertEquals(savedFromMember.getNickname(), memberListResponses.getContent().get(0).getNickname());
     }
 
     @Test
@@ -377,10 +386,12 @@ public class MemberRepositoryTest {
     void listFollowerFailByMemberId() {
         //given
         UUID memberId = UUID.randomUUID();
+        Pageable pageable = Pageable.ofSize(10);
+
 
         //when & then
         CustomException thrown = assertThrows(CustomException.class,
-                () -> followRepository.findByToMember(memberId));
+                () -> memberRepository.findByToMember(pageable, memberId, memberId));
         assertEquals(ResponseCode.MEMBER_ID_NOT_FOUND, thrown.getResponseCode());
     }
 
@@ -492,5 +503,28 @@ public class MemberRepositoryTest {
 
         //when & then
         assertEquals(1L, followRepository.countByToMember(savedToMember.getId()));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 닉네임 검색 테스트")
+    void memberSearchByNickname() throws Exception {
+        //given
+        Member member = Member.builder()
+                .email("test@test.com")
+                .nickname("test")
+                .password("testtest")
+                .build();
+
+        UUID memberId = memberRepository.save(member).getId();
+
+        Pageable pageable = Pageable.ofSize(10);
+
+        //when
+        Page<MemberListResponse> memberListResponses = memberRepository.findByNicknameLike(
+                pageable, memberId, "tes");
+
+        //then
+        assertEquals(memberId, memberListResponses.getContent().get(0).getMemberId());
+        assertEquals(member.getNickname(), memberListResponses.getContent().get(0).getNickname());
     }
 }

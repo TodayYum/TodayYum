@@ -30,7 +30,7 @@ public class RemoveBoardUseCase {
 
         Board board = boardRepository.findById(boardId);
 
-        if(board.getMemberId() != memberId) {
+        if(!board.getMemberId().equals(memberId)) {
             throw new CustomException(ResponseCode.WRITER_USER_MISMATCH);
         }
 

@@ -10,8 +10,12 @@ import com.todayyum.member.infra.database.JpaMemberRepository;
 import com.todayyum.member.infra.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,11 +40,11 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public List<BoardListResponse> findByMemberId(UUID memberId) {
+    public Page<BoardListResponse> findByMemberId(Pageable pageable, UUID memberId) {
         MemberEntity memberEntity = jpaMemberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
-        return jpaBoardRepository.findByMember(memberEntity);
+        return jpaBoardRepository.findByMember(pageable, memberEntity);
     }
 
     @Override
@@ -57,5 +61,35 @@ public class BoardRepositoryImpl implements BoardRepository {
                 .orElseThrow(() -> new CustomException(ResponseCode.BOARD_ID_NOT_FOUND));
 
         return Board.createBoard(boardEntity);
+    }
+
+    @Override
+    public Page<BoardListResponse> findList(Pageable pageable) {
+        return jpaBoardRepository.findList(pageable);
+    }
+
+    @Override
+    public List<BoardListResponse> findTopByYummy() {
+        return jpaBoardRepository.findTopByYummyCount(LocalDate.now());
+    }
+
+    @Override
+    public List<BoardListResponse> findTopListByYummy() {
+        Pageable pageable = PageRequest.of(0, 1);
+
+        return jpaBoardRepository.findTopListByYummyCount(LocalDate.now());
+    }
+
+    @Override
+    public Page<BoardListResponse> findListByTag(Pageable pageable, String content) {
+        return jpaBoardRepository.findListByTag(pageable, content);
+    }
+
+    @Override
+    public Page<BoardListResponse> findByMemberIdAndYummy(Pageable pageable, UUID memberId) {
+        MemberEntity memberEntity = jpaMemberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
+
+        return jpaBoardRepository.findListByMemberAndYummy(pageable, memberEntity);
     }
 }

@@ -2,13 +2,13 @@ package com.todayyum.board.application.repository;
 
 import com.todayyum.board.domain.Comment;
 import com.todayyum.board.dto.response.CommentListResponse;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CommentRepository {
     Comment save(Comment comment);
     void delete(Comment comment);
     Comment findById(Long commentId);
-    List<CommentListResponse> findByBoardId(Long boardId);
+    Page<CommentListResponse> findByBoardId(Long boardId, Pageable pageable);
     Comment findLastByBoardId(Long boardId);
 }

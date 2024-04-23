@@ -4,9 +4,9 @@ import com.todayyum.board.application.repository.CommentRepository;
 import com.todayyum.board.dto.response.CommentListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -14,7 +14,7 @@ import java.util.List;
 public class FindCommentUseCase {
     private final CommentRepository commentRepository;
 
-    public List<CommentListResponse> listComment(Long boardId) {
-        return commentRepository.findByBoardId(boardId);
+    public Page<CommentListResponse> listComment(Long boardId, Pageable pageable) {
+        return commentRepository.findByBoardId(boardId, pageable);
     }
 }

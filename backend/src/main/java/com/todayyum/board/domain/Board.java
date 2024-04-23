@@ -1,6 +1,7 @@
 package com.todayyum.board.domain;
 
 import com.todayyum.board.dto.request.BoardAddRequest;
+import com.todayyum.board.dto.request.BoardModifyRequest;
 import com.todayyum.board.dto.response.BoardDetailResponse;
 import com.todayyum.board.infra.entity.BoardEntity;
 import lombok.Builder;
@@ -91,6 +92,17 @@ public class Board {
                 .ateAt(this.ateAt)
                 .yummyCount(this.yummyCount)
                 .build();
+    }
+
+    public void change(BoardModifyRequest boardModifyRequest) {
+        content = boardModifyRequest.getContent();
+        tasteScore = boardModifyRequest.getTasteScore();
+        priceScore = boardModifyRequest.getPriceScore();
+        moodScore = boardModifyRequest.getMoodScore();
+        totalScore = boardModifyRequest.getTotalScore();
+        category = boardModifyRequest.getCategory();
+        ateAt = boardModifyRequest.getAteAt();
+        mealTime = boardModifyRequest.getMealTime();
     }
 
 }

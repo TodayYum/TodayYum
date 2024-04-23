@@ -21,6 +21,7 @@ public class MemberDetailResponse {
     private Long followerCount;
     private Long followingCount;
     private Role role;
+    private boolean isFollowing;
 
     public static MemberDetailResponse createResponse(Member member) {
         return MemberDetailResponse.builder()

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 @Slf4j
@@ -33,5 +35,15 @@ public class BoardTagRepositoryImpl implements BoardTagRepository {
                 .build();
 
         jpaBoardTagRepository.save(boardTagEntity);
+    }
+
+    @Override
+    public void deleteByBoardIdAndContents(Long boardId, List<String> tags) {
+        jpaBoardTagRepository.deleteByBoardIdAndContents(boardId, tags);
+    }
+
+    @Override
+    public boolean existsByBoardIdAndContent(Long boardId, String content) {
+        return jpaBoardTagRepository.existsByBoardIdAndContent(boardId, content);
     }
 }

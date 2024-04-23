@@ -20,6 +20,10 @@ public class RemoveFollowUseCase {
 
     @Transactional
     public void removeFollow(UUID fromMemberId, UUID toMemberId) {
+        if(fromMemberId.equals(toMemberId)) {
+            throw new CustomException(ResponseCode.SELF_UNFOLLOW);
+        }
+
         Follow follow = Follow.createFollow(fromMemberId, toMemberId);
 
         if(!followRepository.existsByFromMemberAndToMember(follow)) {

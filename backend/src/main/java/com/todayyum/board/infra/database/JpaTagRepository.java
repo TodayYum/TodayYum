@@ -14,4 +14,11 @@ public interface JpaTagRepository extends JpaRepository<TagEntity, Long> {
             "FROM BoardTagEntity bt " +
             "WHERE bt.board.id = :boardId")
     List<TagEntity> findByBoardId(Long boardId);
+
+    @Query("SELECT bt.tag " +
+            "FROM BoardTagEntity bt " +
+            "WHERE bt.board.id = :boardId " +
+            "ORDER BY bt.createdAt " +
+            "LIMIT 1")
+    Optional<TagEntity> findTopByBoardIdOrderByCreatedAt(Long boardId);
 }

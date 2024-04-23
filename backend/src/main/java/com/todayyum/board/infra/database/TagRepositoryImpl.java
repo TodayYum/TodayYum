@@ -37,4 +37,11 @@ public class TagRepositoryImpl implements TagRepository {
 
         return Tag.createTag(jpaTagRepository.save(tagEntity));
     }
+
+    @Override
+    public Tag findTopByBoardId(Long boardId) {
+        return jpaTagRepository.findTopByBoardIdOrderByCreatedAt(boardId)
+                .map(Tag::createTag)
+                .orElse(null);
+    }
 }

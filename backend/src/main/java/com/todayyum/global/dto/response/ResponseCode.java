@@ -40,6 +40,9 @@ public enum ResponseCode {
     DUPLICATE_FOLLOW(HttpStatus.CONFLICT, "이미 팔로우 중인 사용자입니다."),
     NOT_FOLLOW(HttpStatus.NOT_FOUND, "팔로우 중이지 않은 사용자입니다."),
 
+    SELF_FOLLOW(HttpStatus.BAD_REQUEST, "본인을 팔로우할 수 없습니다."),
+    SELF_UNFOLLOW(HttpStatus.BAD_REQUEST, "본인을 언팔로우할 수 없습니다."),
+
     INVALID_MEAL_TIME(HttpStatus.BAD_REQUEST, "유효하지 않은 식사 시간입니다."),
     INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "유효하지 않은 카테고리입니다."),
 

@@ -10,6 +10,8 @@ import com.todayyum.member.dto.request.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +29,6 @@ public class MemberController {
     private final ModifyMemberUseCase modifyMemberUseCase;
     private final RemoveMemberUseCase removeMemberUseCase;
     private final AddFollowUseCase addFollowUseCase;
-    private final FindFollowUseCase findFollowUseCase;
     private final RemoveFollowUseCase removeFollowUseCase;
 
     @PostMapping
@@ -36,8 +37,18 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<?> memberDetail(@PathVariable UUID memberId) {
-        return BaseResponse.createResponseEntity(ResponseCode.OK, findMemberUseCase.findMember(memberId));
+    public ResponseEntity<?> memberDetail(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                          @PathVariable UUID memberId) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK,
+                findMemberUseCase.findMember(customUserDetails.getMemberId(), memberId));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> memberSearchByNickname(@PageableDefault(sort = "createdAt") Pageable pageable,
+                                                    @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                    String nickname) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK,
+                findMemberUseCase.findListByNickname(pageable, customUserDetails.getMemberId(), nickname));
     }
 
     @DeleteMapping
@@ -144,12 +155,18 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/followers")
-    public ResponseEntity<?> followerList(@PathVariable UUID memberId) {
-        return BaseResponse.createResponseEntity(ResponseCode.OK, findFollowUseCase.listFollower(memberId));
+    public ResponseEntity<?> followerList(@PageableDefault(sort = "createdAt") Pageable pageable,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable UUID memberId) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK,
+                findMemberUseCase.listFollower(pageable, customUserDetails.getMemberId(), memberId));
     }
 
     @GetMapping("/{memberId}/followings")
-    public ResponseEntity<?> followingList(@PathVariable UUID memberId) {
-        return BaseResponse.createResponseEntity(ResponseCode.OK, findFollowUseCase.listFollowing(memberId));
+    public ResponseEntity<?> followingList(@PageableDefault(sort = "createdAt") Pageable pageable,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable UUID memberId) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK,
+                findMemberUseCase.listFollowing(pageable, customUserDetails.getMemberId(), memberId));
     }
 }

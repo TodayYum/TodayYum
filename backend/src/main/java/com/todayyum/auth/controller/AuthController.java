@@ -3,15 +3,20 @@ package com.todayyum.auth.controller;
 import com.todayyum.auth.application.RefreshTokenUseCase;
 import com.todayyum.auth.application.RemoveTokenUseCase;
 import com.todayyum.auth.application.VerifyEmailUseCase;
+import com.todayyum.auth.application.VerifyPasswordUseCase;
 import com.todayyum.auth.dto.request.CodeVerifyRequest;
+import com.todayyum.auth.dto.request.PasswordVerifyRequest;
+import com.todayyum.auth.userDetails.CustomUserDetails;
 import com.todayyum.global.dto.response.BaseResponse;
 import com.todayyum.global.dto.response.ResponseCode;
 import com.todayyum.global.exception.CustomException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -26,6 +31,7 @@ public class AuthController {
     private final RefreshTokenUseCase refreshTokenUseCase;
     private final RemoveTokenUseCase removeTokenUseCase;
     private final VerifyEmailUseCase verifyEmailUseCase;
+    private final VerifyPasswordUseCase verifyPasswordUseCase;
 
     @PostMapping("/refresh")
     public ResponseEntity<?> tokenRefresh(@CookieValue(name = "refreshToken", required = false) Cookie cookie,
@@ -68,5 +74,17 @@ public class AuthController {
         if(result) return BaseResponse.createResponseEntity(ResponseCode.OK);
 
         return BaseResponse.createResponseEntity(ResponseCode.EMAIL_VERIFICATION_FAILED);
+    }
+
+    @GetMapping("/verify-password")
+    public ResponseEntity<?> verifyPassword(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                            @Valid PasswordVerifyRequest passwordVerifyRequest) {
+        passwordVerifyRequest.setMemberId(customUserDetails.getMemberId());
+
+        boolean result = verifyPasswordUseCase.verifyPassword(passwordVerifyRequest);
+
+        if(result) return BaseResponse.createResponseEntity(ResponseCode.OK);
+
+        return BaseResponse.createResponseEntity(ResponseCode.LOGIN_ERROR_CREDENTIALS_INVALID);
     }
 }

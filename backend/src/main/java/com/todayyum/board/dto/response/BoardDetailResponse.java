@@ -30,4 +30,5 @@ public class BoardDetailResponse {
     private List<String> images;
     private List<String> tags;
     private String commentWriter;
+    private boolean isYummy;
 }

@@ -1,19 +1,15 @@
 package com.todayyum.board.application;
 
-import com.todayyum.board.application.repository.BoardImageRepository;
-import com.todayyum.board.application.repository.BoardRepository;
-import com.todayyum.board.application.repository.CommentRepository;
-import com.todayyum.board.application.repository.TagRepository;
-import com.todayyum.board.domain.Board;
-import com.todayyum.board.domain.BoardImage;
-import com.todayyum.board.domain.Comment;
-import com.todayyum.board.domain.Tag;
+import com.todayyum.board.application.repository.*;
+import com.todayyum.board.domain.*;
 import com.todayyum.board.dto.response.BoardDetailResponse;
 import com.todayyum.board.dto.response.BoardListResponse;
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,20 +27,21 @@ public class FindBoardUseCase {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final TagRepository tagRepository;
+    private final YummyRepository yummyRepository;
 
-    public List<BoardListResponse> listBoardByMember(UUID memberId) {
-        List<BoardListResponse> boardListResponses = boardRepository.findByMemberId(memberId).stream()
-                .peek(boardListResponse -> {
-                    BoardImage image = boardImageRepository.findThumbnailByBoardId(boardListResponse.getId());
-
-                    Optional.ofNullable(image).ifPresent(img -> boardListResponse.changeThumbnail(img.getLink()));
-                })
-                .collect(Collectors.toList());
-
-        return boardListResponses;
+    public Page<BoardListResponse> listBoardByMember(Pageable pageable, UUID memberId) {
+        return createBoardListResponse(boardRepository.findByMemberId(pageable, memberId));
     }
 
-    public BoardDetailResponse detailBoard(Long boardId) {
+    public Page<BoardListResponse> listBoardByMemberAndYummy(Pageable pageable, UUID memberId) {
+        return createBoardListResponse(boardRepository.findByMemberIdAndYummy(pageable, memberId));
+    }
+
+    public Page<BoardListResponse> listBoard(Pageable pageable) {
+        return createBoardListResponse(boardRepository.findList(pageable));
+    }
+
+    public BoardDetailResponse detailBoard(UUID memberId, Long boardId) {
         Board board = boardRepository.findById(boardId);
 
         Member boardWriter = memberRepository.findById(board.getMemberId());
@@ -61,9 +58,61 @@ public class FindBoardUseCase {
 
         List<Tag> tags = tagRepository.findByBoardId(boardId);
 
-        BoardDetailResponse boardDetailResponse = createBoardDetailResponse(board, boardWriter, commentWriter, comment, tags, boardImages);
+        BoardDetailResponse boardDetailResponse = createBoardDetailResponse(
+                board, boardWriter, commentWriter, comment, tags, boardImages);
+
+        Yummy yummy = Yummy.createYummy(memberId, boardId);
+
+        boardDetailResponse.setYummy(yummyRepository.existsByMemberIdAndBoardId(yummy));
 
         return boardDetailResponse;
+    }
+
+    public List<BoardListResponse> boardByYummy() {
+        return createBoardListResponse(boardRepository.findTopByYummy());
+    }
+
+    public List<BoardListResponse> listBoardByYummy() {
+        return createBoardListResponse(boardRepository.findTopListByYummy());
+    }
+
+    public Page<BoardListResponse> listBoardByTag(Pageable pageable, String content) {
+        Page<BoardListResponse> boardListResponses =
+                createBoardListResponse(boardRepository.findListByTag(pageable, content));
+
+        boardListResponses.forEach(boardListResponse -> boardListResponse.setTag(content));
+
+        return boardListResponses;
+    }
+
+    private Page<BoardListResponse> createBoardListResponse(Page<BoardListResponse> boardListResponses) {
+        return boardListResponses.map(boardListResponse -> {
+                    BoardImage image = boardImageRepository.findThumbnailByBoardId(boardListResponse.getId());
+
+                    Optional.ofNullable(image).ifPresent(img -> boardListResponse.changeThumbnail(img.getLink()));
+
+                    Tag tag = tagRepository.findTopByBoardId(boardListResponse.getId());
+
+                    if(tag != null) {
+                        boardListResponse.changeTag(tag.getContent());
+                    }
+
+                    return boardListResponse;
+                });
+    }
+
+    private List<BoardListResponse> createBoardListResponse(List<BoardListResponse> boardListResponses) {
+        return boardListResponses.stream().peek(boardListResponse -> {
+            BoardImage image = boardImageRepository.findThumbnailByBoardId(boardListResponse.getId());
+
+            Optional.ofNullable(image).ifPresent(img -> boardListResponse.changeThumbnail(img.getLink()));
+
+            Tag tag = tagRepository.findTopByBoardId(boardListResponse.getId());
+
+            if(tag != null) {
+                boardListResponse.changeTag(tag.getContent());
+            }
+        }).collect(Collectors.toList());
     }
 
     private BoardDetailResponse createBoardDetailResponse(

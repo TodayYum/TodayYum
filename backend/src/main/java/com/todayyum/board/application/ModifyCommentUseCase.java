@@ -20,7 +20,7 @@ public class ModifyCommentUseCase {
     public Long modifyComment(CommentModifyRequest commentModifyRequest) {
         Comment comment = commentRepository.findById(commentModifyRequest.getId());
 
-        if(comment.getMemberId() != commentModifyRequest.getMemberId()) {
+        if(!comment.getMemberId().equals(commentModifyRequest.getMemberId())) {
             throw new CustomException(ResponseCode.WRITER_USER_MISMATCH);
         }
 

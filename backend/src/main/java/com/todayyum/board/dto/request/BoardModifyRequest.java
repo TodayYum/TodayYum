@@ -55,5 +55,5 @@ public class BoardModifyRequest {
 
     private List<String> tags;
 
-    private List<Long> removedTags;
+    private List<String> removedTags;
 }

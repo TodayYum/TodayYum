@@ -11,9 +11,11 @@ import com.todayyum.member.infra.database.JpaMemberRepository;
 import com.todayyum.member.infra.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -53,11 +55,11 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<CommentListResponse> findByBoardId(Long boardId) {
+    public Page<CommentListResponse> findByBoardId(Long boardId, Pageable pageable) {
         BoardEntity boardEntity = jpaBoardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ResponseCode.COMMENT_ID_NOT_FOUND));
 
-        return jpaCommentRepository.findByBoard(boardEntity);
+        return jpaCommentRepository.findByBoard(boardEntity, pageable);
     }
 
     @Override
@@ -65,7 +67,7 @@ public class CommentRepositoryImpl implements CommentRepository {
         BoardEntity boardEntity = jpaBoardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ResponseCode.COMMENT_ID_NOT_FOUND));
 
-        return jpaCommentRepository.findFirstByBoardOrderByModifiedAtDesc(boardEntity)
+        return jpaCommentRepository.findTopByBoardOrderByModifiedAtDesc(boardEntity)
                 .map(Comment::createComment).orElse(null);
     }
 }

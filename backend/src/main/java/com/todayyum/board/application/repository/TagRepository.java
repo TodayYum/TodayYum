@@ -8,4 +8,5 @@ public interface TagRepository {
     Tag findByContent(String content);
     List<Tag> findByBoardId(Long boardId);
     Tag save(String content);
+    Tag findTopByBoardId(Long boardId);
 }

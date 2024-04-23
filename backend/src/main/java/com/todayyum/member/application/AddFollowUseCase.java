@@ -20,6 +20,10 @@ public class AddFollowUseCase {
 
     @Transactional
     public Long addFollow(UUID fromMemberId, UUID toMemberId) {
+        if(fromMemberId.equals(toMemberId)) {
+            throw new CustomException(ResponseCode.SELF_FOLLOW);
+        }
+
         Follow follow = Follow.createFollow(fromMemberId, toMemberId);
 
         if(followRepository.existsByFromMemberAndToMember(follow)) {

@@ -11,6 +11,8 @@ import com.todayyum.global.dto.response.ResponseCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +46,10 @@ public class BoardController {
     }
 
     @GetMapping("/members/{memberId}")
-    public ResponseEntity<?> boardListByMemberId(@PathVariable UUID memberId) {
+    public ResponseEntity<?> boardListByMemberId(@PathVariable UUID memberId,
+                                                 @PageableDefault(sort = "createdAt") Pageable pageable) {
         return BaseResponse.createResponseEntity(ResponseCode.OK,
-                findBoardUseCase.listBoardByMember(memberId));
+                findBoardUseCase.listBoardByMember(pageable, memberId));
     }
 
     @DeleteMapping("/{boardId}")
@@ -88,8 +91,9 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}/comments")
-    public ResponseEntity<?> commentList(@PathVariable Long boardId) {
-        return BaseResponse.createResponseEntity(ResponseCode.OK, findCommentUseCase.listComment(boardId));
+    public ResponseEntity<?> commentList(@PathVariable Long boardId,
+                                         @PageableDefault(sort = "createdAt") Pageable pageable) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findCommentUseCase.listComment(boardId, pageable));
     }
 
     @PostMapping("/{boardId}/yummys")
@@ -107,14 +111,11 @@ public class BoardController {
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<?> boardList() {
-        return null;
-    }
-
     @GetMapping("/{boardId}")
-    public ResponseEntity<?> boardDetail(@PathVariable Long boardId) {
-        return BaseResponse.createResponseEntity(ResponseCode.OK, findBoardUseCase.detailBoard(boardId));
+    public ResponseEntity<?> boardDetail(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                         @PathVariable Long boardId) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK,
+                findBoardUseCase.detailBoard(customUserDetails.getMemberId(), boardId));
     }
 
     @PostMapping("/{boardId}")
@@ -127,4 +128,31 @@ public class BoardController {
         return BaseResponse.createResponseEntity(ResponseCode.OK, modifyBoardUseCase.modifyBoard(boardModifyRequest));
     }
 
+    @GetMapping
+    public ResponseEntity<?> boardList(@PageableDefault(sort = "createdAt") Pageable pageable) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findBoardUseCase.listBoard(pageable));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> boardSearchByTag(@PageableDefault(sort = "createdAt") Pageable pageable,
+                                              String content) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findBoardUseCase.listBoardByTag(pageable, content));
+    }
+
+    @GetMapping("/yummys/top")
+    public ResponseEntity<?> boardByYummy() {
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findBoardUseCase.boardByYummy());
+    }
+
+    @GetMapping("/yummys")
+    public ResponseEntity<?> boardListByYummy() {
+        return BaseResponse.createResponseEntity(ResponseCode.OK, findBoardUseCase.listBoardByYummy());
+    }
+
+    @GetMapping("/members/{memberId}/yummys")
+    public ResponseEntity<?> boardListByMemberIdAndYummy(@PathVariable UUID memberId,
+                                                         @PageableDefault(sort = "createdAt") Pageable pageable) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK,
+                findBoardUseCase.listBoardByMemberAndYummy(pageable, memberId));
+    }
 }

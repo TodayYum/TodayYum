@@ -46,7 +46,8 @@ public class AddBoardUseCase {
         return boardId;
     }
 
-    private void addBoardTag(Long boardId, List<String> tags) {
+    @Transactional
+    public void addBoardTag(Long boardId, List<String> tags) {
         if(tags == null || tags.isEmpty()) return;
 
         for(String content : tags) {
@@ -60,7 +61,8 @@ public class AddBoardUseCase {
         }
     }
 
-    private void addBoardImage(Long boardId, List<MultipartFile> images) {
+    @Transactional
+    public void addBoardImage(Long boardId, List<MultipartFile> images) {
         if(images == null || images.isEmpty()) return;
 
         List<BoardImage> boardImages = images.stream()
