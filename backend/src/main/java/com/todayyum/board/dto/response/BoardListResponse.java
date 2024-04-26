@@ -14,7 +14,6 @@ public class BoardListResponse {
     private String thumbnail;
     private String tag;
     private String category;
-    //태그 관련 변수
 
     public BoardListResponse(Long id, Float totalScore, Long yummyCount, Category category) {
         this.id = id;

@@ -24,11 +24,11 @@ public class BoardDetailResponse {
     private Float totalScore; //
     private LocalDate ateAt; //
     private Long yummyCount; //
-    private String comment;
+    private List<String> images;
     private String profile;
     private String nickname;
-    private List<String> images;
-    private List<String> tags;
+    private String comment;
     private String commentWriter;
+    private List<String> tags;
     private boolean isYummy;
 }

@@ -41,7 +41,7 @@ public class FindBoardUseCase {
         return createBoardListResponse(boardRepository.findList(pageable));
     }
 
-    public BoardDetailResponse detailBoard(UUID memberId, Long boardId) {
+    public BoardDetailResponse findBoard(UUID memberId, Long boardId) {
         Board board = boardRepository.findById(boardId);
 
         Member boardWriter = memberRepository.findById(board.getMemberId());

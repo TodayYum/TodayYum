@@ -434,7 +434,7 @@ public class MemberControllerTest {
 
     @Test
     @DisplayName("Member Cont - 팔로우 실패 테스트(중복 오류)")
-    void addFollowFailByMemberId() throws Exception {
+    void addFollowFailByDuplication() throws Exception {
         //given
         when(addFollowUseCase.addFollow(any(UUID.class), any(UUID.class)))
                 .thenThrow(new CustomException(ResponseCode.DUPLICATE_FOLLOW));
@@ -513,8 +513,7 @@ public class MemberControllerTest {
                         .param("page", "0"));
 
         //then
-        resultActions.andExpect(
-                        status().isOk())
+        resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.message")
                         .value(ResponseCode.OK.getMessage()))
                 .andExpect(jsonPath("$.result.content.[0].memberId")

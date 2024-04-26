@@ -74,7 +74,7 @@ public class BoardController {
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity<?> commentModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @PathVariable Long commentId,
-                                           @Valid CommentModifyRequest commentModifyRequest) {
+                                           @Valid @RequestBody CommentModifyRequest commentModifyRequest) {
         commentModifyRequest.setId(commentId);
         commentModifyRequest.setMemberId(customUserDetails.getMemberId());
 
@@ -115,7 +115,7 @@ public class BoardController {
     public ResponseEntity<?> boardDetail(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                          @PathVariable Long boardId) {
         return BaseResponse.createResponseEntity(ResponseCode.OK,
-                findBoardUseCase.detailBoard(customUserDetails.getMemberId(), boardId));
+                findBoardUseCase.findBoard(customUserDetails.getMemberId(), boardId));
     }
 
     @PostMapping("/{boardId}")
