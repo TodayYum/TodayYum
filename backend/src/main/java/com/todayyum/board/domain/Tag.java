@@ -24,4 +24,8 @@ public class Tag {
                 .content(tagEntity.getContent())
                 .build();
     }
+
+    public void changeId(Long id) {
+        this.id = id;
+    }
 }

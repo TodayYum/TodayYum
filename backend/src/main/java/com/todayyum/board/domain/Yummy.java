@@ -32,4 +32,6 @@ public class Yummy {
                 .createdAt(yummyEntity.getCreatedAt())
                 .build();
     }
+
+    public void changeId(Long id) { this.id = id; }
 }

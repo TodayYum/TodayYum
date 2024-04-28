@@ -10,6 +10,7 @@ import com.todayyum.board.dto.request.CommentAddRequest;
 import com.todayyum.board.dto.request.CommentModifyRequest;
 import com.todayyum.board.dto.response.BoardDetailResponse;
 import com.todayyum.board.dto.response.BoardListResponse;
+import com.todayyum.board.dto.response.CommentListResponse;
 import com.todayyum.global.dto.response.ResponseCode;
 import com.todayyum.global.exception.CustomException;
 import com.todayyum.member.WithMockMember;
@@ -32,6 +33,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -284,6 +286,44 @@ public class BoardControllerTest {
                         status().isBadRequest())
                 .andExpect(jsonPath("$[0].message")
                         .value("내용을 입력해주세요."));
+    }
+
+    @Test
+    @DisplayName("Board Cont - 댓글 목록 조회 테스트")
+    void listComment() throws Exception {
+        //given
+        Long boardId = 100000L;
+        UUID memberId = UUID.randomUUID();
+
+        List<CommentListResponse> commentListResponseList = new ArrayList<>();
+        CommentListResponse commentListResponse = CommentListResponse.builder()
+                .boardId(boardId)
+                .memberId(memberId)
+                .content("맛있당")
+                .nickname("yonggkim")
+                .profile("image.jpg")
+                .id(10000L)
+                .modifiedAt(LocalDateTime.now())
+                .build();
+        commentListResponseList.add(commentListResponse);
+
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        Page<CommentListResponse> commentListResponses = new PageImpl<>(commentListResponseList, pageRequest, 1);
+
+        when(findCommentUseCase.listComment(any(Long.class), any(Pageable.class)))
+                .thenReturn(commentListResponses);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/boards/{boardId}/comments", boardId)
+                        .param("page", "0"));
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.content[0].id")
+                        .value(10000L))
+                .andDo(print());
     }
 
     @Test

@@ -105,4 +105,8 @@ public class Board {
         mealTime = boardModifyRequest.getMealTime();
     }
 
+    public void changeId(Long id) {
+        this.id = id;
+    }
+
 }
