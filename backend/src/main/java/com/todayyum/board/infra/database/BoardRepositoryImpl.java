@@ -11,7 +11,6 @@ import com.todayyum.member.infra.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -75,8 +74,6 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public List<BoardListResponse> findTopListByYummy() {
-        Pageable pageable = PageRequest.of(0, 1);
-
         return jpaBoardRepository.findTopListByYummyCount(LocalDate.now());
     }
 

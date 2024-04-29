@@ -34,7 +34,8 @@ public class ModifyBoardUseCase {
         return boardRepository.save(board).getId();
     }
 
-    private void addBoardTag(Long boardId, List<String> tags) {
+    @Transactional
+    public void addBoardTag(Long boardId, List<String> tags) {
         if(tags == null || tags.isEmpty()) return;
 
         for(String content : tags) {

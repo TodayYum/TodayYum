@@ -68,7 +68,7 @@ public class AuthController {
     }
 
     @GetMapping("/verification-code")
-    public ResponseEntity<?> verifyVerificationCode(CodeVerifyRequest codeVerifyRequest) {
+    public ResponseEntity<?> verifyVerificationCode(@Valid CodeVerifyRequest codeVerifyRequest) {
         boolean result = verifyEmailUseCase.verifyCode(codeVerifyRequest);
 
         if(result) return BaseResponse.createResponseEntity(ResponseCode.OK);

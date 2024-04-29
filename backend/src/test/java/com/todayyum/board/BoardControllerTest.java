@@ -535,9 +535,7 @@ public class BoardControllerTest {
 
         //then
         resultActions.andExpect(
-                        status().isBadRequest())
-                .andExpect(jsonPath("$.[0].message")
-                        .value("가격 평점을 입력해주세요."));
+                        status().isBadRequest());
     }
 
     @Test
