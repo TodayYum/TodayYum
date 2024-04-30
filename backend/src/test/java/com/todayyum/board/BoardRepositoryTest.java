@@ -44,7 +44,7 @@ public class BoardRepositoryTest {
     private YummyRepository yummyRepository;
     private Member member;
     private Board board;
-    private String content = "가성비";
+    private String content = "태그태그태그";
 
     @BeforeEach
     void setup() {
@@ -153,7 +153,8 @@ public class BoardRepositoryTest {
                 .findList(pageable);
 
         //then
-        assertEquals(board.getCategory().name(), boardListResponses.getContent().get(0).getCategory());
+        assertEquals(board.getCategory().name(), boardListResponses.getContent()
+                .get(boardListResponses.getContent().size() - 1).getCategory());
     }
 
     @Test
@@ -188,7 +189,8 @@ public class BoardRepositoryTest {
         Page<BoardListResponse> boardListResponses = boardRepository.findListByTag(pageable, content);
 
         //then
-        assertEquals(board.getCategory().name(), boardListResponses.getContent().get(0).getCategory());
+        assertEquals(board.getCategory().name(), boardListResponses.getContent()
+                .get(boardListResponses.getContent().size() - 1).getCategory());
     }
 
     @Test

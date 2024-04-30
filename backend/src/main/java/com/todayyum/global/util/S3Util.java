@@ -65,7 +65,7 @@ public class S3Util {
     }
 
     public void removeFile(String link) {
-        System.out.println("link: " + link);
+        if(link == null) return;
 
         String filename = link.split(".com/")[1];
 

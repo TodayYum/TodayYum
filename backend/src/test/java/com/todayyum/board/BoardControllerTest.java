@@ -201,8 +201,10 @@ public class BoardControllerTest {
         //given
         Long boardId = 100000L;
         Long commentId = 100000L;
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("content", "음 맛있다~");
+
+        CommentAddRequest commentAddRequest = CommentAddRequest.builder()
+                .content("음 맛있다~")
+                .build();
 
         when(addCommentUseCase.addComment(any(CommentAddRequest.class)))
                 .thenReturn(commentId);
@@ -210,8 +212,8 @@ public class BoardControllerTest {
         //when
         ResultActions resultActions = mockMvc.perform(
                 multipart("/api/boards/{boardId}/comments", boardId)
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .params(formData));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(commentAddRequest)));
 
         //then
         resultActions
@@ -225,13 +227,13 @@ public class BoardControllerTest {
     void addCommentFailByInput() throws Exception {
         //given
         Long boardId = 100000L;
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        CommentAddRequest commentAddRequest = CommentAddRequest.builder().build();
 
         //when
         ResultActions resultActions = mockMvc.perform(
                 multipart("/api/boards/{boardId}/comments", boardId)
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .params(formData));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(commentAddRequest)));
 
         //then
         resultActions

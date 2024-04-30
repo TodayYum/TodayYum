@@ -63,7 +63,7 @@ public class BoardController {
     @PostMapping("/{boardId}/comments")
     public ResponseEntity<?> commentAdd(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                         @PathVariable Long boardId,
-                                        @Valid CommentAddRequest commentAddRequest) {
+                                        @Valid @RequestBody CommentAddRequest commentAddRequest) {
         commentAddRequest.setBoardId(boardId);
         commentAddRequest.setMemberId(customUserDetails.getMemberId());
 
