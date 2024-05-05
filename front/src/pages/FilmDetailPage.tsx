@@ -93,6 +93,7 @@ function FilmDetailPage() {
         <CommentList
           onClick={() => setIsMainContents(true)}
           marginTop={height}
+          boardId={121}
         />
       )}
       <div className="bg-black h-36 invisible ">asdf</div>

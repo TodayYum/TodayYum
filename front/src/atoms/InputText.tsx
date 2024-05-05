@@ -40,7 +40,7 @@ function InputText(props: IInputText) {
         <input
           type={props.type}
           placeholder={props.placeholder}
-          className="w-full placeholder:font-ggTitle placeholder:text-sm disabled:bg-white font-sm rounded-small border-none focus:outline-none"
+          className="w-full placeholder:font-ggTitle placeholder:text-sm disabled:bg-white disabled:text-gray-dark font-sm rounded-small border-none focus:outline-none"
           onChange={e => props.setValue(e.target.value)}
           value={props.value}
           alt={`${props.type} 입력창`}
