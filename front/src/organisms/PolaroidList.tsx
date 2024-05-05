@@ -14,6 +14,9 @@ function PolaroidList(props: IPolaroidList) {
           key={polaroid.linkPage}
         />
       ))}
+      <div ref={props.setRef} className="opacity-0">
+        now loading
+      </div>
     </div>
   );
 }
