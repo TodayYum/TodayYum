@@ -8,6 +8,7 @@ import {
   useSignUpDataAtom,
 } from '../jotai/signUpData';
 import { IRegistEmail } from '../types/organisms/RegistEmail.types';
+import { isValidEmailByNumber } from '../util/emailCheck';
 
 function Basebold({ text }: { text: string }) {
   return <p className="font-bold text-base mb-[18px] ml-1">{text}</p>;
@@ -21,7 +22,7 @@ function RegistEmail(props: IRegistEmail) {
 
   const handleNextButton = () => {
     if (registData.signUpLevel === 0) {
-      // 여기에 Swal2로 이메일 확인하라는 문구 넣기
+      // 여기에 Swal2로 이미 사용중인 이메일입니다 문구 넣기
       plusSignUpLevel();
       return;
     }
@@ -34,12 +35,18 @@ function RegistEmail(props: IRegistEmail) {
       <Basebold text={props.isSignUp ? '사용할 이메일' : '작성한 이메일'} />
 
       <InputText
-        type="text"
-        hasSupport={false}
+        type="email"
+        hasSupport
         placeholder="이메일"
         setValue={setEmail}
         customClass="mb-10"
         value={registData.email}
+        disabled={registData.signUpLevel > 0}
+        isSuccess={isValidEmailByNumber(registData.email)}
+        successText={
+          registData.signUpLevel === 0 ? '올바른 형식의 이메일입니다.' : ''
+        }
+        failText="이메일 형식이 올바르지 않습니다."
       />
       {registData.signUpLevel > 0 && (
         <p className="font-bold text-base mb-[18px] ml-1"> 인증코드 입력</p>
@@ -53,6 +60,7 @@ function RegistEmail(props: IRegistEmail) {
           value={registData.code}
         />
       )}
+
       <RectangleButton
         text="다음 단계로"
         onClick={handleNextButton}
