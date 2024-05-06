@@ -1,11 +1,11 @@
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
 import { useSetNicknameAtom, useSignUpDataAtom } from '../jotai/signUpData';
+// import { useQuery } from '@tanstack/react-query';
 
 function RegistNickname() {
   const setNickname = useSetNicknameAtom();
   const registData = useSignUpDataAtom();
-
   const handleOverlapCheck = () => {};
 
   return (
