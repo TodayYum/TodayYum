@@ -80,7 +80,7 @@ public class AuthControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/auth/verification-code")
+                MockMvcRequestBuilders.post("/api/auth/verify/verification-code")
                         .param("email", email)
                         .param("code", code));
 
