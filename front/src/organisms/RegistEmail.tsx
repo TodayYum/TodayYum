@@ -1,9 +1,8 @@
-import Swal from 'sweetalert2';
-import { useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import Swal, { SweetAlertOptions } from 'sweetalert2';
+import { useEffect, useState } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
-// import { IRegistEmail } from '../types/organisms/RegistEmail.type';
 import {
   useSetCodeAtom,
   useSetEmailAtom,
@@ -11,94 +10,83 @@ import {
   useSignUpDataAtom,
 } from '../jotai/signUpData';
 import { IRegistEmail } from '../types/organisms/RegistEmail.types';
-import { isValidEmailByNumber } from '../util/emailCheck';
-import { fetchCheckEmailDuplicate } from '../services/UserService';
+import { isValidEmailByNumber, isValidEmail } from '../util/emailCheck';
+import {
+  fetchCheckEmailDuplicate,
+  fetchPostEmailCode,
+  fetchPostEmailCodeCheck,
+} from '../services/userService';
+import { IPostCodeRequest } from '../types/services/userService';
 
 function Basebold({ text }: { text: string }) {
   return <p className="font-bold text-base mb-[18px] ml-1">{text}</p>;
 }
 
+/**
+ * RegistEmail : 회원가입 절차 중, 이메일 및 인증코드 입력을 담당하는 organism
+ * @param props IRegistEmail
+ * @returns
+ */
 function RegistEmail(props: IRegistEmail) {
   const registData = useSignUpDataAtom();
   const setEmail = useSetEmailAtom();
   const setCode = useSetCodeAtom();
   const plusSignUpLevel = usePlusSignUpLevelAtom();
-  const isFineEmail = useRef(false);
-  // const [isTest, setIsTest] = useState(false);
-  const { data: isFineEmailQ, refetch } = useQuery({
-    queryKey: ['checkEmailDuplicate', registData.email],
-    queryFn: () => fetchCheckEmailDuplicate(registData.email),
-    enabled: false,
-    staleTime: 0,
+  const [emailQuery, setEmailQuery] = useState('');
+  const { data: emailCheckResponse } = useQuery({
+    queryKey: ['checkEmailDuplicate', emailQuery],
+    queryFn: () => fetchCheckEmailDuplicate(emailQuery),
+    staleTime: 500000,
   });
-  const handleNextButton = () => {
-    // 이메일 중복 확인 상태에서 다음으로
-    if (registData.signUpLevel === 0 && isFineEmail.current) {
+  const { mutate: makeEmailCode } = useMutation({
+    mutationFn: (email: string) => fetchPostEmailCode(email),
+    onSuccess: () => {
       plusSignUpLevel();
+    },
+  });
+  const { mutate: validateEmailCode } = useMutation({
+    mutationFn: (request: IPostCodeRequest) => fetchPostEmailCodeCheck(request),
+    onSuccess: () => {
+      plusSignUpLevel();
+    },
+    onError: () => {
+      swalFail.text = '인증코드가 일치하지 않습니다.';
+      Swal.fire(swalFail);
+    },
+  });
+
+  const handleNextButton = () => {
+    // 이메일 중복 체크 성공한 상태에서 nextButton 눌렀을 경우 code 생성
+    if (
+      registData.signUpLevel === 0 &&
+      emailCheckResponse &&
+      emailCheckResponse.result
+    ) {
+      makeEmailCode(emailQuery);
       return;
     }
-    // 인증코드 정상일 경우 다음으로
-    if (registData.signUpLevel > 0 && isCodeRight()) {
-      plusSignUpLevel();
-    }
+
+    // code 일치하는지 확인 후 다음 level로 (RegistPassword로)
+    validateEmailCode({ code: registData.code, email: registData.email });
   };
-  // 버튼 누를때만 refetch
-  // 버튼 누를때만 그 결과를 판단한다
-  // useEffect를 쓰는 순간 변화 감지이기 때문에 쓰기 곤란하다
-  //
+
   const handleOverlapCheck = () => {
-    // setIsTest(true);
-    // 이메일 중복 체크 API 요청
-    refetch();
-    // const test = true;
-    // if (isFineEmailQ) {
-    //   // API 성공
-    //   Swal.fire({
-    //     icon: 'success',
-    //     text: '사용가능한 이메일입니다.',
-    //     width: '300px',
-    //     confirmButtonText: '돌아가기',
-    //     confirmButtonColor: '#787D85',
-    //   });
-    //   isFineEmail.current = true;
-    // } else {
-    //   // API 실패
-    //   Swal.fire({
-    //     icon: 'warning',
-    //     text: '이미 사용중인 이메일입니다.',
-    //     width: '300px',
-    //     confirmButtonText: '돌아가기',
-    //     confirmButtonColor: '#787D85',
-    //   });
-    //   isFineEmail.current = false;
-    // }
+    if (!isValidEmail(registData.email)) return;
+    setEmailQuery(registData.email);
   };
 
   useEffect(() => {
-    console.log(isFineEmailQ);
-    if (isFineEmailQ === undefined) return;
-    if (isFineEmailQ) {
+    if (emailCheckResponse === undefined || emailCheckResponse.result === -1)
+      return;
+    if (emailCheckResponse.result) {
       // API 성공
-      Swal.fire({
-        icon: 'success',
-        text: '사용가능한 이메일입니다.',
-        width: '300px',
-        confirmButtonText: '돌아가기',
-        confirmButtonColor: '#787D85',
-      });
-      isFineEmail.current = true;
+      Swal.fire(swalSuccess);
     } else {
       // API 실패
-      Swal.fire({
-        icon: 'warning',
-        text: '이미 사용중인 이메일입니다.',
-        width: '300px',
-        confirmButtonText: '돌아가기',
-        confirmButtonColor: '#787D85',
-      });
-      isFineEmail.current = false;
+      swalFail.text = '사용 불가능한 이메일입니다.';
+      Swal.fire(swalFail);
     }
-  }, [isFineEmailQ]);
+  }, [emailCheckResponse]);
 
   return (
     <div className="h-screen flex flex-col justify-center px-[30px]">
@@ -112,17 +100,23 @@ function RegistEmail(props: IRegistEmail) {
           customClass="mb-10 flex-[1_1_content]"
           value={registData.email}
           disabled={registData.signUpLevel > 0}
-          isSuccess={isValidEmailByNumber(registData.email)}
+          isSuccess={
+            emailCheckResponse?.result === false
+              ? 0
+              : isValidEmailByNumber(registData.email)
+          }
           successText={
             registData.signUpLevel === 0 ? '올바른 형식의 이메일입니다.' : ''
           }
-          failText="이메일 형식이 올바르지 않습니다."
+          failText="사용중이거나 잘못된 입력값입니다."
         />
-        <RectangleButton
-          onClick={handleOverlapCheck}
-          text="중복검사"
-          customClass="flex-[1_1_95px] h-[40px]"
-        />
+        {registData.signUpLevel === 0 && (
+          <RectangleButton
+            onClick={handleOverlapCheck}
+            text="중복검사"
+            customClass="flex-[1_1_95px] h-[40px]"
+          />
+        )}
       </div>
       {registData.signUpLevel > 0 && (
         <p className="font-bold text-base mb-[18px] ml-1"> 인증코드 입력</p>
@@ -146,8 +140,20 @@ function RegistEmail(props: IRegistEmail) {
   );
 }
 
-const isCodeRight = () => {
-  return true;
+const swalSuccess: SweetAlertOptions = {
+  icon: 'success',
+  text: '사용 가능한 이메일입니다.',
+  width: '300px',
+  confirmButtonText: '돌아가기',
+  confirmButtonColor: '#787D85',
+};
+
+const swalFail: SweetAlertOptions = {
+  icon: 'warning',
+  text: '사용 불가능한 이메일입니다.',
+  width: '300px',
+  confirmButtonText: '돌아가기',
+  confirmButtonColor: '#787D85',
 };
 
 export default RegistEmail;
