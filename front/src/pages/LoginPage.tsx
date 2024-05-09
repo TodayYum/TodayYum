@@ -5,12 +5,7 @@ import InputPassword from '../atoms/InputPassword';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
 
-import {
-  fetchLogin,
-  fetchPostRefreshToken,
-  fetchPostSignOut,
-  fetchPostSignin,
-} from '../services/UserService';
+import { fetchPostSignOut, fetchPostSignin } from '../services/userService';
 import { ISigninRequest } from '../types/services/userService';
 
 const TEST_CONTROL_LOGIN = false;
@@ -28,7 +23,6 @@ function LoginPage() {
 
   const SubmitLogin = () => {
     mutate({ email: id, password });
-    fetchLogin();
     if (TEST_CONTROL_LOGIN) {
       navigate('/');
     } else {
@@ -81,18 +75,10 @@ function LoginPage() {
         <button
           type="button"
           onClick={() => {
-            fetchPostRefreshToken();
-          }}
-        >
-          test
-        </button>
-        <button
-          type="button"
-          onClick={() => {
             fetchPostSignOut();
           }}
         >
-          logout
+          logout-임시
         </button>
       </div>
     </div>

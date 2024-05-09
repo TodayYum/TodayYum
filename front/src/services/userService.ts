@@ -1,5 +1,7 @@
+/**
+ * userService : 회원가입, 로그인 아웃, 비밀번호 관리 등 유저 데이터 관련 API 로직
+ */
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import {
   IPostCodeRequest,
   ISignUpRequest,
@@ -9,14 +11,14 @@ import {
 const API_URL = process.env.REACT_APP_LOCAL_URL;
 // const url = process.env.REACT_APP_SERVER_URL;
 
-export const fetchLogin = () => {};
-
 export const fetchFindPassword = () => {};
 
 // 이메일 중복 검사 요청 API
 export const fetchCheckEmailDuplicate = async (email: string) => {
   if (email.length === 0) return { input: email, result: -1 };
+
   const url = `${API_URL}/api/members/emails/validations`;
+
   try {
     const response = await axios.get(url, {
       params: { email },
@@ -30,12 +32,12 @@ export const fetchCheckEmailDuplicate = async (email: string) => {
 // 이메일 인증 코드 생성 요청
 export const fetchPostEmailCode = async (email: string) => {
   const url = `${API_URL}/api/auth/verification-code`;
+
   const params = new URLSearchParams();
   params.append('email', email);
+
   try {
     const response = await axios.post(url, null, { params });
-
-    console.log('이메일 인증 코드 생성 post 결과 확인', email, response.data);
     return response.data;
   } catch {
     console.log('이메일 인증 코드 생성 실패');
@@ -45,28 +47,14 @@ export const fetchPostEmailCode = async (email: string) => {
 
 // 이메일 인증 코드 확인 요청
 export const fetchPostEmailCodeCheck = async (request: IPostCodeRequest) => {
-  // if (email.length === 0) return { input: email, result: -1 };
-  console.log('리퀘 확인', request);
+  const url = `${API_URL}/api/auth/verify-verification`;
+
   const params = new URLSearchParams();
   params.append('email', request.email);
   params.append('code', request.code);
-  const url = `${API_URL}/api/auth/verify-verification`;
-  //   try {
-  //     const response = await axios.post(url, null, {
-  //       params,
-  //       //   withCredentials: true,
-  //       //   withXSRFToken: true,
-  //     });
-  //     console.log('인증 코드 확인 성공', response.data, request);
-  //     return response.data;
-  //   } catch (err) {
-  //     console.log('인증 코드 확인 실패', err);
-  //     return false;
-  //   }
+
   const response = await axios.post(url, null, {
     params,
-    //   withCredentials: true,
-    //   withXSRFToken: true,
   });
   return response.data;
 };
@@ -74,13 +62,13 @@ export const fetchPostEmailCodeCheck = async (request: IPostCodeRequest) => {
 // 닉네임 중복 검사 get 요청
 export const fetchGetNicknameDuplicate = async (nickname: string) => {
   if (nickname.length === 0) return -1;
+
   const url = `${API_URL}/api/members/nicknames/validations`;
+
   try {
     const response = await axios.get(url, {
       params: { nickname },
     });
-    //   return { input: email, result: response.data };
-    console.log('닉네임 검증 결과', response.data);
     return response.data.message.length;
   } catch (err) {
     console.log('닉 검증 실패', err);
@@ -93,19 +81,17 @@ export const fetchGetNicknameDuplicate = async (nickname: string) => {
  */
 export const fetchPostSignUp = async (request: ISignUpRequest) => {
   const url = `${API_URL}/api/members`;
-  console.log('요청', request);
+
   const params = new URLSearchParams();
   params.append('email', request.email);
   params.append('nickname', request.nickname);
   params.append('password', request.password);
+
   try {
     const response = await axios.post(url, null, { params });
-
-    console.log('회원가입 post 결과 확인', request, response.data);
     return response.data;
   } catch (err) {
-    console.log('회원가입 실패', request, err);
-    return false;
+    return err;
   }
 };
 
@@ -115,6 +101,7 @@ export const fetchPostSignUp = async (request: ISignUpRequest) => {
  */
 export const fetchPostSignin = async (request: ISigninRequest) => {
   const url = `${API_URL}/api/auth/login`;
+
   const params = new URLSearchParams();
   params.append('email', request.email);
   params.append('password', request.password);
@@ -136,31 +123,27 @@ export const fetchPostSignin = async (request: ISigninRequest) => {
 
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
   }
-  if (response.headers.get && typeof response.headers.get === 'function') {
-    console.log('TLqkf', response.headers.get('Set-Cookie'));
-  }
+
   localStorage.setItem('memberId', response.data.result.memberId);
-  console.log('확인', response);
-  console.log('쿠확', document.cookie, Cookies);
   return response.data;
 };
 
 /**
  * fetchPostRefreshToken : 토큰 재발급후 localStorage에 저장하는 함수
  */
-// 인터셉터에서 요청할 때 결국 memberID, refresh토큰 필요 memberId도 스토리지에 넣어야 함
-// refresh 토큰 낮에 할때는 httpOnly true에서 안되었는데 밤에는 알아서 됨. 내일 한 번더 확인해볼 것
 export const fetchPostRefreshToken = async () => {
-  // 브라우저에 저장된 memberId, refreshToken 날아갔을 경우 함수 종료
+  // 브라우저에 저장된 memberId 날아갔을 경우 함수 종료
   if (!localStorage.getItem('memberId')) return false;
+
+  const url = `${API_URL}/api/auth/refresh`;
+
   const params = new URLSearchParams();
   params.append('memberId', localStorage.getItem('memberId') ?? '');
-  const url = `${API_URL}/api/auth/refresh`;
+
   const response = await axios.post(url, null, {
     params,
     withCredentials: true,
   });
-  console.log('재발금 결과', response);
   return response.data;
 };
 
@@ -172,6 +155,7 @@ export const setRefreshInterceptor = () => {
   axios.interceptors.response.use(
     res => res,
     async error => {
+      // NOTICE! 토큰 만료 시, 에러가 어떻게 오는지 확인해야 함
       if (error.response.status === 401) {
         await fetchPostRefreshToken();
       }
@@ -184,17 +168,37 @@ export const setRefreshInterceptor = () => {
  * fetchPostSignOut : 로그아웃 함수
  */
 export const fetchPostSignOut = async () => {
-  // 브라우저에 저장된 memberId, refreshToken 날아갔을 경우 함수 종료
+  // 브라우저에 저장된 memberId 날아갔을 경우 함수 종료
   if (!localStorage.getItem('memberId')) return false;
+
+  const url = `${API_URL}/api/auth/logout`;
+
   const params = new URLSearchParams();
   params.append('memberId', localStorage.getItem('memberId') ?? '');
-  const url = `${API_URL}/api/auth/logout`;
+
   const response = await axios.post(url, null, {
     withCredentials: true,
-    // headers: {
-    //   Cookie: `refreshToken=${Cookies.get('refreshToken')}`,
-    // },
   });
+  console.log('로그아웃 결과', response);
+  return response.data;
+};
+
+/**
+ * fetchPostResetPassword : 비밀번호 잊어버렸을 경우 비밀번호 재설정 요청
+ * 현재 API 미구현이라 보류
+ * @param request
+ * @returns
+ */
+export const fetchPostResetPassword = async (request: string) => {
+  // 브라우저에 저장된 memberId 날아갔을 경우 함수 종료
+  if (!localStorage.getItem('memberId')) return false;
+
+  const url = `${API_URL}/api/members/password`;
+
+  const params = new URLSearchParams();
+  params.append('password', request);
+
+  const response = await axios.post(url, request);
   console.log('로그아웃 결과', response);
   return response.data;
 };
