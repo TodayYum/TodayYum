@@ -3,7 +3,6 @@ import { useState } from 'react';
 import InputPassword from '../atoms/InputPassword';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
-import { fetchLogin } from '../services/UserService';
 
 const TEST_CONTROL_LOGIN = false;
 
