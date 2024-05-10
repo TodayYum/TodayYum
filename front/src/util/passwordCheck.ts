@@ -23,9 +23,10 @@ export const isLowerCase = (password: string | undefined) => {
 };
 
 export const isRightPassword = (password: string | undefined) => {
-  return (
-    isUpperCase(password) &&
-    isLowerCase(password) &&
-    isSpecialCharacter(password)
-  );
+  return isLowerCase(password);
+  // return (
+  //   isUpperCase(password) &&
+  //   isLowerCase(password) &&
+  //   isSpecialCharacter(password)
+  // );
 };

@@ -20,5 +20,8 @@
         "labelAttributes": ["htmlFor"],
       },
     ],
+    "no-useless-escape": "off",
+    // 아래는 임시용
+    "no-promise-executor-return": "off",
   },
 }
