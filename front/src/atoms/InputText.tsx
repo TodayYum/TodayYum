@@ -11,10 +11,12 @@ import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { IInputText, ISupoortText } from '../types/components/InputText.types';
 
 const SupportText = (props: ISupoortText) => {
-  if (props.isSuccess === -1) {
-    return <p className="mx-3 font-sm py-3 invisible">empty</p>;
+  if (props.isSuccess < 0) {
+    return (
+      <p className="mx-3 font-sm py-3 invisible text-wrap w-full">empty</p>
+    );
   }
-  if (props.isSuccess === 1) {
+  if (props.isSuccess > 0) {
     return (
       <p className="text-left font-sm text-correct mx-2 py-3">{`${props.successText}`}</p>
     );

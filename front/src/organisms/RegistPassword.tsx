@@ -22,10 +22,8 @@ function RegistPassword(props: IRegistPassword) {
   const setPassword = useSetPasswordAtom();
   const setConfirmPassword = useSetConfirmPasswordAtom();
   const plusSignUpLevelAtom = usePlusSignUpLevelAtom();
-  // const setNickname = useSetNicknameAtom();
   const navigate = useNavigate();
   const handleNextButton = () => {
-    // 닉네임 체크?
     // 비밀번호 체크
     if (!isRightPassword(registData.password)) {
       Swal.fire({
@@ -95,14 +93,6 @@ function RegistPassword(props: IRegistPassword) {
         setValue={setConfirmPassword}
         value={registData.confirmPassword}
       />
-      {/* <p className="base-bold ml-1">닉네임</p>
-      <InputText
-        type="text"
-        hasSupport={false}
-        placeholder="닉네임"
-        setValue={setNickname}
-        value={registData.nickname}
-      /> */}
       <RectangleButton
         text="다음 단계로"
         onClick={handleNextButton}

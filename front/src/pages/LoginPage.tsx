@@ -1,26 +1,28 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import InputPassword from '../atoms/InputPassword';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
-import { fetchLogin } from '../services/UserService';
+
+import { fetchPostSignOut, fetchPostSignin } from '../services/userService';
+import { ISigninRequest } from '../types/services/userService';
 
 const TEST_CONTROL_LOGIN = false;
-
 function LoginPage() {
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isFailed, setIsFailed] = useState<boolean>(false);
+  const { mutate } = useMutation({
+    mutationFn: (request: ISigninRequest) => fetchPostSignin(request),
+    onSuccess: async (res: any) => {
+      console.log('결과', res);
+    },
+  });
   const navigate = useNavigate();
-  // const {data} = useQuery({
-  //   queryKey: ['loginData'],
-  //   queryFn: () =>
-  // })
-
-  // console.log(id, password);
 
   const SubmitLogin = () => {
-    fetchLogin();
+    mutate({ email: id, password });
     if (TEST_CONTROL_LOGIN) {
       navigate('/');
     } else {
@@ -69,6 +71,15 @@ function LoginPage() {
         <Link to="/reset-password" className="ml-4 text-sm">
           비밀번호 찾기
         </Link>
+        |
+        <button
+          type="button"
+          onClick={() => {
+            fetchPostSignOut();
+          }}
+        >
+          logout-임시
+        </button>
       </div>
     </div>
   );

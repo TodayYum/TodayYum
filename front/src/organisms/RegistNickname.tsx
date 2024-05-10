@@ -1,12 +1,50 @@
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
 import { useSetNicknameAtom, useSignUpDataAtom } from '../jotai/signUpData';
+import {
+  fetchGetNicknameDuplicate,
+  fetchPostSignUp,
+} from '../services/userService';
+import { ISignUpRequest } from '../types/services/userService';
 
+/**
+ * RegistNickname : 회원가입 절차 중, 닉네임 등록 및 최종 확인 버튼을 관리하는 organism
+ * @returns
+ */
 function RegistNickname() {
+  const [nickname, setNicknameState] = useState('');
   const setNickname = useSetNicknameAtom();
   const registData = useSignUpDataAtom();
+  const navigate = useNavigate();
 
-  const handleOverlapCheck = () => {};
+  const { data: checkNicknameResponse, isPending } = useQuery({
+    queryKey: ['nicknameDuplicate', nickname],
+    queryFn: () => fetchGetNicknameDuplicate(nickname),
+    staleTime: 500000,
+  });
+
+  const { mutate: fetchSignUp } = useMutation({
+    mutationFn: (signUpRequest: ISignUpRequest) =>
+      fetchPostSignUp(signUpRequest),
+    onSuccess: () => {
+      navigate('/login');
+    },
+  });
+
+  const handleOverlapCheck = () => {
+    setNicknameState(registData.nickname);
+  };
+
+  const handleSubmitSignUp = () => {
+    fetchSignUp({
+      nickname: registData.nickname,
+      email: registData.email,
+      password: registData.password,
+    });
+  };
 
   return (
     <div className="h-screen flex flex-col justify-center px-[30px]">
@@ -18,7 +56,7 @@ function RegistNickname() {
           setValue={setNickname}
           type="text"
           failText="중복된 닉네임이 있습니다."
-          isSuccess={isRightNickname(registData.nickname)}
+          isSuccess={isPending ? -1 : Number(checkNicknameResponse)}
           successText="사용가능한 닉네임입니다."
           value={registData.nickname}
           customClass="flex-[1_1_content]"
@@ -30,23 +68,12 @@ function RegistNickname() {
         />
       </div>
       <RectangleButton
-        onClick={() => {}}
+        onClick={handleSubmitSignUp}
         text="확인"
         customClass="fixed bottom-20 w-[calc(100%-60px)]"
       />
     </div>
   );
 }
-
-const isRightNickname = (nickname: string) => {
-  // nickname 기반으로 API 보내고 그 결과 받아오기
-  if (nickname.length > 5) {
-    return 1;
-  }
-  if (nickname.length > 3) {
-    return 0;
-  }
-  return -1;
-};
 
 export default RegistNickname;
