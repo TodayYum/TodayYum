@@ -1,5 +1,6 @@
 package com.todayyum.member;
 
+import com.todayyum.board.application.repository.BoardImageRepository;
 import com.todayyum.global.dto.response.ResponseCode;
 import com.todayyum.global.exception.CustomException;
 import com.todayyum.global.util.S3Util;
@@ -10,8 +11,8 @@ import com.todayyum.member.domain.Follow;
 import com.todayyum.member.domain.Member;
 import com.todayyum.member.domain.ValidationResult;
 import com.todayyum.member.dto.request.*;
-import com.todayyum.member.dto.response.FollowListResponse;
 import com.todayyum.member.dto.response.MemberDetailResponse;
+import com.todayyum.member.dto.response.MemberListResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +43,8 @@ public class MemberUseCaseTest {
     @Mock
     private MemberRepository memberRepository;
     @Mock
+    private BoardImageRepository boardImageRepository;
+    @Mock
     private FollowRepository followRepository;
     @InjectMocks
     private AddMemberUseCase addMemberUseCase;
@@ -49,8 +56,6 @@ public class MemberUseCaseTest {
     private RemoveMemberUseCase removeMemberUseCase;
     @InjectMocks
     private AddFollowUseCase addFollowUseCase;
-    @InjectMocks
-    private FindFollowUseCase findFollowUseCase;
     @InjectMocks
     private RemoveFollowUseCase removeFollowUseCase;
     @Spy
@@ -138,7 +143,7 @@ public class MemberUseCaseTest {
                 .thenReturn(member);
 
         //when
-        MemberDetailResponse memberDetailResponse = findMemberUseCase.findMember(memberId);
+        MemberDetailResponse memberDetailResponse = findMemberUseCase.findMember(memberId, memberId);
 
         //then
         assertEquals(member.getEmail(), memberDetailResponse.getEmail());
@@ -158,7 +163,7 @@ public class MemberUseCaseTest {
 
         //when & then
         CustomException thrown = assertThrows(CustomException.class,
-                () -> findMemberUseCase.findMember(memberId));
+                () -> findMemberUseCase.findMember(memberId, memberId));
         assertEquals(ResponseCode.MEMBER_ID_NOT_FOUND, thrown.getResponseCode());
 
         verify(memberRepository, times(1)).findById(any(UUID.class));
@@ -169,6 +174,16 @@ public class MemberUseCaseTest {
     void removeMember() {
         //given
         UUID memberId = UUID.randomUUID();
+
+        Member member = Member.builder()
+                .id(memberId)
+                .email("test@test.com")
+                .nickname("test")
+                .password("testtest")
+                .build();
+
+        when(memberRepository.findById(any(UUID.class)))
+                .thenReturn(member);
 
         doNothing()
                 .when(memberRepository)
@@ -186,6 +201,16 @@ public class MemberUseCaseTest {
     void removeMemberFailByMemberId() {
         //given
         UUID memberId = UUID.randomUUID();
+
+        Member member = Member.builder()
+                .id(memberId)
+                .email("test@test.com")
+                .nickname("test")
+                .password("testtest")
+                .build();
+
+        when(memberRepository.findById(any(UUID.class)))
+                .thenReturn(member);
 
         doThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND))
                 .when(memberRepository)
@@ -283,27 +308,27 @@ public class MemberUseCaseTest {
 
     @Test
     @DisplayName("Member UC - 소개글 변경 테스트")
-    void modifyComment() {
+    void modifyIntroduction() {
         //given
         UUID memberId = UUID.randomUUID();
 
-        CommentModifyRequest commentModifyRequest = CommentModifyRequest.builder()
-                .comment("내가 누구??")
+        IntroductionModifyRequest introductionModifyRequest = IntroductionModifyRequest.builder()
+                .introduction("내가 누구??")
                 .memberId(memberId)
                 .build();
 
         Member member = Member.builder()
-                .comment("내가 누구?")
+                .introduction("내가 누구?")
                 .build();
 
         when(memberRepository.findById(memberId))
                 .thenReturn(member);
 
         //when
-        modifyMemberUseCase.modifyComment(commentModifyRequest);
+        modifyMemberUseCase.modifyIntroduction(introductionModifyRequest);
 
         //then
-        assertEquals(commentModifyRequest.getComment(), member.getComment());
+        assertEquals(introductionModifyRequest.getIntroduction(), member.getIntroduction());
         verify(memberRepository, times(1)).save(any(Member.class));
     }
 
@@ -454,7 +479,7 @@ public class MemberUseCaseTest {
 
         doNothing()
                 .when(followRepository)
-                .deleteByFromMemberAndToMember(any(Follow.class));
+                .delete(any(Follow.class));
 
         when(followRepository.existsByFromMemberAndToMember(any(Follow.class)))
                 .thenReturn(true);
@@ -463,7 +488,7 @@ public class MemberUseCaseTest {
         removeFollowUseCase.removeFollow(fromMemberId, toMemberId);
 
         //then
-        verify(followRepository, times(1)).deleteByFromMemberAndToMember(any(Follow.class));
+        verify(followRepository, times(1)).delete(any(Follow.class));
     }
 
     @Test
@@ -486,30 +511,35 @@ public class MemberUseCaseTest {
     @DisplayName("Member UC - 팔로잉 리스트 테스트")
     void listFollowing() {
         //given
-        UUID memberId = UUID.randomUUID();
+        UUID loginMemberId = UUID.randomUUID();
         String nickname = "test";
         String profile = "test.jpg";
 
-        FollowListResponse followListResponse = FollowListResponse.builder()
-                .memberId(memberId)
-                .nickname(nickname)
-                .profile(profile)
-                .build();
+        MemberListResponse memberListResponse = new MemberListResponse(loginMemberId, nickname, profile);
 
-        List<FollowListResponse> followListResponses = new ArrayList<>();
-        followListResponses.add(followListResponse);
+        List<MemberListResponse> memberListResponseList = new ArrayList<>();
+        memberListResponseList.add(memberListResponse);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        Page<MemberListResponse> memberListResponses = new PageImpl<>(memberListResponseList, pageRequest, 1);
+
+        Pageable pageable = Pageable.ofSize(10);
 
         UUID fromMemberId = UUID.randomUUID();
 
-        when(followRepository.findByFromMember(any(UUID.class)))
-                .thenReturn(followListResponses);
+        when(memberRepository.findByFromMember(any(Pageable.class), eq(loginMemberId), eq(fromMemberId)))
+                .thenReturn(memberListResponses);
 
         //when
-        List<FollowListResponse> savedFollowListResponses = findFollowUseCase.listFollowing(fromMemberId);
+        Page<MemberListResponse> savedMemberListResponse = findMemberUseCase.listFollowing(
+                pageable, loginMemberId, fromMemberId);
 
         //then
-        assertEquals(followListResponses.get(0).getMemberId(), savedFollowListResponses.get(0).getMemberId());
-        verify(followRepository, times(1)).findByFromMember(any(UUID.class));
+        assertEquals(memberListResponses.getContent().get(0).getMemberId(),
+                savedMemberListResponse.getContent().get(0).getMemberId());
+        verify(memberRepository,
+                times(1))
+                .findByFromMember(any(Pageable.class), eq(loginMemberId), eq(fromMemberId));
     }
 
     @Test
@@ -517,13 +547,16 @@ public class MemberUseCaseTest {
     void listFollowingFailByMemberId() {
         //given
         UUID fromMemberId = UUID.randomUUID();
+        UUID loginMemberId = UUID.randomUUID();
 
-        when(followRepository.findByFromMember(any(UUID.class)))
+        Pageable pageable = Pageable.ofSize(10);
+
+        when(memberRepository.findByFromMember(any(Pageable.class), any(UUID.class), any(UUID.class)))
                 .thenThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
         //when&&then
         CustomException thrown = assertThrows(CustomException.class,
-                () -> findFollowUseCase.listFollowing(fromMemberId));
+                () -> findMemberUseCase.listFollowing(pageable, loginMemberId, fromMemberId));
         assertEquals(ResponseCode.MEMBER_ID_NOT_FOUND, thrown.getResponseCode());
     }
 
@@ -531,30 +564,34 @@ public class MemberUseCaseTest {
     @DisplayName("Member UC - 팔로워 리스트 테스트")
     void listFollower() {
         //given
-        UUID memberId = UUID.randomUUID();
+        UUID loginMemberId = UUID.randomUUID();
         String nickname = "test";
         String profile = "test.jpg";
 
-        FollowListResponse followListResponse = FollowListResponse.builder()
-                .memberId(memberId)
-                .nickname(nickname)
-                .profile(profile)
-                .build();
+        MemberListResponse memberListResponse = new MemberListResponse(loginMemberId, nickname, profile);
 
-        List<FollowListResponse> followListResponses = new ArrayList<>();
-        followListResponses.add(followListResponse);
+        List<MemberListResponse> memberListResponseList = new ArrayList<>();
+        memberListResponseList.add(memberListResponse);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        Page<MemberListResponse> memberListResponses = new PageImpl<>(memberListResponseList, pageRequest, 1);
+
+        Pageable pageable = Pageable.ofSize(10);
 
         UUID toMemberId = UUID.randomUUID();
 
-        when(followRepository.findByToMember(any(UUID.class)))
-                .thenReturn(followListResponses);
+        when(memberRepository.findByToMember(eq(pageable), any(UUID.class), any(UUID.class)))
+                .thenReturn(memberListResponses);
 
         //when
-        List<FollowListResponse> savedFollowListResponses = findFollowUseCase.listFollower(toMemberId);
+        Page<MemberListResponse> savedMemberListResponses = findMemberUseCase.listFollower(
+                pageable, loginMemberId, toMemberId);
 
         //then
-        assertEquals(followListResponses.get(0).getMemberId(), savedFollowListResponses.get(0).getMemberId());
-        verify(followRepository, times(1)).findByToMember(any(UUID.class));
+        assertEquals(memberListResponses.getContent().get(0).getMemberId(),
+                savedMemberListResponses.getContent().get(0).getMemberId());
+        verify(memberRepository,
+                times(1)).findByToMember(eq(pageable), eq(loginMemberId), eq(toMemberId));
     }
 
     @Test
@@ -563,12 +600,48 @@ public class MemberUseCaseTest {
         //given
         UUID toMemberId = UUID.randomUUID();
 
-        when(followRepository.findByToMember(any(UUID.class)))
+        Pageable pageable = Pageable.ofSize(10);
+
+        when(memberRepository.findByToMember(eq(pageable), any(UUID.class), any(UUID.class)))
                 .thenThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
         //when&&then
         CustomException thrown = assertThrows(CustomException.class,
-                () -> findFollowUseCase.listFollower(toMemberId));
+                () -> findMemberUseCase.listFollower(pageable, toMemberId, toMemberId));
         assertEquals(ResponseCode.MEMBER_ID_NOT_FOUND, thrown.getResponseCode());
+    }
+
+    @Test
+    @DisplayName("Member UC - 닉네임 검색 테스트")
+    void memberSearchByNickname()  {
+        //given
+        UUID loginMemberId = UUID.randomUUID();
+        String nickname = "test";
+        String profile = "test.jpg";
+
+        MemberListResponse memberListResponse = new MemberListResponse(loginMemberId, nickname, profile);
+
+        List<MemberListResponse> memberListResponseList = new ArrayList<>();
+        memberListResponseList.add(memberListResponse);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        Page<MemberListResponse> memberListResponses = new PageImpl<>(memberListResponseList, pageRequest, 1);
+
+        Pageable pageable = Pageable.ofSize(10);
+
+        String word = "tes";
+
+        when(memberRepository.findByNicknameLike(eq(pageable), any(UUID.class), any(String.class)))
+                .thenReturn(memberListResponses);
+
+        //when
+        Page<MemberListResponse> savedMemberListResponses = findMemberUseCase.findListByNickname(
+                pageable, loginMemberId, word);
+
+        //then
+        assertEquals(memberListResponses.getContent().get(0).getMemberId(),
+                savedMemberListResponses.getContent().get(0).getMemberId());
+        verify(memberRepository,
+                times(1)).findByNicknameLike(eq(pageable), eq(loginMemberId), eq(word));
     }
 }

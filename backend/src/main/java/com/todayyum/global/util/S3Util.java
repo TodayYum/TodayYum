@@ -22,7 +22,7 @@ public class S3Util {
 
     public String uploadFile(MultipartFile file) {
         if(file == null || file.isEmpty()) {
-            throw new CustomException(ResponseCode.EMPTY_FILE);
+            return null;
         }
 
         String fileName = file.getOriginalFilename();
@@ -62,6 +62,16 @@ public class S3Util {
         } else {
             return "";
         }
+    }
+
+    public void removeFile(String link) {
+        if(link == null) return;
+
+        String filename = link.split(".com/")[1];
+
+        System.out.println("filename: " + filename);
+
+        amazonS3.deleteObject(bucket, filename);
     }
 
 }

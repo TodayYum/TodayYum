@@ -1,21 +1,27 @@
 package com.todayyum.member.application.repository;
 
 import com.todayyum.member.domain.Member;
+import com.todayyum.member.dto.response.MemberListResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
 public interface MemberRepository {
 
-    public Member save(Member member);
+    Member save(Member member);
 
-    public boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
 
-    public Member findById(UUID memberId);
+    Member findById(UUID memberId);
 
-    public Member findByEmail(String email);
+    Member findByEmail(String email);
 
-    public boolean existsByNickname(String nickname);
+    boolean existsByNickname(String nickname);
 
-    public void deleteById(UUID memberId);
+    void deleteById(UUID memberId);
+    Page<MemberListResponse> findByNicknameLike(Pageable pageable, UUID loginMemberId, String nickname);
+    Page<MemberListResponse> findByFromMember(Pageable pageable, UUID loginMemberId, UUID fromMemberId);
 
+    Page<MemberListResponse> findByToMember(Pageable pageable, UUID loginMemberId, UUID toMemberId);
 }

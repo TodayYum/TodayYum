@@ -11,11 +11,11 @@ import java.util.UUID;
 @Setter
 @Getter
 @Builder
-public class CommentModifyRequest {
+public class IntroductionModifyRequest {
 
     private UUID memberId;
 
     @NotNull(message = "소개글을 입력해주세요.")
     @Size(max = 30, message = "소개글은 최대 30자입니다.")
-    private String comment;
+    private String introduction;
 }

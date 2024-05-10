@@ -7,14 +7,18 @@ import com.todayyum.member.application.*;
 import com.todayyum.member.controller.MemberController;
 import com.todayyum.member.domain.ValidationResult;
 import com.todayyum.member.dto.request.*;
-import com.todayyum.member.dto.response.FollowListResponse;
 import com.todayyum.member.dto.response.MemberDetailResponse;
+import com.todayyum.member.dto.response.MemberListResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -49,8 +53,6 @@ public class MemberControllerTest {
     private ModifyMemberUseCase modifyMemberUseCase;
     @MockBean
     private AddFollowUseCase addFollowUseCase;
-    @MockBean
-    private FindFollowUseCase findFollowUseCase;
     @MockBean
     private RemoveFollowUseCase removeFollowUseCase;
     @MockBean
@@ -106,7 +108,7 @@ public class MemberControllerTest {
     @DisplayName("Member Cont - 회원 조회 테스트")
     void findMember() throws Exception {
         //given
-        UUID memberId = UUID.randomUUID();
+        UUID memberId = UUID.fromString("c3f1843f-1304-4526-ba5b-ffedc85f0d55");
 
         MemberDetailResponse memberDetailResponse = MemberDetailResponse.builder()
                 .memberId(memberId)
@@ -114,12 +116,12 @@ public class MemberControllerTest {
                 .nickname("test")
                 .build();
 
-        when(findMemberUseCase.findMember(memberId))
+        when(findMemberUseCase.findMember(memberId, memberId))
                 .thenReturn(memberDetailResponse);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/members/{id}", memberId));
+                MockMvcRequestBuilders.get("/api/members/{memberId}", memberId));
 
         //then
         resultActions.andExpect(
@@ -136,9 +138,9 @@ public class MemberControllerTest {
     @DisplayName("Member Cont - 회원 조회 실패 테스트(멤버 식별자 오류)")
     void findMemberFailByMemberId() throws Exception {
         //given
-        UUID memberId = UUID.randomUUID();
+        UUID memberId = UUID.fromString("c3f1843f-1304-4526-ba5b-ffedc85f0d55");
 
-        when(findMemberUseCase.findMember(any(UUID.class)))
+        when(findMemberUseCase.findMember(any(UUID.class), any(UUID.class)))
                 .thenThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
         //when
@@ -218,21 +220,21 @@ public class MemberControllerTest {
 
     @Test
     @DisplayName("Member Cont - 소개글 변경 테스트")
-    void modifyComment() throws Exception {
+    void modifyIntroduction() throws Exception {
         //given
-        CommentModifyRequest commentModifyRequest = CommentModifyRequest.builder()
-                .comment("내가 누구?")
+        IntroductionModifyRequest introductionModifyRequest = IntroductionModifyRequest.builder()
+                .introduction("내가 누구?")
                 .build();
 
         doNothing()
                 .when(modifyMemberUseCase)
-                .modifyComment(any(CommentModifyRequest.class));
+                .modifyIntroduction(any(IntroductionModifyRequest.class));
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/api/members/comments")
+                MockMvcRequestBuilders.patch("/api/members/introductions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(commentModifyRequest)));
+                        .content(new ObjectMapper().writeValueAsString(introductionModifyRequest)));
 
         //then
         resultActions.andExpect(
@@ -243,16 +245,16 @@ public class MemberControllerTest {
 
     @Test
     @DisplayName("Member Cont - 소개글 변경 실패 테스트(입력 오류)")
-    void modifyCommentFailByInput() throws Exception {
+    void modifyIntroductionFailByInput() throws Exception {
         //given
-        CommentModifyRequest commentModifyRequest = CommentModifyRequest.builder()
+        IntroductionModifyRequest introductionModifyRequest = IntroductionModifyRequest.builder()
                 .build();
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch("/api/members/comments")
+                MockMvcRequestBuilders.patch("/api/members/introductions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(commentModifyRequest)));
+                        .content(new ObjectMapper().writeValueAsString(introductionModifyRequest)));
 
         //then
         resultActions.andExpect(
@@ -432,7 +434,7 @@ public class MemberControllerTest {
 
     @Test
     @DisplayName("Member Cont - 팔로우 실패 테스트(중복 오류)")
-    void addFollowFailByMemberId() throws Exception {
+    void addFollowFailByDuplication() throws Exception {
         //given
         when(addFollowUseCase.addFollow(any(UUID.class), any(UUID.class)))
                 .thenThrow(new CustomException(ResponseCode.DUPLICATE_FOLLOW));
@@ -490,36 +492,35 @@ public class MemberControllerTest {
     @DisplayName("Member Cont - 팔로잉 리스트 테스트")
     void listFollowing() throws Exception {
         //given
-        UUID memberId = UUID.randomUUID();
+        UUID memberId = UUID.fromString("c3f1843f-1304-4526-ba5b-ffedc85f0d55");
         String nickname = "test";
         String profile = "test.jpg";
 
-        FollowListResponse followListResponse = FollowListResponse.builder()
-                .memberId(memberId)
-                .nickname(nickname)
-                .profile(profile)
-                .build();
+        MemberListResponse memberListResponse = new MemberListResponse(memberId, nickname, profile);
 
-        List<FollowListResponse> followListResponses = new ArrayList<>();
-        followListResponses.add(followListResponse);
+        List<MemberListResponse> memberListResponseList = new ArrayList<>();
+        memberListResponseList.add(memberListResponse);
+        PageRequest pageRequest = PageRequest.of(0, 10);
 
-        when(findFollowUseCase.listFollowing(memberId))
-                .thenReturn(followListResponses);
+        Page<MemberListResponse> memberListResponses = new PageImpl<>(memberListResponseList, pageRequest, 1);
+
+        when(findMemberUseCase.listFollowing(any(Pageable.class), eq(memberId), eq(memberId)))
+                .thenReturn(memberListResponses);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/members/{memberId}/followings", memberId));
+                MockMvcRequestBuilders.get("/api/members/{memberId}/followings", memberId)
+                        .param("page", "0"));
 
         //then
-        resultActions.andExpect(
-                        status().isOk())
+        resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.message")
                         .value(ResponseCode.OK.getMessage()))
-                .andExpect(jsonPath("$.result.[0].memberId")
+                .andExpect(jsonPath("$.result.content.[0].memberId")
                         .value(memberId.toString()))
-                .andExpect(jsonPath("$.result.[0].nickname")
+                .andExpect(jsonPath("$.result.content.[0].nickname")
                         .value(nickname))
-                .andExpect(jsonPath("$.result.[0].profile")
+                .andExpect(jsonPath("$.result.content.[0].profile")
                         .value(profile));
     }
 
@@ -527,7 +528,7 @@ public class MemberControllerTest {
     @DisplayName("Member Cont - 팔로잉 리스트 실패 테스트(멤버 식별자 오류)")
     void listFollowingFailByMemberId() throws Exception {
         //given
-        when(findFollowUseCase.listFollowing(any(UUID.class)))
+        when(findMemberUseCase.listFollowing(any(Pageable.class), any(UUID.class) ,any(UUID.class)))
                 .thenThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
         //when
@@ -545,36 +546,36 @@ public class MemberControllerTest {
     @DisplayName("Member Cont - 팔로워 리스트 테스트")
     void listFollower() throws Exception {
         //given
-        UUID memberId = UUID.randomUUID();
+        UUID memberId = UUID.fromString("c3f1843f-1304-4526-ba5b-ffedc85f0d55");
         String nickname = "test";
         String profile = "test.jpg";
 
-        FollowListResponse followListResponse = FollowListResponse.builder()
-                .memberId(memberId)
-                .nickname(nickname)
-                .profile(profile)
-                .build();
+        MemberListResponse memberListResponse = new MemberListResponse(memberId, nickname, profile);
 
-        List<FollowListResponse> followListResponses = new ArrayList<>();
-        followListResponses.add(followListResponse);
+        List<MemberListResponse> memberListResponseList = new ArrayList<>();
+        memberListResponseList.add(memberListResponse);
+        PageRequest pageRequest = PageRequest.of(0, 10);
 
-        when(findFollowUseCase.listFollower(memberId))
-                .thenReturn(followListResponses);
+        Page<MemberListResponse> memberListResponses = new PageImpl<>(memberListResponseList, pageRequest, 1);
+
+        when(findMemberUseCase.listFollower(any(Pageable.class), eq(memberId), eq(memberId)))
+                .thenReturn(memberListResponses);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/members/{memberId}/followers", memberId));
+                MockMvcRequestBuilders.get("/api/members/{memberId}/followers", memberId)
+                        .param("page", "0"));
 
         //then
         resultActions.andExpect(
                         status().isOk())
                 .andExpect(jsonPath("$.message")
                         .value(ResponseCode.OK.getMessage()))
-                .andExpect(jsonPath("$.result.[0].memberId")
+                .andExpect(jsonPath("$.result.content.[0].memberId")
                         .value(memberId.toString()))
-                .andExpect(jsonPath("$.result.[0].nickname")
+                .andExpect(jsonPath("$.result.content.[0].nickname")
                         .value(nickname))
-                .andExpect(jsonPath("$.result.[0].profile")
+                .andExpect(jsonPath("$.result.content.[0].profile")
                         .value(profile));
     }
 
@@ -582,7 +583,7 @@ public class MemberControllerTest {
     @DisplayName("Member Cont - 팔로워 리스트 실패 테스트(멤버 식별자 오류)")
     void listFollowerFailByMemberId() throws Exception {
         //given
-        when(findFollowUseCase.listFollower(any(UUID.class)))
+        when(findMemberUseCase.listFollower(any(Pageable.class), any(UUID.class), any(UUID.class)))
                 .thenThrow(new CustomException(ResponseCode.MEMBER_ID_NOT_FOUND));
 
         //when
@@ -594,6 +595,43 @@ public class MemberControllerTest {
                         status().isNotFound())
                 .andExpect(jsonPath("$.message")
                         .value(ResponseCode.MEMBER_ID_NOT_FOUND.getMessage()));
+    }
+
+    @Test
+    @DisplayName("Member Cont - 닉네임 검색 테스트")
+    void memberSearchByNickname() throws Exception {
+        //given
+        UUID memberId = UUID.fromString("c3f1843f-1304-4526-ba5b-ffedc85f0d55");
+        String nickname = "test";
+        String profile = "test.jpg";
+
+        MemberListResponse memberListResponse = new MemberListResponse(memberId, nickname, profile);
+
+        List<MemberListResponse> memberListResponseList = new ArrayList<>();
+        memberListResponseList.add(memberListResponse);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        Page<MemberListResponse> memberListResponses = new PageImpl<>(memberListResponseList, pageRequest, 1);
+
+        when(findMemberUseCase.findListByNickname(any(Pageable.class), eq(memberId), eq("tes")))
+                .thenReturn(memberListResponses);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/members/search")
+                        .param("page", "0").param("nickname", "tes"));
+
+        //then
+        resultActions.andExpect(
+                        status().isOk())
+                .andExpect(jsonPath("$.message")
+                        .value(ResponseCode.OK.getMessage()))
+                .andExpect(jsonPath("$.result.content.[0].memberId")
+                        .value(memberId.toString()))
+                .andExpect(jsonPath("$.result.content.[0].nickname")
+                        .value(nickname))
+                .andExpect(jsonPath("$.result.content.[0].profile")
+                        .value(profile));
     }
 
 }

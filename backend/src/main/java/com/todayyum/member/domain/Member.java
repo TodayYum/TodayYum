@@ -17,7 +17,7 @@ public class Member {
     private String email;
     private String password;
     private String nickname;
-    private String comment;
+    private String introduction;
     private String profile;
     private LocalDateTime createdAt;
     private Role role;
@@ -37,7 +37,7 @@ public class Member {
                 .email(memberEntity.getEmail())
                 .password(memberEntity.getPassword())
                 .nickname(memberEntity.getNickname())
-                .comment(memberEntity.getComment())
+                .introduction(memberEntity.getIntroduction())
                 .profile(memberEntity.getProfile())
                 .createdAt(memberEntity.getCreatedAt())
                 .role(memberEntity.getRole())
@@ -50,7 +50,7 @@ public class Member {
                 .email(this.email)
                 .password(this.password)
                 .nickname(this.nickname)
-                .comment(this.comment)
+                .introduction(this.introduction)
                 .profile(this.profile)
                 .role(this.role)
                 .createdAt(this.createdAt)
@@ -65,8 +65,8 @@ public class Member {
         this.nickname = nickname;
     }
 
-    public void changeComment(String comment) {
-        this.comment = comment;
+    public void changeIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 
     public void changeProfile(String profile) {

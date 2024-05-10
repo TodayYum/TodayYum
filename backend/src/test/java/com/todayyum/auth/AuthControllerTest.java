@@ -3,6 +3,7 @@ package com.todayyum.auth;
 import com.todayyum.auth.application.RefreshTokenUseCase;
 import com.todayyum.auth.application.RemoveTokenUseCase;
 import com.todayyum.auth.application.VerifyEmailUseCase;
+import com.todayyum.auth.application.VerifyPasswordUseCase;
 import com.todayyum.auth.controller.AuthController;
 import com.todayyum.auth.dto.request.CodeVerifyRequest;
 import com.todayyum.global.dto.response.ResponseCode;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,6 +33,8 @@ public class AuthControllerTest {
 
     @MockBean
     private VerifyEmailUseCase verifyEmailUseCase;
+    @MockBean
+    private VerifyPasswordUseCase verifyPasswordUseCase;
     @MockBean
     private RefreshTokenUseCase refreshTokenUseCase;
     @MockBean
@@ -60,7 +64,8 @@ public class AuthControllerTest {
                 .andExpect(jsonPath("$.result")
                         .value(code))
                 .andExpect(jsonPath("$.message")
-                        .value(ResponseCode.CREATED.getMessage()));
+                        .value(ResponseCode.CREATED.getMessage()))
+                .andDo(print());
     }
 
     @Test
@@ -75,7 +80,7 @@ public class AuthControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/auth/verification-code")
+                MockMvcRequestBuilders.post("/api/auth/verify/verification-code")
                         .param("email", email)
                         .param("code", code));
 

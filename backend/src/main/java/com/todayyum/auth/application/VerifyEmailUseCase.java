@@ -8,7 +8,6 @@ import com.todayyum.global.exception.CustomException;
 import com.todayyum.member.application.repository.MemberRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Getter
 public class VerifyEmailUseCase {
 
     private final VerificationCodeRepository verificationCodeRepository;
