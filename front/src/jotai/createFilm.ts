@@ -4,15 +4,15 @@
 
 import { atom, useAtom } from 'jotai';
 import {
-  ICreateFile,
-  IUndefinedableCreateFile,
+  ICreateFilm,
+  IUndefinedableCreateFilm,
 } from '../types/jotai/createFile.types';
 
-const createFilm = atom<ICreateFile>({
-  files: [],
-  fileURL: [],
-  date: 9,
-  contents: '',
+const createFilm = atom<ICreateFilm>({
+  images: [],
+  imagesURL: [],
+  ateAt: '',
+  content: '',
   category: -1,
   tags: [],
   score: [0, 0, 0],
@@ -21,7 +21,7 @@ const createFilm = atom<ICreateFile>({
 
 const createFilmAtom = atom(
   get => get(createFilm),
-  (get, set, inputData: IUndefinedableCreateFile) => {
+  (get, set, inputData: IUndefinedableCreateFilm) => {
     const prevData = get(createFilm);
     const newSearchData = { ...prevData };
     Object.entries(inputData).forEach(entry => {
