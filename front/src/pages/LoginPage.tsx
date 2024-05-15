@@ -13,13 +13,14 @@ function LoginPage() {
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isFailed, setIsFailed] = useState<boolean>(false);
+  const navigate = useNavigate();
   const { mutate } = useMutation({
     mutationFn: (request: ISigninRequest) => fetchPostSignin(request),
     onSuccess: async (res: any) => {
       console.log('결과', res);
+      navigate('/');
     },
   });
-  const navigate = useNavigate();
 
   const SubmitLogin = () => {
     mutate({ email: id, password });

@@ -72,7 +72,7 @@ function CreateFilmFirstData() {
         {createFilm.category > 0 && (
           <ToggleChip
             dataId={`${createFilm.category}`}
-            text={CATEGORY_LIST[createFilm.category]}
+            text={CATEGORY_LIST.kr[createFilm.category]}
             isClick
             onClick={() => {}}
           />

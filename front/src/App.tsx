@@ -13,7 +13,6 @@ import FilmDetailPage from './pages/FilmDetailPage';
 import UploadFicturesPage from './pages/UploadFicturesPage';
 import CreatePolaroidFilmPage from './pages/CreatePolaroidFilmPage';
 import UserProfilePage from './pages/UserProfilePage';
-// import MyFilmsPage from './pages/MyFilmsPage';
 import HeaderLayout from './layout/HeaderLayout';
 import MyFilmsPage from './pages/MyFilmsPage';
 import UserListPage from './pages/UserListPage';
@@ -23,7 +22,7 @@ function App() {
     <Routes>
       <Route element={<NavBarLayout />}>
         <Route path="/" element={<MainPage />} />
-        <Route path="/test" element={<FilmDetailPage />} />
+        <Route path="/board/:boardId" element={<FilmDetailPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
       </Route>
       <Route path="/create-board" element={<NavBarLayout />}>
@@ -41,7 +40,6 @@ function App() {
         <Route path="/recent" element={<RecentSearchPage />} />
         <Route path="/search-result" element={<SearchResultPage />} />
       </Route>
-      {/* <Route path="/films" element={<MyFilmsPage />} /> */}
       <Route element={<HeaderLayout />}>
         <Route path="/write-list" element={<MyFilmsPage />} />
         <Route path="/user-list" element={<UserListPage />} />

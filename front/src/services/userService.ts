@@ -45,17 +45,20 @@ export const fetchPostEmailCode = async (email: string) => {
   }
 };
 
-// 이메일 인증 코드 확인 요청
+/**
+ * 코드 검증
+ * @param request
+ * @returns
+ */
 export const fetchPostEmailCodeCheck = async (request: IPostCodeRequest) => {
-  const url = `${API_URL}/api/auth/verify-verification`;
+  // 경로 문제 해결해야 함
+  const url = `${API_URL}/api/auth/verify/verification-code`;
 
-  const params = new URLSearchParams();
-  params.append('email', request.email);
-  params.append('code', request.code);
+  const bodyData = new FormData();
+  bodyData.append('email', request.email);
+  bodyData.append('code', request.code);
 
-  const response = await axios.post(url, null, {
-    params,
-  });
+  const response = await axios.post(url, bodyData);
   return response.data;
 };
 
@@ -82,13 +85,13 @@ export const fetchGetNicknameDuplicate = async (nickname: string) => {
 export const fetchPostSignUp = async (request: ISignUpRequest) => {
   const url = `${API_URL}/api/members`;
 
-  const params = new URLSearchParams();
-  params.append('email', request.email);
-  params.append('nickname', request.nickname);
-  params.append('password', request.password);
+  const bodyData = new FormData();
+  bodyData.append('email', request.email);
+  bodyData.append('nickname', request.nickname);
+  bodyData.append('password', request.password);
 
   try {
-    const response = await axios.post(url, null, { params });
+    const response = await axios.post(url, bodyData);
     return response.data;
   } catch (err) {
     return err;
@@ -102,12 +105,11 @@ export const fetchPostSignUp = async (request: ISignUpRequest) => {
 export const fetchPostSignin = async (request: ISigninRequest) => {
   const url = `${API_URL}/api/auth/login`;
 
-  const params = new URLSearchParams();
-  params.append('email', request.email);
-  params.append('password', request.password);
+  const bodyData = new FormData();
+  bodyData.append('email', request.email);
+  bodyData.append('password', request.password);
 
-  const response = await axios.post(url, null, {
-    params,
+  const response = await axios.post(url, bodyData, {
     withCredentials: true,
   });
 
@@ -125,6 +127,7 @@ export const fetchPostSignin = async (request: ISigninRequest) => {
   }
 
   localStorage.setItem('memberId', response.data.result.memberId);
+  localStorage.setItem('nickname', response.data.result.nickname);
   return response.data;
 };
 
@@ -179,6 +182,7 @@ export const fetchPostSignOut = async () => {
   const response = await axios.post(url, null, {
     withCredentials: true,
   });
+
   console.log('로그아웃 결과', response);
   return response.data;
 };

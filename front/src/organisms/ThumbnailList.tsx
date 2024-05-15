@@ -14,7 +14,7 @@ function ThumbnailList() {
   const [createFilm] = useCreateFilmAtom();
   return (
     <div className="flex gap-2 items-end w-[calc(100%-30px)] overflow-auto m-[15px] mb-[30px]">
-      {createFilm.fileURL.map((element, idx) => (
+      {createFilm.imagesURL.map((element, idx) => (
         <Img src={element} isFirst={!idx} />
       ))}
     </div>

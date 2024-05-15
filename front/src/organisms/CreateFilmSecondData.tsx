@@ -9,7 +9,7 @@ function CreateFilmSecondData() {
   const [tagName, setTagName] = useState('');
   const handleTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value.length > 100) return;
-    setCreateFilm({ contents: e.target.value });
+    setCreateFilm({ content: e.target.value });
   };
   console.log(tagName);
   const handleTagInput = (input: string) => {
@@ -31,7 +31,7 @@ function CreateFilmSecondData() {
   return (
     <div>
       <p className="base-bold mx-[15px]">
-        식사평을 적어주세요. ({creatFilm.contents.length}/100)
+        식사평을 적어주세요. ({creatFilm.content.length}/100)
       </p>
       <textarea
         className="focus:outline-secondary focus:outline-1 border-gray-dark border-[1px] rounded h-20 mx-[15px] mb-[30px] w-[calc(100%-30px)]"

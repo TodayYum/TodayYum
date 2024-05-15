@@ -23,5 +23,7 @@
     "no-useless-escape": "off",
     // 아래는 임시용
     "no-promise-executor-return": "off",
+    // axios interceptor 적용하기 위해서 어쩔수 없었음
+    "no-param-reassign": "off",
   },
 }

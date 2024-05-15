@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import useCreateFilmAtom from '../jotai/createFilm';
 import { IDateBottomSheet } from '../types/organisms/DateBottomSheet.types';
 import { DATE_LIST } from '../constant/createFilmConstant';
+import { getDate } from '../util/dateUtil';
 
 function DateBottomSheet(props: IDateBottomSheet) {
   const [, setCreateFilm] = useCreateFilmAtom();
@@ -10,7 +11,7 @@ function DateBottomSheet(props: IDateBottomSheet) {
   console.log(selectedIdx, '뭐선택됨');
 
   const handleSelectDate = (idx: number) => {
-    setCreateFilm({ date: idx });
+    setCreateFilm({ ateAt: getDate(idx) });
     setSelectedIdx(idx);
     console.log(idx, '엥');
     props.onClose();
@@ -20,13 +21,6 @@ function DateBottomSheet(props: IDateBottomSheet) {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       props.onClose();
     }
-  };
-
-  const getDate = (idx: number) => {
-    const currentDate = new Date();
-    const date = new Date();
-    date.setDate(currentDate.getDate() - idx);
-    return date.toLocaleDateString().substring(5);
   };
 
   useEffect(() => {
@@ -58,7 +52,7 @@ function DateBottomSheet(props: IDateBottomSheet) {
                 {`${element} `}
               </span>
               <span className={`${selectedIdx === idx && 'font-bold'} text-lg`}>
-                ({getDate(idx)})
+                ({getDate(idx).substring(5)})
               </span>
             </div>
           ))}
