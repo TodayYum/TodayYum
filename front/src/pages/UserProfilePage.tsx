@@ -3,47 +3,57 @@
  *
  */
 
-// import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { useQuery } from '@tanstack/react-query';
 import Header from '../atoms/Header';
 import UserProfileContainer from '../organisms/UserProfileContainer';
 import PolaroidFilm from '../organisms/PolaroidFilm';
 import { IPolaroidFilm } from '../types/organisms/PolaroidFilm.types';
-// import { IUserProfileContainer } from '../types/organisms/UserProfileContainer.types';
+import {
+  fetchGetWrittenBoard,
+  fetchGetYummyBoard,
+} from '../services/boardService';
 
 function UserProfilePage() {
-  // const [userProfile] = useState<IUserProfileContainer>(DUMMY_PROFILE);
+  const DUMMY_MEMBER_ID = '80ad8672-3501-431f-8a9a-0d0f1c02f2c3';
   const navigate = useNavigate();
-
+  const { data: yummyList, isSuccess: isYummySuccess } = useQuery({
+    queryKey: ['yummyBoardList', DUMMY_MEMBER_ID],
+    queryFn: () =>
+      fetchGetYummyBoard({ pageParam: 0, content: DUMMY_MEMBER_ID }),
+    staleTime: 500000,
+  });
+  const { data: writtenList, isSuccess: isWrittenSuccess } = useQuery({
+    queryKey: ['writtenBoardList', DUMMY_MEMBER_ID],
+    queryFn: () =>
+      fetchGetWrittenBoard({ pageParam: 0, content: DUMMY_MEMBER_ID }),
+    staleTime: 500000,
+  });
   const handleGoMyFilms = () => {
     navigate('/write-list', {
       state: {
         title: '작성한 글',
-        filmList: DUMMY_FILMS,
+        memberId: '80ad8672-3501-431f-8a9a-0d0f1c02f2c3',
+        type: 'written',
       },
     });
   };
 
   const handleGoYummyList = () => {
-    navigate('/yummy-list', {
+    navigate('/write-list', {
       state: {
         title: 'Yummy 목록',
-        filmList: DUMMY_FILMS,
+        memberId: '80ad8672-3501-431f-8a9a-0d0f1c02f2c3',
+        type: 'yummy',
       },
     });
   };
   return (
     <div>
       <Header title="마이페이지" />
-      <UserProfileContainer
-      // comment={userProfile.comment}
-      // followerCount={userProfile.followerCount}
-      // followingCount={userProfile.followingCount}
-      // nickname={userProfile.nickname}
-      // profile={userProfile.profile}
-      />
+      <UserProfileContainer />
       <div
         className="flex justify-between mx-[15px]"
         onClick={handleGoMyFilms}
@@ -55,15 +65,17 @@ function UserProfilePage() {
         <FontAwesomeIcon icon={faChevronRight} />
       </div>
       <div className="flex w-[calc(100%-30px)] overflow-auto gap-4 mx-[15px]">
-        {DUMMY_FILMS.map(element => (
-          <PolaroidFilm
-            firstTag={element.firstTag}
-            imgSrc={element.imgSrc}
-            linkPage={element.linkPage}
-            score={element.score}
-            yummyCount={element.yummyCount}
-          />
-        ))}
+        {isWrittenSuccess &&
+          ((writtenList as IPolaroidFilm[]) ?? []).map(element => (
+            <PolaroidFilm
+              tag={element.tag}
+              thumbnail={element.thumbnail}
+              id={element.id}
+              totalScore={element.totalScore}
+              yummyCount={element.yummyCount}
+              category={element.category}
+            />
+          ))}
       </div>
       <div
         className="flex justify-between mx-[15px] mt-[15px]"
@@ -76,65 +88,20 @@ function UserProfilePage() {
         <FontAwesomeIcon icon={faChevronRight} />
       </div>
       <div className="flex w-[calc(100%-30px)] overflow-auto gap-4 mx-[15px]">
-        {DUMMY_FILMS.map(element => (
-          <PolaroidFilm
-            firstTag={element.firstTag}
-            imgSrc={element.imgSrc}
-            linkPage={element.linkPage}
-            score={element.score}
-            yummyCount={element.yummyCount}
-          />
-        ))}
+        {isYummySuccess &&
+          (yummyList as IPolaroidFilm[]).map(element => (
+            <PolaroidFilm
+              tag={element.tag}
+              thumbnail={element.thumbnail}
+              id={element.id}
+              totalScore={element.totalScore}
+              yummyCount={element.yummyCount}
+              category={element.category}
+            />
+          ))}
       </div>
     </div>
   );
 }
-
-// const DUMMY_PROFILE = {
-//   email: 'test@test.com',
-//   nickname: 'yonggkimm',
-//   comment: 'ㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇㅎㅇ',
-//   profile: '/t3.jpg',
-//   followerCount: 10000,
-//   followingCount: 1,
-// };
-
-const DUMMY_FILMS: IPolaroidFilm[] = [
-  {
-    firstTag: '테스트테스트테스트테스트테스트테스트테스트테스트테스트',
-    imgSrc: '/logo.svg',
-    score: 4.5,
-    yummyCount: 30,
-    linkPage: '/recent',
-  },
-  {
-    firstTag: '테스트',
-    imgSrc: '/logo.svg',
-    score: 4.5,
-    yummyCount: 30,
-    linkPage: '/recent',
-  },
-  {
-    firstTag: '테스트',
-    imgSrc: '/logo.svg',
-    score: 4.5,
-    yummyCount: 30,
-    linkPage: '/recent',
-  },
-  {
-    firstTag: '테스트',
-    imgSrc: '/logo.svg',
-    score: 4.5,
-    yummyCount: 30,
-    linkPage: '/recent',
-  },
-  {
-    firstTag: '테스트',
-    imgSrc: '/logo.svg',
-    score: 4.5,
-    yummyCount: 30,
-    linkPage: '/recent',
-  },
-];
 
 export default UserProfilePage;
