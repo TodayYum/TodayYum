@@ -2,7 +2,6 @@ import { IUserList } from '../types/organisms/UserList';
 import SearchAccountContainer from './SearchAccountContainer';
 
 function UserList(props: IUserList) {
-  // const userList = DUMMY_ACCOUNT;
   return (
     <div className="px-[30px] mt-2 flex flex-col gap-5">
       {props.userList.map(element => (
