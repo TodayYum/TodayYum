@@ -5,15 +5,25 @@
 
 import Swal from 'sweetalert2';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
 import { isRightPassword } from '../util/passwordCheck';
 import InputPassword from '../atoms/InputPassword';
 import { IResetPassword } from '../types/organisms/ResetPassword.types';
+import { fetchPatchPassword } from '../services/userService';
 
 function ResetPassword(props: IResetPassword) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { mutate } = useMutation({
+    mutationFn: (request: string) => fetchPatchPassword(request),
+    onSuccess: res => {
+      if (res) {
+        props.setModalLevel(0);
+      }
+    },
+  });
   // const setNickname = useSetNicknameAtom();
 
   const handleNextButton = () => {
@@ -41,7 +51,7 @@ function ResetPassword(props: IResetPassword) {
       return;
     }
     // 다음 단께로 넘어가는 작업
-    props.setModalLevel(0);
+    mutate(password);
   };
 
   return (

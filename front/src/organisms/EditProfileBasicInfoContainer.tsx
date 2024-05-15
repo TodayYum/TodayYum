@@ -1,6 +1,7 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useMutation } from '@tanstack/react-query';
 import {
   userProfileAtom,
   useSetCommentAtom,
@@ -10,6 +11,11 @@ import {
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
 import { IEditProfileBasicInfoContainer } from '../types/organisms/EditProfileBasicInfoContainer.types';
+import {
+  fetchPatchEditIntroduction,
+  fetchPatchEditNickname,
+  fetchPostEditProfileImg,
+} from '../services/userService';
 
 function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
   const userProfile = userProfileAtom();
@@ -17,9 +23,43 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
   const setCommentAtom = useSetCommentAtom();
   const setProfileImgAtom = useSetProfileImgAtom();
   const [nickname, setNickname] = useState(userProfile.nickname);
-  const [comment, setComment] = useState(userProfile.comment);
+  const [comment, setComment] = useState(userProfile.introduction);
   const imgInputRef = useRef<HTMLInputElement>(null);
+  const { mutate: patchNickname } = useMutation({
+    mutationFn: (request: string) => fetchPatchEditNickname(request),
+    onSuccess: response => {
+      if (response) {
+        setNicknameAtom(nickname);
+      } else {
+        console.log('닉설정 실패');
+      }
+    },
+  });
+  const { mutate: patchIntroduction } = useMutation({
+    mutationFn: (request: string) => fetchPatchEditIntroduction(request),
+    onSuccess: response => {
+      if (response) {
+        setCommentAtom(comment);
+      } else {
+        console.log('소개글 실패');
+      }
+    },
+  });
+  const { mutate: postEditProfile } = useMutation({
+    mutationFn: (request: File) => fetchPostEditProfileImg(request),
+    onSuccess: (response, input) => {
+      if (response) {
+        setProfileImgAtom({
+          profileFile: input,
+          profile: window.URL.createObjectURL(input),
+        });
+      } else {
+        console.log('소개글 실패');
+      }
+    },
+  });
 
+  // props 함수
   const handleSetNickNameValue = (input: string) => {
     setNickname(input);
   };
@@ -27,13 +67,12 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
     setComment(input);
   };
 
+  // API 요청
   const handleSetNicknameButton = () => {
-    // API 요청 후
-    setNicknameAtom(nickname);
+    patchNickname(nickname);
   };
   const handleCommentButton = () => {
-    // API 요청 후
-    setCommentAtom(comment);
+    patchIntroduction(comment);
   };
   const handleClickUploadButton = () => {
     imgInputRef.current?.click();
@@ -42,10 +81,7 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
     if (!e.target.files?.length) return;
     const target = e.target.files[0];
     // API로 등록 후 받은 S3 주소를 profile에 넣을 것
-    setProfileImgAtom({
-      profileFile: target,
-      profile: window.URL.createObjectURL(target),
-    });
+    postEditProfile(target);
   };
 
   return (
