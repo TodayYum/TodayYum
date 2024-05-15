@@ -5,7 +5,12 @@ export interface IProfileImg {
 
 export interface IUserProfileContainer extends IProfileImg {
   nickname: string;
-  comment: string;
+  memberId: string;
+  profile: string;
+  role: string;
+  following: boolean;
+  introduction: string;
   followerCount: number;
   followingCount: number;
+  email: string;
 }
