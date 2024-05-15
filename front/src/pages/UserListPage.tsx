@@ -1,53 +1,35 @@
-// import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useMemo } from 'react';
 import UserList from '../organisms/UserList';
-import useIntersect from '../util/useIntersect';
 import { IUserThumbnail } from '../types/organisms/UserList';
+import {
+  fetchGetFollowerList,
+  fetchGetFollowingList,
+} from '../services/userService';
+import useInfiniteQueryProduct from '../util/useInfiniteQueryProduct';
 
 function UserListPage() {
-  // const location = useLocation();
-  const [userList, setUserList] = useState<IUserThumbnail[]>(DUMMY_ACCOUNT);
-  // const { userList } = location.state;
-  const [, setRef] = useIntersect(async (entry, observer) => {
-    // API 결과에 따라 hasNext 결정
-    const hasNext = true;
-    const newList = userList.concat(JSON.parse(JSON.stringify(userList)));
-    setUserList(newList);
-    observer.unobserve(entry.target);
-    return hasNext;
-  }, {});
-  console.log(userList);
+  const locationState = useLocation().state;
+  const [, setRef, data, isPending] = useInfiniteQueryProduct(
+    {
+      constant: locationState.type,
+      variables: [],
+      stringVariables: [locationState.memberId],
+    },
+    () =>
+      locationState.type === 'following'
+        ? fetchGetFollowingList
+        : fetchGetFollowerList,
+    {},
+  );
+
+  const product: IUserThumbnail[] = useMemo(() => {
+    console.log('우에에에', data, locationState);
+    return data as IUserThumbnail[];
+  }, [data]);
   return (
-    <div>
-      <UserList userList={userList} setRef={setRef} />
-    </div>
+    <div>{!isPending && <UserList userList={product} setRef={setRef} />}</div>
   );
 }
-const DUMMY_ACCOUNT = [
-  {
-    nickname: '닉네임',
-    imgSrc: '/logo.svg',
-    comment: '테스트입니다.',
-  },
-  {
-    nickname: '닉네임',
-    imgSrc: '/logo.svg',
-    comment: '테스트입니다.',
-  },
-  {
-    nickname: '닉네임',
-    imgSrc: '/logo.svg',
-    comment: '테스트입니다.',
-  },
-  {
-    nickname: '닉네임',
-    imgSrc: '/logo.svc',
-    comment: '테스트입니다.',
-  },
-  {
-    nickname: '닉네임',
-    imgSrc: '/logo.svc',
-    comment: '테스트입니다.',
-  },
-];
+
 export default UserListPage;
