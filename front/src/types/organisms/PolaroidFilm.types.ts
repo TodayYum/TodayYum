@@ -1,8 +1,9 @@
 export interface IPolaroidFilm {
-  imgSrc: string;
-  firstTag: string;
+  id: number;
+  thumbnail: string;
+  tag: string;
   yummyCount: number;
-  score: number;
-  linkPage: string;
+  totalScore: number;
+  category: number;
   customCSS?: string;
 }

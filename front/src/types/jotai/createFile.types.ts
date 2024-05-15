@@ -1,21 +1,21 @@
-export interface ICreateFile {
-  files: File[];
-  fileURL: string[];
-  contents: string;
+export interface ICreateFilm {
+  images: File[];
+  imagesURL: string[];
+  content: string;
   tags: string[];
   category: number;
   score: number[];
-  date: number;
+  ateAt: string;
   mealTime: number;
   [key: string]: any;
 }
 
-export interface IUndefinedableCreateFile {
-  files?: File[];
-  fileURL?: string[];
-  contents?: string;
+export interface IUndefinedableCreateFilm {
+  images?: File[];
+  imagesURL?: string[];
+  content?: string;
   category?: number;
-  date?: number;
+  ateAt?: string;
   tags?: string[];
   mealTime?: number;
   score?: number[];

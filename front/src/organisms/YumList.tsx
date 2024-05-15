@@ -4,20 +4,24 @@ import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { IYumList, IYumByCategory } from '../types/organisms/YumList.types';
 import RectangleChip from '../atoms/RectangleChip';
 import PolaroidFilm from './PolaroidFilm';
+import { CATEGORY_LIST, CATEGORY_MAP } from '../constant/searchConstant';
 
 const YumByCategoy = (props: IYumByCategory) => {
   return (
     <div className="flex flex-col gap-4 justify-center w-1/2">
       <div className="flex justify-center">
-        <RectangleChip text={props.title} />
+        <RectangleChip
+          text={CATEGORY_LIST.kr[CATEGORY_MAP[props.board.category]]}
+        />
       </div>
       <PolaroidFilm
-        firstTag={props.board.firstTag}
-        imgSrc={props.board.imgSrc}
-        linkPage={props.board.linkPage}
-        score={props.board.score}
+        tag={props.board.tag}
+        thumbnail={props.board.thumbnail}
+        id={props.board.id}
+        totalScore={props.board.totalScore}
         yummyCount={props.board.yummyCount}
         customCSS="mx-auto"
+        category={props.board.category}
       />
     </div>
   );
@@ -43,9 +47,9 @@ function YumList(props: IYumList) {
   }, []);
 
   return (
-    <div className="bg-black/30 w-screen h-[135vh] absolute top-0 left-0">
+    <div className="bg-black/30 w-screen h-screen absolute top-0 left-0">
       <div
-        className="bg-white rounded mx-[30px] mt-[30px] px-2 py-[30px]"
+        className="bg-white rounded mx-[30px] mt-[30px] px-2 py-[30px] h-[85%] overflow-auto"
         ref={modalRef}
       >
         <div className="relative">
@@ -57,75 +61,13 @@ function YumList(props: IYumList) {
           />
         </div>
         <div className="flex-wrap flex gap-y-8">
-          {DUMMY_TODAY_YUM_LIST.map(element => (
-            <YumByCategoy title={element.title} board={element.board} />
+          {props.todayYummys.map(element => (
+            <YumByCategoy board={element} />
           ))}
         </div>
       </div>
     </div>
   );
 }
-const DUMMY_TODAY_YUM_LIST = [
-  {
-    title: '한식',
-    board: {
-      firstTag: '테스트',
-      imgSrc: '/logo.svg',
-      score: 4.5,
-      yummyCount: 30,
-      linkPage: '/recent',
-    },
-  },
-  {
-    title: '한식',
-    board: {
-      firstTag: '테스트',
-      imgSrc: '/logo.svg',
-      score: 4.5,
-      yummyCount: 30,
-      linkPage: '/recent',
-    },
-  },
-  {
-    title: '한식',
-    board: {
-      firstTag: '테스트',
-      imgSrc: '/logo.svg',
-      score: 4.5,
-      yummyCount: 30,
-      linkPage: '/recent',
-    },
-  },
-  {
-    title: '한식',
-    board: {
-      firstTag: '테스트',
-      imgSrc: '/logo.svg',
-      score: 4.5,
-      yummyCount: 30,
-      linkPage: '/recent',
-    },
-  },
-  {
-    title: '한식',
-    board: {
-      firstTag: '테스트',
-      imgSrc: '/logo.svg',
-      score: 4.5,
-      yummyCount: 30,
-      linkPage: '/recent',
-    },
-  },
-  {
-    title: '한식',
-    board: {
-      firstTag: '테스트',
-      imgSrc: '/logo.svg',
-      score: 4.5,
-      yummyCount: 30,
-      linkPage: '/recent',
-    },
-  },
-];
 
 export default YumList;

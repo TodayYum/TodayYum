@@ -24,14 +24,14 @@ function UploadFicturesPage() {
 
   const handleFictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) {
-      setCreateFilmData({ files: [], fileURL: [] });
+      setCreateFilmData({ images: [], imagesURL: [] });
       return;
     }
     const fileList = Array.from(e.target.files);
     const fileURLList = fileList.map(element =>
       window.URL.createObjectURL(element),
     );
-    setCreateFilmData({ files: fileList, fileURL: fileURLList });
+    setCreateFilmData({ images: fileList, imagesURL: fileURLList });
   };
 
   const handleClickUploadButton = () => {
@@ -49,8 +49,8 @@ function UploadFicturesPage() {
 
   return (
     <div className="relative">
-      <HasNextHeader isActive={createFilmData.fileURL.length > 0} />
-      {createFilmData.fileURL.length === 0 && (
+      <HasNextHeader isActive={createFilmData.imagesURL.length > 0} />
+      {createFilmData.imagesURL.length === 0 && (
         <div
           className="fixed top-[58px] w-full bg-white h-[110vw] flex justify-center"
           onClick={handleClickUploadButton}
@@ -67,9 +67,9 @@ function UploadFicturesPage() {
           </div>
         </div>
       )}
-      {createFilmData.fileURL.length > 0 && (
+      {createFilmData.imagesURL.length > 0 && (
         <DetailPageCarousel
-          imgs={createFilmData.fileURL}
+          imgs={createFilmData.imagesURL}
           customCSS="fixed top-[58px]"
           divRef={carouselRef}
         />
