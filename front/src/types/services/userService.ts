@@ -13,3 +13,8 @@ export interface ISigninRequest {
   email: string;
   password: string;
 }
+
+export interface IGetFollowingListRequest {
+  pageParam: number;
+  content: string;
+}

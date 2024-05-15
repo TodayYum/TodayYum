@@ -3,6 +3,7 @@
  */
 import axios from 'axios';
 import {
+  IGetFollowingListRequest,
   IPostCodeRequest,
   ISignUpRequest,
   ISigninRequest,
@@ -205,4 +206,200 @@ export const fetchPostResetPassword = async (request: string) => {
   const response = await axios.post(url, request);
   console.log('로그아웃 결과', response);
   return response.data;
+};
+
+/// //////////////////////////////////////// 프로필
+/**
+ * fetchGetUserInfo : 유저 프로필 정보에서 사용할 유저 정보 가져오기
+ * @param memberId
+ * @returns
+ */
+export const fetchGetUserInfo = async (memberId: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+  const url = `${API_URL}/api/members/${memberId}`;
+
+  const response = await axios.get(url, {
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return response.data.result;
+};
+
+/**
+ * fetchPatchEditNickname : 닉네임 변경 patch 요청
+ * @param nickname
+ * @returns
+ */
+export const fetchPatchEditNickname = async (nickname: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+  const url = `${API_URL}/api/members/nicknames`;
+
+  const formData = new FormData();
+  formData.append('nickname', nickname);
+  const response = await axios.patch(
+    url,
+    { nickname },
+    {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  return response.data.message === '요청이 완료되었습니다.';
+};
+
+/**
+ * fetchPatchEditIntroduction : 소개글 변경 patch 요청
+ * @param introduction
+ * @returns
+ */
+export const fetchPatchEditIntroduction = async (introduction: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+  const url = `${API_URL}/api/members/introductions`;
+
+  const response = await axios.patch(
+    url,
+    { introduction },
+    {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  return response.data.message === '요청이 완료되었습니다.';
+};
+
+/**
+ * fetchPostEditProfileImg : 프로필 사진 갱신 post 요청
+ * @param profile
+ * @returns
+ */
+export const fetchPostEditProfileImg = async (profile: File) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/members/profiles`;
+
+  const formData = new FormData();
+  formData.append('profile', profile);
+
+  const response = await axios.post(url, formData, {
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data.message === '요청이 완료되었습니다.';
+};
+
+/**
+ * fetchPostConfirmPassword : 비밀번호 재설정 과정에서 비밀번호 확인
+ * @param password
+ * @returns
+ */
+export const fetchPostConfirmPassword = async (password: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/auth/verify/password`;
+
+  const formData = new FormData();
+  formData.append('password', password);
+
+  const response = await axios.post(url, formData, {
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data.message === '요청이 완료되었습니다.';
+};
+
+/**
+ * fetchPatchPassword : 비밀번호 재설정 과정에서 비밀번호 확인
+ * @param password: 변경된 비밀번호
+ * @returns
+ */
+export const fetchPatchPassword = async (password: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/members/passwords`;
+
+  const response = await axios.patch(
+    url,
+    { password },
+    {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  return response.data.message === '요청이 완료되었습니다.';
+};
+
+/**
+ * fetchGetFollowerList : 유저를 팔로우한 리스트 요청
+ * @param request
+ * @returns
+ */
+export const fetchGetFollowerList = async (
+  request: IGetFollowingListRequest,
+) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/members/${request.content}/followers`;
+
+  const response = await axios.get(url, {
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    params: {
+      page: request.pageParam,
+    },
+  });
+
+  return response.data.result;
+};
+
+/**
+ * fetchGetFollowingList : 유저가 팔로잉 한 리스트 요청
+ * @param request
+ * @returns
+ */
+export const fetchGetFollowingList = async (
+  request: IGetFollowingListRequest,
+) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/members/${request.content}/followings`;
+
+  console.log('리퀘ㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔ스트', url);
+  const response = await axios.get(url, {
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    params: {
+      page: request.pageParam,
+    },
+  });
+  console.log('요청 결곽ㄱㄱㄱㄱㄱ', response);
+  return response.data.result;
 };

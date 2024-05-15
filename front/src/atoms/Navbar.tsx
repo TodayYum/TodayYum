@@ -16,7 +16,10 @@ function Navbar() {
       <Link to="/create-board/select-fictures">
         <FontAwesomeIcon icon={faCirclePlus} />
       </Link>
-      <Link to="/">
+      <Link
+        to="/profile"
+        state={{ memberId: localStorage.getItem('memberId') }}
+      >
         <FontAwesomeIcon icon={faUser} />
       </Link>
       <Link to="/">

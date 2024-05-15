@@ -5,14 +5,30 @@
  */
 
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import InputPassword from '../atoms/InputPassword';
 import RectangleButton from '../atoms/RectangleButton';
 import { IEditProfileIdentifyuserContainer } from '../types/organisms/EditProfileIdentifyUserContainer.types';
+import { fetchPostConfirmPassword } from '../services/userService';
 
 function EditProfileIdentifyUserContainer(
   props: IEditProfileIdentifyuserContainer,
 ) {
   const [password, setPassword] = useState('');
+  const { mutate } = useMutation({
+    mutationFn: (request: string) => fetchPostConfirmPassword(request),
+    onSuccess: response => {
+      console.log('비밀번호 확인 결과', response);
+      if (response) {
+        props.goNextLevel();
+      }
+    },
+    // NOTICE! 비밀번호 일치하지 않을 경우 401에러 발생
+  });
+
+  const handleNextButton = () => {
+    mutate(password);
+  };
   return (
     <div>
       <p className="text-center font-bold text-2xl mb-6">본인 확인</p>
@@ -24,7 +40,7 @@ function EditProfileIdentifyUserContainer(
       />
       <RectangleButton
         text="확인"
-        onClick={props.goNextLevel}
+        onClick={handleNextButton}
         customClass="w-full mt-5"
       />
     </div>

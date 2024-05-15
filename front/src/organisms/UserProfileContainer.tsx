@@ -11,15 +11,28 @@ import { userProfileAtom } from '../jotai/userProfile';
 
 function UserProfileContainer() {
   const [isOnEdit, setIsOnEdit] = useState(false);
+
   const userProfile = userProfileAtom();
   const navigate = useNavigate();
   const handleFollowButton = () => {};
 
   const handleGoFollowings = () => {
-    navigate('/user-list', { state: { title: '팔로잉 목록' } });
+    navigate('/user-list', {
+      state: {
+        title: '팔로잉 목록',
+        type: 'following',
+        memberId: userProfile.memberId,
+      },
+    });
   };
   const handleGoFollowers = () => {
-    navigate('/user-list', { state: { title: '팔로워 목록' } });
+    navigate('/user-list', {
+      state: {
+        title: '팔로워 목록',
+        type: 'follower',
+        memberId: userProfile.memberId,
+      },
+    });
   };
   return (
     <div className="bg-white rounded-2xl m-[15px] p-[15px]">
@@ -31,9 +44,9 @@ function UserProfileContainer() {
         />
         <div className="font-ggTitle text-base w-full">
           <p className="font-bold mb-2">{userProfile.nickname}</p>
-          <p>{userProfile.comment}</p>
+          <p className="h-6">{userProfile.introduction}</p>
         </div>
-        {DUMMY_ISMINE ? (
+        {userProfile.memberId === localStorage.getItem('memberId') ? (
           <FontAwesomeIcon
             icon={faPencil}
             className="text-gray-dark mx-1 text-xl"
@@ -83,6 +96,5 @@ function UserProfileContainer() {
   );
 }
 
-const DUMMY_ISMINE = true;
 const DUMMY_ISFOLLOW = true;
 export default UserProfileContainer;
