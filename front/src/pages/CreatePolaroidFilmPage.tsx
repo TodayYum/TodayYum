@@ -1,16 +1,23 @@
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import Header from '../atoms/Header';
 import ThumbnailList from '../organisms/ThumbnailList';
 import CreateFilmFirstData from '../organisms/CreateFilmFirstData';
 import CreateFilmSecondData from '../organisms/CreateFilmSecondData';
 import RectangleButton from '../atoms/RectangleButton';
 import useCreateFilmAtom from '../jotai/createFilm';
+import { fetchPostAddBoard } from '../services/boardService';
 
 function CreatePolaroidFilmPage() {
   const [isFirst, setIsFirst] = useState(true);
   const [createFilm] = useCreateFilmAtom();
+  const { mutate } = useMutation({
+    mutationFn: () => fetchPostAddBoard(createFilm),
+    onSuccess: data => console.log('등록 확인', data),
+    onError: err => console.log('에러 괗ㄱ이', err),
+  });
   const handleFirstNextButton = () => {
-    if (!createFilm.files.length || createFilm.category === -1) {
+    if (!createFilm.images.length || createFilm.category === -1) {
       // Swal 자리
       console.log('선택하지 않은 항목이 있습니다.');
       return;
@@ -19,10 +26,11 @@ function CreatePolaroidFilmPage() {
   };
 
   const handleSecondNextButton = () => {
-    if (!createFilm.contents.length || !createFilm.tags.length) {
+    if (!createFilm.content.length || !createFilm.tags.length) {
       // Swal 자리
       console.log('선택하지 않은 항목이 있습니다.');
     }
+    mutate();
   };
 
   return (
