@@ -4,25 +4,23 @@ import { useMutation } from '@tanstack/react-query';
 import InputPassword from '../atoms/InputPassword';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
-<<<<<<< HEAD
-=======
 
 import { fetchPostSignOut, fetchPostSignin } from '../services/userService';
 import { ISigninRequest } from '../types/services/userService';
->>>>>>> 2bff19bdb6857322b2012df12a5be5e320290b64
 
 const TEST_CONTROL_LOGIN = false;
 function LoginPage() {
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isFailed, setIsFailed] = useState<boolean>(false);
+  const navigate = useNavigate();
   const { mutate } = useMutation({
     mutationFn: (request: ISigninRequest) => fetchPostSignin(request),
     onSuccess: async (res: any) => {
       console.log('결과', res);
+      navigate('/');
     },
   });
-  const navigate = useNavigate();
 
   const SubmitLogin = () => {
     mutate({ email: id, password });
