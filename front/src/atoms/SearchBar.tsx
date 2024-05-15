@@ -4,10 +4,12 @@ import {
   faAngleLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import useSearchDataAtom from '../jotai/searchData';
 
 function SearchBar() {
-  const [searchData, setSearchData] = useSearchDataAtom();
+  const [inputText, setInputText] = useState('');
+  const [, setSearchData] = useSearchDataAtom();
   const nagivate = useNavigate();
 
   return (
@@ -16,13 +18,16 @@ function SearchBar() {
       <input
         type="text"
         placeholder="검색하기"
-        value={searchData.keyword}
-        onChange={e => setSearchData({ keyword: e.target.value })}
+        value={inputText}
+        onChange={e => setInputText(e.target.value)}
         className="focus:outline-none border-b-[1px] border-black w-full text-gray-dark pl-1 text-base"
       />
       <FontAwesomeIcon
         icon={faMagnifyingGlass}
-        onClick={() => nagivate('/search-result')}
+        onClick={() => {
+          setSearchData({ keyword: inputText });
+          nagivate('/search-result');
+        }}
       />
     </div>
   );
