@@ -56,7 +56,7 @@ function CategoryBottomSheet(props: ISortBottomSheet) {
           카테고리 선택
         </p>
         <div className="flex px-[30px] flex-wrap gap-4 ">
-          {CATEGORY_LIST.map((element, idx) => (
+          {CATEGORY_LIST.en.map((element, idx) => (
             <ToggleChip
               dataId={`${idx}`}
               text={element}

@@ -64,9 +64,9 @@ function SortCriteria() {
           (category, idx) =>
             category && (
               <ToggleChip
-                dataId={CATEGORY_LIST[idx]}
+                dataId={CATEGORY_LIST.kr[idx]}
                 isClick={category}
-                text={CATEGORY_LIST[idx]}
+                text={CATEGORY_LIST.kr[idx]}
                 onClick={() => {}}
               />
             ),

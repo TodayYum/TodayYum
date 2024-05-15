@@ -37,7 +37,7 @@ function CategoryBottomSheetForCreateFilm(props: ISortBottomSheet) {
           카테고리 선택
         </p>
         <div className="flex px-[30px] flex-wrap gap-4 ">
-          {CATEGORY_LIST.map(
+          {CATEGORY_LIST.kr.map(
             (element, idx) =>
               idx > 0 && (
                 <ToggleChip
