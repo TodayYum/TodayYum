@@ -17,7 +17,7 @@ function DetailPageCarousel(props: IDetailPageCarousel) {
     setCarouselIdx(prev => prev + direction);
   };
   return (
-    <div className={`w-[100vw] ${props.customCSS}`} ref={props.divRef}>
+    <div className={`w-[100vw] ${props.customCSS} bg-white`} ref={props.divRef}>
       <div
         className="flex transition duration-1000"
         style={{ transform: `translate(-${carouselIdx * 100}vw)` }}
