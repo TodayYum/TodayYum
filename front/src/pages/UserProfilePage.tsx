@@ -3,7 +3,7 @@
  *
  */
 
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useQuery } from '@tanstack/react-query';
@@ -15,10 +15,24 @@ import {
   fetchGetWrittenBoard,
   fetchGetYummyBoard,
 } from '../services/boardService';
+import { fetchGetUserInfo } from '../services/userService';
+import { useSetProfileAtom } from '../jotai/userProfile';
 
 function UserProfilePage() {
   const DUMMY_MEMBER_ID = '80ad8672-3501-431f-8a9a-0d0f1c02f2c3';
+  const locationState = useLocation().state;
+  const setProfile = useSetProfileAtom();
   const navigate = useNavigate();
+  const { data: userProfile, isSuccess: isProfileSuccess } = useQuery({
+    queryKey: ['userProfile', locationState.memberId],
+    queryFn: () => fetchGetUserInfo(locationState.memberId),
+    staleTime: 500000,
+  });
+
+  if (isProfileSuccess) {
+    console.log('ㅅㅂㅂㅂㅂㅂㅂㅂㅂㅂ', userProfile);
+    setProfile(userProfile);
+  }
   const { data: yummyList, isSuccess: isYummySuccess } = useQuery({
     queryKey: ['yummyBoardList', DUMMY_MEMBER_ID],
     queryFn: () =>
@@ -31,6 +45,7 @@ function UserProfilePage() {
       fetchGetWrittenBoard({ pageParam: 0, content: DUMMY_MEMBER_ID }),
     staleTime: 500000,
   });
+  console.log('상태태', locationState);
   const handleGoMyFilms = () => {
     navigate('/write-list', {
       state: {
@@ -52,7 +67,9 @@ function UserProfilePage() {
   };
   return (
     <div>
-      <Header title="마이페이지" />
+      <Header
+        title={`${localStorage.getItem('memberId') === locationState?.memberId ? '마이페이지' : '프로필페이지'}`}
+      />
       <UserProfileContainer />
       <div
         className="flex justify-between mx-[15px]"
