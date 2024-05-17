@@ -69,10 +69,7 @@ public class MemberController {
     }
 
     @PatchMapping("/passwords")
-    public ResponseEntity<?> passwordModify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                            @Valid @RequestBody PasswordModifyRequest passwordModifyRequest) {
-
-        passwordModifyRequest.setMemberId(customUserDetails.getMemberId());
+    public ResponseEntity<?> passwordModify(@Valid @RequestBody PasswordModifyRequest passwordModifyRequest) {
         modifyMemberUseCase.modifyPassword(passwordModifyRequest);
 
         return BaseResponse.createResponseEntity(ResponseCode.OK);

@@ -284,18 +284,19 @@ public class MemberUseCaseTest {
     @DisplayName("Member UC - 비밀번호 변경 테스트")
     void modifyPassword() {
         //given
-        UUID memberId = UUID.randomUUID();
+        String email = "test@test.com";
 
         PasswordModifyRequest passwordModifyRequest = PasswordModifyRequest.builder()
                 .password("testtest2")
-                .memberId(memberId)
+                .email(email)
                 .build();
 
         Member member = Member.builder()
                 .password("testtest")
+                .email(email)
                 .build();
 
-        when(memberRepository.findById(memberId))
+        when(memberRepository.findByEmail(email))
                 .thenReturn(member);
 
         //when
@@ -514,8 +515,9 @@ public class MemberUseCaseTest {
         UUID loginMemberId = UUID.randomUUID();
         String nickname = "test";
         String profile = "test.jpg";
+        String introduction = "hi";
 
-        MemberListResponse memberListResponse = new MemberListResponse(loginMemberId, nickname, profile);
+        MemberListResponse memberListResponse = new MemberListResponse(loginMemberId, nickname, profile, introduction);
 
         List<MemberListResponse> memberListResponseList = new ArrayList<>();
         memberListResponseList.add(memberListResponse);
@@ -567,8 +569,9 @@ public class MemberUseCaseTest {
         UUID loginMemberId = UUID.randomUUID();
         String nickname = "test";
         String profile = "test.jpg";
+        String introduction = "hi";
 
-        MemberListResponse memberListResponse = new MemberListResponse(loginMemberId, nickname, profile);
+        MemberListResponse memberListResponse = new MemberListResponse(loginMemberId, nickname, profile, introduction);
 
         List<MemberListResponse> memberListResponseList = new ArrayList<>();
         memberListResponseList.add(memberListResponse);
@@ -618,8 +621,9 @@ public class MemberUseCaseTest {
         UUID loginMemberId = UUID.randomUUID();
         String nickname = "test";
         String profile = "test.jpg";
+        String introduction = "hi";
 
-        MemberListResponse memberListResponse = new MemberListResponse(loginMemberId, nickname, profile);
+        MemberListResponse memberListResponse = new MemberListResponse(loginMemberId, nickname, profile, introduction);
 
         List<MemberListResponse> memberListResponseList = new ArrayList<>();
         memberListResponseList.add(memberListResponse);

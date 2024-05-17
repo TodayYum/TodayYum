@@ -68,9 +68,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/members", "post").permitAll()
                         .requestMatchers("/api/auth/verify-password").authenticated()
-                        .requestMatchers("/api/auth/*").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/members/nicknames/validations").permitAll()
                         .requestMatchers("/api/members/emails/validations").permitAll()
+                        .requestMatchers("/api/members/").permitAll()
                         .anyRequest().authenticated());
 
         http
