@@ -10,7 +10,7 @@ function PolaroidFilm(props: IPolaroidFilm) {
       className={`${props.customCSS} bg-white rounded shadow-md min-w-[133px] max-w-[158px] w-[50%] min-h-[193px] max-h-[229px] h-[70vw] p-[10px] flex flex-col
     justify-between `}
     >
-      <img src={props.thumbnail} alt="사진" className="w-full bg-blue" />
+      <img src={props.thumbnail} alt="사진" className="w-full bg-white" />
       <div className="flex justify-between">
         <p className="line-clamp-2 w-2/3">#{props.tag}</p>
         <div className="text-[10px]">
