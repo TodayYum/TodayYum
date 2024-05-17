@@ -1,5 +1,6 @@
 package com.todayyum.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todayyum.auth.application.RefreshTokenUseCase;
 import com.todayyum.auth.application.RemoveTokenUseCase;
 import com.todayyum.auth.application.VerifyEmailUseCase;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -75,14 +77,19 @@ public class AuthControllerTest {
         String email = "test@test.com";
         String code = "123456";
 
+        CodeVerifyRequest codeVerifyRequest = CodeVerifyRequest.builder()
+                .email(email)
+                .code(code)
+                .build();
+
         when(verifyEmailUseCase.verifyCode(any(CodeVerifyRequest.class)))
                 .thenReturn(true);
 
         //when
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/auth/verify/verification-code")
-                        .param("email", email)
-                        .param("code", code));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(codeVerifyRequest)));
 
         //then
         resultActions.andExpect(
@@ -98,14 +105,19 @@ public class AuthControllerTest {
         String email = "test@test.com";
         String code = "123456";
 
+        CodeVerifyRequest codeVerifyRequest = CodeVerifyRequest.builder()
+                .email(email)
+                .code(code)
+                .build();
+
         when(verifyEmailUseCase.verifyCode(any(CodeVerifyRequest.class)))
                 .thenReturn(false);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/auth/verification-code")
-                        .param("email", email)
-                        .param("code", code));
+                MockMvcRequestBuilders.post("/api/auth/verify/verification-code")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(codeVerifyRequest)));
 
         //then
         resultActions.andExpect(

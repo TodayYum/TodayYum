@@ -68,7 +68,7 @@ public class AuthController {
     }
 
     @PostMapping("/verify/verification-code")
-    public ResponseEntity<?> verifyVerificationCode(@Valid CodeVerifyRequest codeVerifyRequest) {
+    public ResponseEntity<?> verifyVerificationCode(@Valid @RequestBody CodeVerifyRequest codeVerifyRequest) {
         boolean result = verifyEmailUseCase.verifyCode(codeVerifyRequest);
 
         if(result) return BaseResponse.createResponseEntity(ResponseCode.OK);
@@ -78,7 +78,7 @@ public class AuthController {
 
     @PostMapping("/verify/password")
     public ResponseEntity<?> verifyPassword(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                            @Valid PasswordVerifyRequest passwordVerifyRequest) {
+                                            @Valid @RequestBody PasswordVerifyRequest passwordVerifyRequest) {
         passwordVerifyRequest.setMemberId(customUserDetails.getMemberId());
 
         boolean result = verifyPasswordUseCase.verifyPassword(passwordVerifyRequest);

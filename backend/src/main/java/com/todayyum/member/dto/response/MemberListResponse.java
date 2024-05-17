@@ -13,10 +13,12 @@ public class MemberListResponse {
     private String nickname;
     private String profile;
     private boolean isFollowing;
+    private String introduction;
 
-    public MemberListResponse(UUID memberId, String nickname, String profile) {
+    public MemberListResponse(UUID memberId, String nickname, String profile, String introduction) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.profile = profile;
+        this.introduction = introduction;
     }
 }

@@ -52,7 +52,7 @@ public class ModifyMemberUseCase {
 
     @Transactional
     public void modifyPassword(PasswordModifyRequest passwordModifyRequest) {
-        Member member = memberRepository.findById(passwordModifyRequest.getMemberId());
+        Member member = memberRepository.findByEmail(passwordModifyRequest.getEmail());
 
         member.changePassword(bCryptPasswordEncoder.encode(passwordModifyRequest.getPassword()));
         memberRepository.save(member);
