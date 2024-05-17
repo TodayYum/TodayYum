@@ -1,10 +1,10 @@
 import { atom, useAtomValue, useSetAtom } from 'jotai';
 import {
   IProfileImg,
-  IUserProfileContainer,
+  IUserProfile,
 } from '../types/organisms/UserProfileContainer.types';
 
-const userProfile = atom<IUserProfileContainer>({
+const userProfile = atom<IUserProfile>({
   nickname: '',
   introduction: '',
   profile: '/default.png',
@@ -35,23 +35,20 @@ const setProfileImgAtom = atom(null, (get, set, profileImg: IProfileImg) => {
   });
 });
 
-const setProfileAtom = atom(
-  null,
-  (get, set, userInfo: IUserProfileContainer) => {
-    set(userProfile, {
-      ...get(userProfile),
-      nickname: userInfo.nickname,
-      introduction: userInfo.introduction,
-      profile: userInfo.profile,
-      followerCount: userInfo.followerCount,
-      followingCount: userInfo.followingCount,
-      role: userInfo.role,
-      email: userInfo.email,
-      memberId: userInfo.memberId,
-      following: userInfo.following,
-    });
-  },
-);
+const setProfileAtom = atom(null, (get, set, userInfo: IUserProfile) => {
+  set(userProfile, {
+    ...get(userProfile),
+    nickname: userInfo.nickname,
+    introduction: userInfo.introduction,
+    profile: userInfo.profile,
+    followerCount: userInfo.followerCount,
+    followingCount: userInfo.followingCount,
+    role: userInfo.role,
+    email: userInfo.email,
+    memberId: userInfo.memberId,
+    following: userInfo.following,
+  });
+});
 
 export const useSetCommentAtom = () => useSetAtom(setCommentAtom);
 export const useSetNicknameAtom = () => useSetAtom(setNicknameAtom);
