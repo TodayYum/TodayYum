@@ -14,7 +14,7 @@ import { IPolaroidFilm } from '../types/organisms/PolaroidFilm.types';
 import { IUserThumbnail } from '../types/organisms/UserList';
 import useInfiniteQueryProduct from '../util/useInfiniteQueryProduct';
 import { fetchGetSearchBoard } from '../services/boardService';
-import { fetchCheckEmailDuplicate } from '../services/userService';
+import { fetchGetSearchUsers } from '../services/userService';
 import { IPageableResponse } from '../types/services/boardService';
 // const TAB_TAG = 0;
 // const TAB_REGION = 1;
@@ -29,13 +29,12 @@ function SearchResultPage() {
       variables: [],
       stringVariables: [keyword],
     },
-    () =>
-      tab === TAB_ACCOUNT ? fetchCheckEmailDuplicate : fetchGetSearchBoard,
+    () => (tab === TAB_ACCOUNT ? fetchGetSearchUsers : fetchGetSearchBoard),
     {},
   );
-  // }
 
   const product: IPolaroidFilm[] | IUserThumbnail[] = useMemo(() => {
+    console.log('검색 데이터 확인', data);
     if (tab === TAB_ACCOUNT) {
       const output: IUserThumbnail[] = [];
       (data as IPageableResponse[])?.forEach(page =>
