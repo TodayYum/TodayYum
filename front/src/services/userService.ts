@@ -12,9 +12,6 @@ import {
 const API_URL = process.env.REACT_APP_LOCAL_URL;
 // const url = process.env.REACT_APP_SERVER_URL;
 
-export const fetchFindPassword = () => {};
-
-// 이메일 중복 검사 요청 API
 export const fetchCheckEmailDuplicate = async (email: string) => {
   if (email.length === 0) return { input: email, result: -1 };
 
@@ -37,13 +34,13 @@ export const fetchPostEmailCode = async (email: string) => {
   const params = new URLSearchParams();
   params.append('email', email);
 
-  try {
-    const response = await axios.post(url, null, { params });
-    return response.data;
-  } catch {
-    console.log('이메일 인증 코드 생성 실패');
-    return false;
-  }
+  // try {
+  const response = await axios.post(url, null, { params });
+  return response.data;
+  // } catch {
+  //   console.log('이메일 인증 코드 생성 실패');
+  //   return false;
+  // }
 };
 
 /**
@@ -53,7 +50,10 @@ export const fetchPostEmailCode = async (email: string) => {
  */
 export const fetchPostEmailCodeCheck = async (request: IPostCodeRequest) => {
   // 경로 문제 해결해야 함
-  const url = `${API_URL}/api/auth/verify/verification-code`;
+  const url = `${API_URL}/api/auth/verify-verification-code`;
+  // const url = `${API_URL}/api/auth/verify/password`;
+  // const url = `${API_URL}/api/auth/code-check/verification-code`;
+  // const url = `${API_URL}/api/auth/code-check/password`;
 
   const bodyData = new FormData();
   bodyData.append('email', request.email);
@@ -401,5 +401,94 @@ export const fetchGetFollowingList = async (
     },
   });
   console.log('요청 결곽ㄱㄱㄱㄱㄱ', response);
+  return response.data.result;
+};
+
+/**
+ * fetchPostAddFollow : 팔로우 등록하는 api 요청
+ * @param memberId
+ * @returns
+ */
+export const fetchPostAddFollow = async (memberId: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/members/${memberId}/follow`;
+
+  const response = await axios.post(url, null, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+/**
+ * fetchDeleteFollow : 팔로우 취소하는 API 요청
+ * @param memberId
+ * @returns
+ */
+export const fetchDeleteFollow = async (memberId: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/members/${memberId}/follow`;
+
+  const response = await axios.delete(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+/**
+ * fetchGetSearchUsers : 유저 검색 API 요청
+ * @param
+ * @returns
+ */
+export const fetchGetSearchUsers = async (request: {
+  pageParam: number;
+  content: string;
+}) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/members/search`;
+  const params = new URLSearchParams();
+  params.append('nickname', request.content);
+
+  console.log('유저검색', request);
+  const response = await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+    params: {
+      page: request.pageParam,
+      nickname: request.content,
+    },
+  });
+  return response.data.result;
+};
+
+/**
+ * fetchDeleteUser : 회원탈퇴
+ * @returns
+ */
+export const fetchDeleteUser = async () => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/members`;
+
+  const response = await axios.delete(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
   return response.data.result;
 };
