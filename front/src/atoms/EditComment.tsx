@@ -12,21 +12,22 @@ function EditComment(props: IEditComment) {
   };
 
   const handleSubmitChange = () => {
-    console.log(props.commentId);
+    props.editComment({ content: comment, commentId: props.commentId });
+    props.exitEdit();
   };
 
   return (
     <div className="flex justify-between p-3 pl-0 gap-2 bg-white rounded w-[calc(100vw-30px)]">
       <Link
         to="/"
-        className="flex-[0_0_110px] leading-5 flex flex-col justify-center items-center gap-y-2"
+        className="flex-[0_0_110px] leading-5 flex flex-col justify-center items-center gap-y-2 pointer-events-none"
       >
         <img
-          src="/t3.jpg"
+          src={props.profile}
           alt="프로필 사진"
           className="rounded-full h-10 w-10"
         />
-        <span className="font-bold text-sm">토큰수정후 변경</span>
+        <span className="font-bold text-sm">{props.nickname}</span>
       </Link>
       <input
         type="text"
@@ -38,7 +39,7 @@ function EditComment(props: IEditComment) {
       <div className="flex flex-col justify-between">
         <FontAwesomeIcon
           icon={faClose}
-          className="text-xl text-gray"
+          className="text-xl text-gray-dark"
           onClick={props.exitEdit}
         />
         <FontAwesomeIcon

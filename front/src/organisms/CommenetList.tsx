@@ -1,27 +1,33 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import CommentContainer from '../atoms/CommentContainer';
 import { ICommentList } from '../types/organisms/CommentList.types';
 import EditComment from '../atoms/EditComment';
-import useIntersect from '../util/useIntersect';
-
-// 연동 시 파일로 뺼 것, edit와 commentcontainer에 extand할 것
-interface IComment {
-  nickname: string;
-  comment: string;
-}
+import {
+  fetchDeleteComment,
+  fetchPatchEditComment,
+} from '../services/commentService';
 
 function CommentList(props: ICommentList) {
   const [idxOfEditComment, setIdxOfEditComment] = useState(-1);
-  const [commentList, setCommentList] = useState<IComment[]>(DUMMY_COMMENTLIST);
-  const [, setRef] = useIntersect(async (entry, observer) => {
-    const hasNext = true;
-    const newList = commentList.concat(JSON.parse(JSON.stringify(commentList)));
-    setCommentList(newList);
-    observer.unobserve(entry.target);
-    return hasNext;
-  }, {});
+  const { mutate: deleteComment } = useMutation({
+    mutationFn: (commentId: number) => fetchDeleteComment(commentId),
+    onSuccess: res => {
+      console.log('댓글 삭제 확인', res);
+      props.refetch();
+    },
+  });
+
+  const { mutate: editComment } = useMutation({
+    mutationFn: (request: { commentId: number; content: string }) =>
+      fetchPatchEditComment(request),
+    onSuccess: res => {
+      console.log('댓글 수정 확인', res);
+      props.refetch();
+    },
+  });
   return (
     <div
       className="bg-white rounded mx-[15px]"
@@ -36,40 +42,35 @@ function CommentList(props: ICommentList) {
         <p className="font-bold text-base">Comments</p>
       </div>
       <div>
-        {commentList.map((element, idx) =>
+        {props.commentList.map((comment, idx) =>
           idxOfEditComment === idx ? (
             <EditComment
-              commentId={idx}
+              nickname={comment.nickname}
+              profile={comment.profile}
+              commentId={comment.id}
               exitEdit={() => setIdxOfEditComment(-1)}
-              comment={element.comment}
+              comment={comment.content}
+              editComment={editComment}
             />
           ) : (
             <CommentContainer
-              comment={element.comment}
-              nickname={element.nickname}
+              commentId={comment.id}
+              profile={comment.profile}
+              modifiedAt={comment.modifiedAt}
+              memberId={comment.memberId}
+              comment={comment.content}
+              nickname={comment.nickname}
               setEdit={() => setIdxOfEditComment(idx)}
+              deleteComment={deleteComment}
             />
           ),
         )}
-        <div ref={setRef} className="opacity-0">
+        <div ref={props.setRef} className="opacity-0">
           now loading
         </div>
       </div>
     </div>
   );
 }
-
-const DUMMY_COMMENTLIST = [
-  {
-    nickname: '닉네임',
-    comment:
-      '내용용용용용내용용용용용내용용용용용내용용용용용내용용용용용내용용용용용',
-  },
-  { nickname: '닉네임', comment: '내용용용용용' },
-  { nickname: '닉네임', comment: '내용용용용용' },
-  { nickname: '닉네임', comment: '내용용용용용' },
-  { nickname: '닉네임', comment: '내용용용용용' },
-  { nickname: '닉네임', comment: '내용용용용용' },
-];
 
 export default CommentList;
