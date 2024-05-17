@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -27,10 +29,12 @@ public class FollowEntity {
 
     @ManyToOne
     @JoinColumn(name = "from_member_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MemberEntity fromMember;
 
     @ManyToOne
     @JoinColumn(name = "to_member_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MemberEntity toMember;
 
     @CreatedDate

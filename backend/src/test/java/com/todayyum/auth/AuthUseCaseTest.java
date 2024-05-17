@@ -51,7 +51,7 @@ public class AuthUseCaseTest {
                 .thenReturn(new MimeMessage((Session) null));
 
         //when
-        String savedCode = verifyEmailUseCase.sendEmail(email);
+        String savedCode = verifyEmailUseCase.sendEmailForSignUp(email);
 
         //then
         assertEquals(code, savedCode);

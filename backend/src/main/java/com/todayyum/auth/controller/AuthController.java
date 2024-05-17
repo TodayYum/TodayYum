@@ -62,9 +62,14 @@ public class AuthController {
         return BaseResponse.createResponseEntity(ResponseCode.OK);
     }
 
-    @PostMapping("/verification-code")
-    public ResponseEntity<?> sendVerificationCode(@RequestParam String email) {
-        return BaseResponse.createResponseEntity(ResponseCode.CREATED, verifyEmailUseCase.sendEmail(email));
+    @PostMapping("/verification-code/signUp")
+    public ResponseEntity<?> sendVerificationCodeForSignUp(@RequestParam String email) {
+        return BaseResponse.createResponseEntity(ResponseCode.CREATED, verifyEmailUseCase.sendEmailForSignUp(email));
+    }
+
+    @PostMapping("/verification-code/password")
+    public ResponseEntity<?> sendVerificationCodeForPassword(@RequestParam String email) {
+        return BaseResponse.createResponseEntity(ResponseCode.CREATED, verifyEmailUseCase.sendEmailForPassword(email));
     }
 
     @PostMapping("/verify/verification-code")

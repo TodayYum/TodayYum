@@ -53,12 +53,12 @@ public class AuthControllerTest {
         String email = "test@test.com";
         String code = "123456";
 
-        when(verifyEmailUseCase.sendEmail(any(String.class)))
+        when(verifyEmailUseCase.sendEmailForSignUp(any(String.class)))
                 .thenReturn(code);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/auth/verification-code")
+                post("/api/auth/verification-code/signUp")
                         .param("email", email));
 
         //then
