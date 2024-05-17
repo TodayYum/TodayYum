@@ -3,7 +3,7 @@ export interface IProfileImg {
   profileFile: File | null;
 }
 
-export interface IUserProfileContainer extends IProfileImg {
+export interface IUserProfile extends IProfileImg {
   nickname: string;
   memberId: string;
   profile: string;
@@ -13,4 +13,8 @@ export interface IUserProfileContainer extends IProfileImg {
   followerCount: number;
   followingCount: number;
   email: string;
+}
+
+export interface IUserPofileContainer {
+  refetch: () => void;
 }

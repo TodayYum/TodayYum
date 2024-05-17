@@ -2,6 +2,7 @@ import { useState, useRef, ChangeEvent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import {
   userProfileAtom,
   useSetCommentAtom,
@@ -12,6 +13,7 @@ import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
 import { IEditProfileBasicInfoContainer } from '../types/organisms/EditProfileBasicInfoContainer.types';
 import {
+  fetchDeleteUser,
   fetchPatchEditIntroduction,
   fetchPatchEditNickname,
   fetchPostEditProfileImg,
@@ -19,6 +21,7 @@ import {
 
 function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
   const userProfile = userProfileAtom();
+  const nagivate = useNavigate();
   const setNicknameAtom = useSetNicknameAtom();
   const setCommentAtom = useSetCommentAtom();
   const setProfileImgAtom = useSetProfileImgAtom();
@@ -56,6 +59,13 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
       } else {
         console.log('소개글 실패');
       }
+    },
+  });
+  const { mutate: signOut } = useMutation({
+    mutationFn: () => fetchDeleteUser(),
+    onSuccess: res => {
+      console.log('탈퇴 결과', res);
+      nagivate('/login');
     },
   });
 
@@ -130,13 +140,23 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
         value={comment}
         setValue={handleSetCommentValue}
         onClickUpload={handleCommentButton}
-        customClass="mb-[30px]"
+        customClass="mb-[40px]"
       />
       <RectangleButton
         text="비밀번호 재설정"
         onClick={props.goNextLevel}
-        customClass="w-full"
+        customClass="w-full mb-[15px]"
       />
+      <p
+        role="presentation"
+        className="text-right text-gray-dark"
+        onKeyUp={() => {}}
+        onClick={() => {
+          signOut();
+        }}
+      >
+        탈퇴
+      </p>
     </div>
   );
 }

@@ -6,15 +6,29 @@ import {
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import EditProfileModal from './EditProfileModal';
 import { userProfileAtom } from '../jotai/userProfile';
+import { fetchDeleteFollow, fetchPostAddFollow } from '../services/userService';
+import { IUserPofileContainer } from '../types/organisms/UserProfileContainer.types';
 
-function UserProfileContainer() {
+function UserProfileContainer(props: IUserPofileContainer) {
   const [isOnEdit, setIsOnEdit] = useState(false);
-
   const userProfile = userProfileAtom();
   const navigate = useNavigate();
-  const handleFollowButton = () => {};
+  const { mutate: handleFollow } = useMutation({
+    mutationFn: (follow: boolean) =>
+      follow
+        ? fetchDeleteFollow(userProfile.memberId)
+        : fetchPostAddFollow(userProfile.memberId),
+    onSuccess: () => {
+      props.refetch();
+    },
+  });
+
+  const handleFollowButton = () => {
+    handleFollow(userProfile.following);
+  };
 
   const handleGoFollowings = () => {
     navigate('/user-list', {
@@ -34,6 +48,7 @@ function UserProfileContainer() {
       },
     });
   };
+
   return (
     <div className="bg-white rounded-2xl m-[15px] p-[15px]">
       <div className="flex flex-row items-center justify-between mb-[15px] gap-3">
@@ -54,7 +69,7 @@ function UserProfileContainer() {
           />
         ) : (
           <FontAwesomeIcon
-            icon={DUMMY_ISFOLLOW ? faHeartFill : faHeart}
+            icon={userProfile.following ? faHeartFill : faHeart}
             className="mr-1 text-primary text-2xl"
             onClick={handleFollowButton}
           />
@@ -96,5 +111,4 @@ function UserProfileContainer() {
   );
 }
 
-const DUMMY_ISFOLLOW = true;
 export default UserProfileContainer;

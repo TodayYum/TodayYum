@@ -1,6 +1,6 @@
 export interface IUserThumbnail {
   nickname: string;
-  imgSrc: string;
+  profile: string;
   comment: string;
 }
 
