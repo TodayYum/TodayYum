@@ -25,19 +25,21 @@ const useInfiniteQueryProduct = (
   options: IIntersectionObserverInit,
 ) => {
   const queryFunction = wrapperQueryFn();
-  const { data, hasNextPage, fetchNextPage, isPending } = useInfiniteQuery({
-    queryKey: [
-      queryKey.constant,
-      ...queryKey.variables,
-      queryKey.stringVariables,
-    ],
-    queryFn: ({ pageParam }) =>
-      queryFunction({ pageParam, content: queryKey.stringVariables?.[0] }),
-    initialPageParam: 0,
-    getNextPageParam: lastPage => {
-      return lastPage.last ? null : lastPage.number + 1;
-    },
-  });
+  const { data, hasNextPage, fetchNextPage, isPending, refetch } =
+    useInfiniteQuery({
+      queryKey: [
+        queryKey.constant,
+        ...queryKey.variables,
+        queryKey.stringVariables,
+      ],
+      queryFn: ({ pageParam }) =>
+        queryFunction({ pageParam, content: queryKey.stringVariables?.[0] }),
+      initialPageParam: 0,
+      getNextPageParam: lastPage => {
+        return lastPage.last ? null : lastPage.number + 1;
+      },
+      staleTime: 500000,
+    });
   const [ref, setRef] = useState<Element | null>(null);
   const checkIntersect = useCallback(
     async ([entry]: IntersectionObserverEntry[]) => {
@@ -72,7 +74,7 @@ const useInfiniteQueryProduct = (
     checkIntersect,
   ]);
 
-  return [ref, setRef, data?.pages, isPending] as const;
+  return [ref, setRef, data?.pages, isPending, refetch] as const;
 };
 
 export default useInfiniteQueryProduct;

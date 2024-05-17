@@ -7,7 +7,7 @@ function UserList(props: IUserList) {
       {props.userList.map(element => (
         <SearchAccountContainer
           comment={element.comment}
-          imgSrc={element.imgSrc}
+          imgSrc={element.profile}
           nickname={element.nickname}
         />
       ))}

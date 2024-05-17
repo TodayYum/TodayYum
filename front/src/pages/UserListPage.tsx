@@ -7,6 +7,7 @@ import {
   fetchGetFollowingList,
 } from '../services/userService';
 import useInfiniteQueryProduct from '../util/useInfiniteQueryProduct';
+import { IPageableResponse } from '../types/services/boardService';
 
 function UserListPage() {
   const locationState = useLocation().state;
@@ -25,7 +26,11 @@ function UserListPage() {
 
   const product: IUserThumbnail[] = useMemo(() => {
     console.log('우에에에', data, locationState);
-    return data as IUserThumbnail[];
+    const result: IUserThumbnail[] = [];
+    (data as IPageableResponse[])?.forEach(page =>
+      (page.content as IUserThumbnail[]).forEach(user => result.push(user)),
+    );
+    return result as IUserThumbnail[];
   }, [data]);
   return (
     <div>{!isPending && <UserList userList={product} setRef={setRef} />}</div>

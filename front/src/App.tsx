@@ -16,6 +16,7 @@ import UserProfilePage from './pages/UserProfilePage';
 import HeaderLayout from './layout/HeaderLayout';
 import MyFilmsPage from './pages/MyFilmsPage';
 import UserListPage from './pages/UserListPage';
+import EditDetailPage from './pages/EditDetailPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route element={<NavBarLayout />}>
         <Route path="/" element={<MainPage />} />
         <Route path="/board/:boardId" element={<FilmDetailPage />} />
+        <Route path="/edit-film" element={<EditDetailPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
       </Route>
       <Route path="/create-board" element={<NavBarLayout />}>

@@ -1,4 +1,4 @@
-import Swal, { SweetAlertOptions } from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import InputText from '../atoms/InputText';
@@ -17,6 +17,7 @@ import {
   fetchPostEmailCodeCheck,
 } from '../services/userService';
 import { IPostCodeRequest } from '../types/services/userService';
+import { swalFail, swalSuccess } from '../constant/swalConstant';
 
 function Basebold({ text }: { text: string }) {
   return <p className="font-bold text-base mb-[18px] ml-1">{text}</p>;
@@ -43,6 +44,9 @@ function RegistEmail(props: IRegistEmail) {
     onSuccess: () => {
       plusSignUpLevel();
     },
+    onError: err => {
+      console.log('ㅇ이잉', err);
+    },
   });
   const { mutate: validateEmailCode } = useMutation({
     mutationFn: (request: IPostCodeRequest) => fetchPostEmailCodeCheck(request),
@@ -56,18 +60,22 @@ function RegistEmail(props: IRegistEmail) {
   });
 
   const handleNextButton = () => {
-    // 이메일 중복 체크 성공한 상태에서 nextButton 눌렀을 경우 code 생성
-    if (
-      registData.signUpLevel === 0 &&
-      emailCheckResponse &&
-      emailCheckResponse.result
-    ) {
-      makeEmailCode(emailQuery);
+    if (registData.email.length === 0) return;
+
+    // 중복 체크 및 인증 코드 생성 후, 인증코드 확인
+    if (registData.signUpLevel === 1) {
+      validateEmailCode({ code: registData.code, email: registData.email });
       return;
     }
 
-    // code 일치하는지 확인 후 다음 level로 (RegistPassword로)
-    validateEmailCode({ code: registData.code, email: registData.email });
+    // 이메일 중복 체크 성공한 상태에서 nextButton 눌렀을 경우 code 생성
+    if (emailCheckResponse && emailCheckResponse.result) {
+      makeEmailCode(emailQuery);
+    }
+  };
+
+  const handlePasswordResetNextButton = () => {
+    makeEmailCode(emailQuery);
   };
 
   const handleOverlapCheck = () => {
@@ -80,6 +88,7 @@ function RegistEmail(props: IRegistEmail) {
       return;
     if (emailCheckResponse.result) {
       // API 성공
+      swalSuccess.text = '사용 가능한 이메일입니다.';
       Swal.fire(swalSuccess);
     } else {
       // API 실패
@@ -113,7 +122,7 @@ function RegistEmail(props: IRegistEmail) {
         {registData.signUpLevel === 0 && (
           <RectangleButton
             onClick={handleOverlapCheck}
-            text="중복검사"
+            text={props.isSignUp ? '중복검사' : '이메일 확인'}
             customClass="flex-[1_1_95px] h-[40px]"
           />
         )}
@@ -133,27 +142,13 @@ function RegistEmail(props: IRegistEmail) {
 
       <RectangleButton
         text="다음 단계로"
-        onClick={handleNextButton}
+        onClick={
+          props.isSignUp ? handleNextButton : handlePasswordResetNextButton
+        }
         customClass="fixed bottom-20 w-[calc(100%-60px)]"
       />
     </div>
   );
 }
-
-const swalSuccess: SweetAlertOptions = {
-  icon: 'success',
-  text: '사용 가능한 이메일입니다.',
-  width: '300px',
-  confirmButtonText: '돌아가기',
-  confirmButtonColor: '#787D85',
-};
-
-const swalFail: SweetAlertOptions = {
-  icon: 'warning',
-  text: '사용 불가능한 이메일입니다.',
-  width: '300px',
-  confirmButtonText: '돌아가기',
-  confirmButtonColor: '#787D85',
-};
 
 export default RegistEmail;

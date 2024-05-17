@@ -14,7 +14,7 @@ function SearchAccountContainer(props: ISearchAccountContainer) {
       <img
         src={props.imgSrc}
         alt="프로필 사진"
-        className="bg-blue h-[60px] w-[60px] rounded-full"
+        className="bg-white h-[60px] w-[60px] rounded-full"
       />
     </Link>
   );

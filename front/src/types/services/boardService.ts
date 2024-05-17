@@ -18,7 +18,7 @@ export interface IGetBoardListRequest {
   sort?: number;
 }
 
-export interface IGetSearchBoardListRequest {
+export interface IGetPageableListRequest {
   pageParam: number;
   content: string;
 }

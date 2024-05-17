@@ -3,11 +3,15 @@ import { ICreateFilm } from '../types/jotai/createFile.types';
 import {
   IAddBoard,
   IGetBoardListRequest,
-  IGetSearchBoardListRequest,
+  IGetPageableListRequest,
   // IGetWrittenBoardListRequest,
 } from '../types/services/boardService';
 import { CATEGORY_LIST } from '../constant/searchConstant';
 import { TIME_LIST } from '../constant/createFilmConstant';
+import {
+  IUpdateBoardRequest,
+  IUpdateBoardRequestBody,
+} from '../types/jotai/updateFilm.types';
 
 const API_URL = process.env.REACT_APP_LOCAL_URL;
 // const url = process.env.REACT_APP_SERVER_URL;
@@ -122,9 +126,7 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
  * @param request
  * @returns
  */
-export const fetchGetSearchBoard = async (
-  request: IGetSearchBoardListRequest,
-) => {
+export const fetchGetSearchBoard = async (request: IGetPageableListRequest) => {
   const accessToken = localStorage.getItem('token');
   if (!accessToken) return false;
   console.log('리퀘스트 확인', request);
@@ -148,7 +150,7 @@ export const fetchGetSearchBoard = async (
  * @returns
  */
 export const fetchGetWrittenBoard = async (
-  request: IGetSearchBoardListRequest,
+  request: IGetPageableListRequest,
 ) => {
   const accessToken = localStorage.getItem('token');
   if (!accessToken) return false;
@@ -172,9 +174,7 @@ export const fetchGetWrittenBoard = async (
  * @param request
  * @returns
  */
-export const fetchGetYummyBoard = async (
-  request: IGetSearchBoardListRequest,
-) => {
+export const fetchGetYummyBoard = async (request: IGetPageableListRequest) => {
   const accessToken = localStorage.getItem('token');
   if (!accessToken) return false;
   console.log('리퀘스트 확인', request);
@@ -214,4 +214,92 @@ export const fetchGetTodayYummys = async (isTop: boolean) => {
   }
   console.log('야미 글 목록 조회 결과', response);
   return response.data.result;
+};
+
+/**
+ * fetchPostAddYummy: yummy 등록 post 요청
+ * @param boardId
+ * @returns
+ */
+export const fetchPostAddYummy = async (boardId: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/boards/${boardId}/yummys`;
+
+  const response = await axios.post(url, null, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+/**
+ * fetchDeleteYummy : yummy 취소 delete 요청
+ * @param boardId
+ * @returns
+ */
+export const fetchDeleteYummy = async (boardId: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/boards/${boardId}/yummys`;
+
+  const response = await axios.delete(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+/**
+ * fetchPatchFilm : 글 수정 API 요청
+ * @param input : 프론트에서 쓰는 데이터 형식으로 request를 보내고, 이 함수 내에서 백에 맞게 수정함
+ * @returns
+ */
+export const fetchPatchFilm = async (input: IUpdateBoardRequest) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/boards/${input.boardId}`;
+  const request: IUpdateBoardRequestBody = { ...input };
+
+  request.category = CATEGORY_LIST.en[request.category as number];
+  request.mealTime = TIME_LIST[request.mealTime as number].en;
+  // 원래 리무브대그에는 있는데  지금 태그스에 없는 애들
+  request.removedTags = request.removedTags.filter(
+    element => !request.tags.includes(element),
+  );
+
+  const body = new FormData();
+  Object.entries(request).forEach(([key, value]) => {
+    body.append(key, value);
+  });
+
+  const response = await axios.post(url, body, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+export const fetchDeleteFilm = async (boardId: string) => {
+  const accessToken = localStorage.getItem('token');
+  if (!accessToken) return false;
+
+  const url = `${API_URL}/api/boards/${boardId}`;
+
+  const response = await axios.delete(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
+  return response.data;
 };

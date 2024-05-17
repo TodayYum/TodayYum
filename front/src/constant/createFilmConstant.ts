@@ -18,3 +18,9 @@ export const TIME_LIST = [
     en: '',
   },
 ];
+
+export const TIME_MAP: { [key: string]: any } = {
+  BREAKFAST: 0,
+  LUNCH: 1,
+  DINNER: 2,
+};
