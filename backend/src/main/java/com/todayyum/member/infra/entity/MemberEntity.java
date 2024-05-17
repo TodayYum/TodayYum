@@ -25,7 +25,6 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @DynamicUpdate
-//@Where(clause = "is_deleted = false")
 public class MemberEntity {
 
     @Id
@@ -68,7 +67,4 @@ public class MemberEntity {
     @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
-//    @Column(name = "is_deleted", columnDefinition = "boolean default false")
-//    private boolean isDeleted;
 }

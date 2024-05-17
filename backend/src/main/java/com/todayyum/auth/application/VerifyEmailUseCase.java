@@ -25,7 +25,7 @@ public class VerifyEmailUseCase {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public String sendEmail(String email) {
+    public String sendEmailForSignUp(String email) {
         if(email == null || email.isEmpty()) {
             throw new CustomException(ResponseCode.EMPTY_INPUT);
         }
@@ -36,6 +36,53 @@ public class VerifyEmailUseCase {
 
         if(memberRepository.existsByEmail(email)) {
             throw new CustomException(ResponseCode.DUPLICATE_EMAIL);
+        }
+
+        String code = generateVerificationCode();
+        VerificationCode verificationCode = new VerificationCode(email, code);
+        verificationCode = verificationCodeRepository.save(verificationCode);
+
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+
+        try {
+            mimeMessageHelper.setTo(email);
+            mimeMessageHelper.setSubject("[TodayYum] 이메일 인증 번호입니다.");
+
+            String body = "";
+
+            body += "<div style=\"font-family: Verdana; padding: 0 30px 0 30px\">";
+            body += "<h1> 이메일 인증 코드 안내 </h1>";
+            body += "<p> 본 메일은 <span style=\"font-weight: 700\">TodayYum</span>의 이메일 인증을 위한 메일입니다. </p>";
+            body += "<p> 아래의 [이메일 인증코드]를 입력하여 본인확인을 해주시기 바랍니다. </p>";
+            body += "<div align=\"center\" style=\"background-color: #f3f4f8; height: 60px; font-size:" +
+                    " 20px; font-weight: 700; display: flex; align-items: center;justify-content: center;\">";
+            body += "<p>" + code + "</p>";
+            body += "</div>";
+            body += "<p>감사합니다.</p></div>";
+
+            mimeMessageHelper.setText(body, true);
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            verificationCodeRepository.deleteByEmail(email);
+            throw new CustomException(ResponseCode.EMAIL_SEND_FAILED);
+        }
+
+        return verificationCode.getCode();
+    }
+
+    @Transactional
+    public String sendEmailForPassword(String email) {
+        if(email == null || email.isEmpty()) {
+            throw new CustomException(ResponseCode.EMPTY_INPUT);
+        }
+
+        if(!email.matches("^[A-Za-z0-9._]+@[A-Za-z0-9]+\\.[A-Za-z]{2,}$")) {
+            throw new CustomException(ResponseCode.INVALID_EMAIL);
+        }
+
+        if(!memberRepository.existsByEmail(email)) {
+            throw new CustomException(ResponseCode.EMAIL_NOT_FOUND);
         }
 
         String code = generateVerificationCode();
