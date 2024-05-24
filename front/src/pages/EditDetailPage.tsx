@@ -114,7 +114,7 @@ function EditDetailPage() {
             tabIndex={0}
           >
             <img
-              src={boardDetail.profile ?? '/t3.jpg'}
+              src={boardDetail.profile ?? '/default_profile.png'}
               alt="프로필사진"
               className="rounded-full h-7 w-7"
             />

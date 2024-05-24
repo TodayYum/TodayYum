@@ -23,7 +23,7 @@ function EditComment(props: IEditComment) {
         className="flex-[0_0_110px] leading-5 flex flex-col justify-center items-center gap-y-2 pointer-events-none"
       >
         <img
-          src={props.profile}
+          src={props.profile ?? '/default_profile.png'}
           alt="프로필 사진"
           className="rounded-full h-10 w-10"
         />

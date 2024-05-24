@@ -105,7 +105,7 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
             ref={imgInputRef}
           />
           <img
-            src={userProfile.profile ?? '/t1.jpg'}
+            src={userProfile.profile ?? '/default_profile.png'}
             alt="프로필 사진 수정 버튼"
             className="rounded-full opacity-60 h-[70px] w-[70px] object-cover"
           />
