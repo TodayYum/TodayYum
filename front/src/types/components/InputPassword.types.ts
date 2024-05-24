@@ -5,7 +5,7 @@ export interface IInputPassword {
 }
 
 export interface ICheckArea {
-  isUpperCase: boolean;
   isLowerCase: boolean;
-  isSpecialCharacter: boolean;
+  isRightLength: boolean;
+  hasNumbers: boolean;
 }
