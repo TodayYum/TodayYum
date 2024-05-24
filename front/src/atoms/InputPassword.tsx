@@ -6,19 +6,15 @@ import {
 } from '../types/components/InputPassword.types';
 import {
   isLowerCase as isRightLowerCase,
-  isUpperCase as isRightUpperCase,
-  isSpecialCharacter as isRightSpecialCharacter,
+  isRightLength as isRightLengthCase,
+  hasNumbers as hasNumberscase,
 } from '../util/passwordCheck';
 /**
  * @param props
  * @returns
  */
 
-const CheckArea = ({
-  isUpperCase,
-  isLowerCase,
-  isSpecialCharacter,
-}: ICheckArea) => {
+const CheckArea = ({ isLowerCase, isRightLength, hasNumbers }: ICheckArea) => {
   const isCheckedIcon = (isChecked: boolean) => {
     return isChecked ? (
       <FontAwesomeIcon icon={faCircleCheck} />
@@ -29,18 +25,12 @@ const CheckArea = ({
 
   return (
     <div className="flex justify-center items-center gap-2 my-3">
-      {/* <div> */}
-      {isCheckedIcon(isSpecialCharacter)}
-      <span className="mr-2">특수문자</span>
-      {/* </div>
-      <div> */}
-      {isCheckedIcon(isUpperCase)}
-      <span className="mr-2">영어 대문자</span>
-      {/* </div>
-      <div> */}
+      {isCheckedIcon(isRightLength)}
+      <span className="mr-2">8글자 이상</span>
+      {isCheckedIcon(hasNumbers)}
+      <span className="mr-2">숫자</span>
       {isCheckedIcon(isLowerCase)}
       <span className="mr-2">영어 소문자</span>
-      {/* </div> */}
     </div>
   );
 };
@@ -58,8 +48,8 @@ function InputPassword(props: IInputPassword) {
       />
       <CheckArea
         isLowerCase={isRightLowerCase(props.value)}
-        isSpecialCharacter={isRightSpecialCharacter(props.value)}
-        isUpperCase={isRightUpperCase(props.value)}
+        isRightLength={isRightLengthCase(props.value)}
+        hasNumbers={hasNumberscase(props.value)}
       />
     </div>
   );

@@ -5,30 +5,27 @@ import InputPassword from '../atoms/InputPassword';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
 
-import { fetchPostSignOut, fetchPostSignin } from '../services/userService';
+import { fetchPostSignin } from '../services/userService';
 import { ISigninRequest } from '../types/services/userService';
 
-const TEST_CONTROL_LOGIN = false;
 function LoginPage() {
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isFailed, setIsFailed] = useState<boolean>(false);
   const navigate = useNavigate();
+
   const { mutate } = useMutation({
     mutationFn: (request: ISigninRequest) => fetchPostSignin(request),
-    onSuccess: async (res: any) => {
-      console.log('결과', res);
+    onSuccess: () => {
       navigate('/');
+    },
+    onError: () => {
+      setIsFailed(true);
     },
   });
 
   const SubmitLogin = () => {
     mutate({ email: id, password });
-    if (TEST_CONTROL_LOGIN) {
-      navigate('/');
-    } else {
-      setIsFailed(true);
-    }
   };
 
   return (
@@ -72,15 +69,6 @@ function LoginPage() {
         <Link to="/reset-password" className="ml-4 text-sm">
           비밀번호 찾기
         </Link>
-        |
-        <button
-          type="button"
-          onClick={() => {
-            fetchPostSignOut();
-          }}
-        >
-          logout-임시
-        </button>
       </div>
     </div>
   );

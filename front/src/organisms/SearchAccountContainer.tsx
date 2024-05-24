@@ -12,7 +12,7 @@ function SearchAccountContainer(props: ISearchAccountContainer) {
         <p className="text-base line-clamp-1">{props.comment}</p>
       </div>
       <img
-        src={props.imgSrc}
+        src={props.imgSrc ?? '/default_profile.png'}
         alt="프로필 사진"
         className="bg-white h-[60px] w-[60px] rounded-full"
       />

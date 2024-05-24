@@ -22,6 +22,16 @@ export const isLowerCase = (password: string | undefined) => {
   return lowerRegex.test(password);
 };
 
+export const hasNumbers = (password: string | undefined) => {
+  if (password === undefined) return false;
+  const numbRegex = /\d/;
+  return numbRegex.test(password);
+};
+
+export const isRightLength = (password: string | undefined) => {
+  if (password === undefined) return false;
+  return password.length >= 8;
+};
 export const isRightPassword = (password: string | undefined) => {
   return isLowerCase(password);
   // return (

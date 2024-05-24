@@ -26,7 +26,7 @@ function CommentContainer(props: ICommentContainer) {
       >
         {!props.isPreview && (
           <img
-            src={props.profile}
+            src={props.profile ?? '/default_profile.png'}
             alt="프로필 사진"
             className="rounded-full h-10 w-10"
           />

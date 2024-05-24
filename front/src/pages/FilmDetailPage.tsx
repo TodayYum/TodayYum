@@ -133,7 +133,7 @@ function FilmDetailPage() {
             tabIndex={0}
           >
             <img
-              src={data.profile ?? '/t3.jpg'}
+              src={data.profile ?? '/default_profile.png'}
               alt="프로필사진"
               className="rounded-full h-7 w-7"
             />

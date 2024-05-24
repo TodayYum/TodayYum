@@ -8,12 +8,10 @@ function DateBottomSheet(props: IDateBottomSheet) {
   const [, setCreateFilm] = useCreateFilmAtom();
   const modalRef = useRef<HTMLDivElement>(null);
   const [selectedIdx, setSelectedIdx] = useState(props.selectedIdx);
-  console.log(selectedIdx, '뭐선택됨');
 
   const handleSelectDate = (idx: number) => {
-    setCreateFilm({ ateAt: getDate(idx) });
+    setCreateFilm({ ateAt: idx });
     setSelectedIdx(idx);
-    console.log(idx, '엥');
     props.onClose();
   };
 

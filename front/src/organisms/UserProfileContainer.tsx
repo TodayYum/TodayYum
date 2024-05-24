@@ -53,7 +53,7 @@ function UserProfileContainer(props: IUserPofileContainer) {
     <div className="bg-white rounded-2xl m-[15px] p-[15px]">
       <div className="flex flex-row items-center justify-between mb-[15px] gap-3">
         <img
-          src={userProfile.profile}
+          src={userProfile.profile ?? '/default_profile.png'}
           alt="프로필 사진"
           className="h-[45px] w-[45px] object-cover rounded-full"
         />

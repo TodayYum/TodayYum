@@ -11,7 +11,7 @@ import {
 const createFilm = atom<ICreateFilm>({
   images: [],
   imagesURL: [],
-  ateAt: '',
+  ateAt: 0,
   content: '',
   category: -1,
   tags: [],

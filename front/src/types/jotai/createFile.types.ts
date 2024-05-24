@@ -5,7 +5,7 @@ export interface ICreateFilm {
   tags: string[];
   category: number;
   score: number[];
-  ateAt: string;
+  ateAt: number;
   mealTime: number;
   [key: string]: any;
 }
@@ -15,7 +15,7 @@ export interface IUndefinedableCreateFilm {
   imagesURL?: string[];
   content?: string;
   category?: number;
-  ateAt?: string;
+  ateAt?: number;
   tags?: string[];
   mealTime?: number;
   score?: number[];

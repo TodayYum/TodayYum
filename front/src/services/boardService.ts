@@ -41,6 +41,8 @@ export const fetchPostAddBoard = async (input: ICreateFilm) => {
 
   const url = `${API_URL}/api/boards`;
   const request: IAddBoard = { ...DEFAULT_CREATE_BOARD };
+
+  // 프론트 데이터를 백에서 다룰 데이터로 변환하는 작업. score만 프로퍼티 이름이 달라 분기 처리
   Object.entries(input).forEach(entry => {
     const [keyName, value] = entry;
     if (!Object.hasOwn(request, keyName)) {
@@ -54,10 +56,14 @@ export const fetchPostAddBoard = async (input: ICreateFilm) => {
     }
     request[keyName] = value;
   });
+
+  // 같은 프로퍼티 이름 중, category, mealTime, ateAt은 자료형이 다르므로 그에 맞게 변경
   request.category = CATEGORY_LIST.en[input.category ?? 0];
   request.mealTime = TIME_LIST[input.mealTime ?? 0].en;
   // 프론트 데이터에서 백의 LocalDate 형식으로 변환시키기 위함
-  [request.ateAt] = new Date(request.ateAt).toISOString().split('T');
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() - (request.ateAt as number));
+  [request.ateAt] = new Date(currentDate).toISOString().split('T');
 
   console.log('인풋 테스트', request);
 
