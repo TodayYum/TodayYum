@@ -5,8 +5,11 @@
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { useQuery } from '@tanstack/react-query';
+import {
+  faChevronRight,
+  faRightFromBracket,
+} from '@fortawesome/free-solid-svg-icons';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import Header from '../atoms/Header';
 import UserProfileContainer from '../organisms/UserProfileContainer';
 import PolaroidFilm from '../organisms/PolaroidFilm';
@@ -15,7 +18,7 @@ import {
   fetchGetWrittenBoard,
   fetchGetYummyBoard,
 } from '../services/boardService';
-import { fetchGetUserInfo } from '../services/userService';
+import { fetchGetUserInfo, fetchPostSignOut } from '../services/userService';
 import { useSetProfileAtom } from '../jotai/userProfile';
 
 function UserProfilePage() {
@@ -33,7 +36,6 @@ function UserProfilePage() {
   });
 
   if (isProfileSuccess) {
-    console.log('ㅅㅂㅂㅂㅂㅂㅂㅂㅂㅂ', userProfile);
     setProfile(userProfile);
   }
   const { data: yummyList, isSuccess: isYummySuccess } = useQuery({
@@ -47,6 +49,13 @@ function UserProfilePage() {
     queryFn: () =>
       fetchGetWrittenBoard({ pageParam: 0, content: locationState.memberId }),
     staleTime: 500000,
+  });
+
+  const { mutate: signOut } = useMutation({
+    mutationFn: () => fetchPostSignOut(),
+    onSuccess: () => {
+      navigate('/login');
+    },
   });
 
   const handleGoMyFilms = () => {
@@ -68,11 +77,19 @@ function UserProfilePage() {
       },
     });
   };
+
   return (
-    <div>
+    <div className="relative">
       <Header
         title={`${localStorage.getItem('memberId') === locationState?.memberId ? '마이페이지' : '프로필페이지'}`}
       />
+      {localStorage.getItem('memberId') === locationState?.memberId && (
+        <FontAwesomeIcon
+          icon={faRightFromBracket}
+          onClick={() => signOut()}
+          className="absolute text-gray-dark text-xl top-5 right-5"
+        />
+      )}
       <UserProfileContainer refetch={refetch} />
       <div
         className="flex justify-between mx-[15px]"

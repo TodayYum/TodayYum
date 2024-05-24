@@ -184,7 +184,7 @@ export const fetchPostSignOut = async () => {
     withCredentials: true,
   });
 
-  console.log('로그아웃 결과', response);
+  localStorage.clear();
   return response.data;
 };
 
