@@ -43,7 +43,7 @@ function CreateFilmFirstData() {
         <InputDate
           isOnSheet={isDateSheet}
           onClick={handleDateClick}
-          value={createFilm.date}
+          value={createFilm.ateAt}
         />
         <InputDate
           isOnSheet={isTimeSheet}
