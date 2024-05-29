@@ -13,7 +13,7 @@ import { IRegistEmail } from '../types/organisms/RegistEmail.types';
 import { isValidEmailByNumber, isValidEmail } from '../util/emailCheck';
 import {
   fetchCheckEmailDuplicate,
-  fetchPostEmailCode,
+  fetchPostEmailCodeForSignup,
   fetchPostEmailCodeCheck,
 } from '../services/userService';
 import { IPostCodeRequest } from '../types/services/userService';
@@ -40,7 +40,7 @@ function RegistEmail(props: IRegistEmail) {
     staleTime: 500000,
   });
   const { mutate: makeEmailCode } = useMutation({
-    mutationFn: (email: string) => fetchPostEmailCode(email),
+    mutationFn: (email: string) => fetchPostEmailCodeForSignup(email),
     onSuccess: () => {
       plusSignUpLevel();
     },
