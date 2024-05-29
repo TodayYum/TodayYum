@@ -18,7 +18,7 @@ import { fetchGetSearchUsers } from '../services/userService';
 import { IPageableResponse } from '../types/services/boardService';
 // const TAB_TAG = 0;
 // const TAB_REGION = 1;
-const TAB_ACCOUNT = 2;
+const TAB_ACCOUNT = 1;
 
 function SearchResultPage() {
   const [{ keyword, tab }] = useSearchDataAtom();
@@ -34,7 +34,7 @@ function SearchResultPage() {
   );
 
   const product: IPolaroidFilm[] | IUserThumbnail[] = useMemo(() => {
-    console.log('검색 데이터 확인', data);
+    if (!data || !data[0]) return [];
     if (tab === TAB_ACCOUNT) {
       const output: IUserThumbnail[] = [];
       (data as IPageableResponse[])?.forEach(page =>

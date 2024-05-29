@@ -30,22 +30,23 @@ function UserProfilePage() {
     isSuccess: isProfileSuccess,
     refetch,
   } = useQuery({
-    queryKey: ['userProfile', locationState.memberId],
-    queryFn: () => fetchGetUserInfo(locationState.memberId),
+    queryKey: ['userProfile', locationState?.memberId],
+    queryFn: () => fetchGetUserInfo(locationState?.memberId),
     staleTime: 500000,
   });
 
-  if (isProfileSuccess) {
-    setProfile(userProfile);
+  if (isProfileSuccess && userProfile) {
+    console.log('test', userProfile);
+    setProfile(userProfile.result);
   }
   const { data: yummyList, isSuccess: isYummySuccess } = useQuery({
-    queryKey: ['yummyBoardList', locationState.memberId],
+    queryKey: ['yummyBoardList', locationState?.memberId],
     queryFn: () =>
       fetchGetYummyBoard({ pageParam: 0, content: locationState.memberId }),
     staleTime: 500000,
   });
   const { data: writtenList, isSuccess: isWrittenSuccess } = useQuery({
-    queryKey: ['writtenBoardList', locationState.memberId],
+    queryKey: ['writtenBoardList', locationState?.memberId],
     queryFn: () =>
       fetchGetWrittenBoard({ pageParam: 0, content: locationState.memberId }),
     staleTime: 500000,
@@ -103,6 +104,7 @@ function UserProfilePage() {
       </div>
       <div className="flex w-[calc(100%-30px)] overflow-auto gap-4 mx-[15px]">
         {isWrittenSuccess &&
+          writtenList &&
           ((writtenList as IPolaroidFilm[]) ?? []).map(element => (
             <PolaroidFilm
               tag={element.tag}
@@ -126,6 +128,7 @@ function UserProfilePage() {
       </div>
       <div className="flex w-[calc(100%-30px)] overflow-auto gap-4 mx-[15px]">
         {isYummySuccess &&
+          yummyList &&
           (yummyList as IPolaroidFilm[]).map(element => (
             <PolaroidFilm
               tag={element.tag}

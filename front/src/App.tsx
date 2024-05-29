@@ -17,20 +17,18 @@ import HeaderLayout from './layout/HeaderLayout';
 import MyFilmsPage from './pages/MyFilmsPage';
 import UserListPage from './pages/UserListPage';
 import EditDetailPage from './pages/EditDetailPage';
+import CheckAuthRoute from './organisms/CheckAuthRoute';
+import Test from './Test';
 
 function App() {
   return (
     <Routes>
-      <Route element={<NavBarLayout />}>
+      {/* <Route element={<NavBarLayout />}>
         <Route path="/" element={<MainPage />} />
         <Route path="/board/:boardId" element={<FilmDetailPage />} />
         <Route path="/edit-film" element={<EditDetailPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
-      </Route>
-      <Route path="/create-board" element={<NavBarLayout />}>
-        <Route path="select-fictures" element={<UploadFicturesPage />} />
-        <Route path="" element={<CreatePolaroidFilmPage />} />
-      </Route>
+      </Route> */}
       <Route path="/login" element={<LoginPage />} />
       <Route element={<HeaderOnlyLayout isSignUp />}>
         <Route path="/sign-up" element={<SignUpPage />} />
@@ -38,14 +36,29 @@ function App() {
       <Route element={<HeaderOnlyLayout isSignUp={false} />}>
         <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Route>
-      <Route element={<SearchLayout />}>
-        <Route path="/recent" element={<RecentSearchPage />} />
-        <Route path="/search-result" element={<SearchResultPage />} />
+      {/* 토큰 확인이 필요한 페이지들 */}
+      <Route element={<CheckAuthRoute />}>
+        <Route path="/test" element={<Test />} />
+        <Route element={<NavBarLayout />}>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/board/:boardId" element={<FilmDetailPage />} />
+          <Route path="/edit-film" element={<EditDetailPage />} />
+          <Route path="/profile" element={<UserProfilePage />} />
+        </Route>
+        <Route path="/create-board" element={<NavBarLayout />}>
+          <Route path="select-fictures" element={<UploadFicturesPage />} />
+          <Route path="" element={<CreatePolaroidFilmPage />} />
+        </Route>
+        <Route element={<SearchLayout />}>
+          <Route path="/recent" element={<RecentSearchPage />} />
+          <Route path="/search-result" element={<SearchResultPage />} />
+        </Route>
+        <Route element={<HeaderLayout />}>
+          <Route path="/write-list" element={<MyFilmsPage />} />
+          <Route path="/user-list" element={<UserListPage />} />
+        </Route>
       </Route>
-      <Route element={<HeaderLayout />}>
-        <Route path="/write-list" element={<MyFilmsPage />} />
-        <Route path="/user-list" element={<UserListPage />} />
-      </Route>
+      <Route path="*" element={<Test />} />
     </Routes>
   );
 }

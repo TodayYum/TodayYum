@@ -3,7 +3,7 @@ import useSearchDataAtom from '../jotai/searchData';
 // const TAB_TAG = 0;
 // const TAB_REGION = 1;
 // const TAB_ACCOUNT = 2;
-const TAB_NAMES = ['태그', '지역', '계정'];
+const TAB_NAMES = ['태그', '계정'];
 
 const Tab = (props: ITab) => {
   return (

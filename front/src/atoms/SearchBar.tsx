@@ -12,6 +12,18 @@ function SearchBar() {
   const [, setSearchData] = useSearchDataAtom();
   const nagivate = useNavigate();
 
+  const addRecentSearch = (word: string) => {
+    const wordListString = localStorage.getItem('recentSearch');
+    let wordList;
+    if (!wordListString) {
+      wordList = [];
+    } else {
+      wordList = JSON.parse(wordListString);
+    }
+    wordList.push(word);
+    localStorage.setItem('recentSearch', JSON.stringify(wordList));
+  };
+
   return (
     <div className="flex bg-white items-center px-[15px] py-3 gap-5">
       <FontAwesomeIcon icon={faAngleLeft} onClick={() => nagivate(-1)} />
@@ -25,6 +37,7 @@ function SearchBar() {
       <FontAwesomeIcon
         icon={faMagnifyingGlass}
         onClick={() => {
+          addRecentSearch(inputText);
           setSearchData({ keyword: inputText });
           nagivate('/search-result');
         }}

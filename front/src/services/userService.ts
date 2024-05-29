@@ -27,9 +27,33 @@ export const fetchCheckEmailDuplicate = async (email: string) => {
   }
 };
 
-// 이메일 인증 코드 생성 요청
-export const fetchPostEmailCode = async (email: string) => {
-  const url = `${API_URL}/api/auth/verification-code`;
+/**
+ * fetchPostEmailCodeForSignup : 회원가입 시 사용하는 인증코드 생성 요청
+ * @param email
+ * @returns
+ */
+export const fetchPostEmailCodeForSignup = async (email: string) => {
+  const url = `${API_URL}/api/auth/verification-code/signUp`;
+
+  const params = new URLSearchParams();
+  params.append('email', email);
+
+  // try {
+  const response = await axios.post(url, null, { params });
+  return response.data;
+  // } catch {
+  //   console.log('이메일 인증 코드 생성 실패');
+  //   return false;
+  // }
+};
+
+/**
+ * fetchPostEmailCodeForResetPassword : 비밀번호 찾기에서 사용하는 인증 코드 생성 요청
+ * @param email
+ * @returns
+ */
+export const fetchPostEmailCodeForResetPassword = async (email: string) => {
+  const url = `${API_URL}/api/auth/verification-code/password`;
 
   const params = new URLSearchParams();
   params.append('email', email);
@@ -143,11 +167,11 @@ export const fetchPostRefreshToken = async () => {
 
   const params = new URLSearchParams();
   params.append('memberId', localStorage.getItem('memberId') ?? '');
-
   const response = await axios.post(url, null, {
     params,
     withCredentials: true,
   });
+  console.log('넘어감', response);
   return response.data;
 };
 
@@ -216,16 +240,21 @@ export const fetchPostResetPassword = async (request: string) => {
  */
 export const fetchGetUserInfo = async (memberId: string) => {
   const accessToken = localStorage.getItem('token');
+  console.log('들어와ㅏㅅ니');
   if (!accessToken) return false;
   const url = `${API_URL}/api/members/${memberId}`;
-
-  const response = await axios.get(url, {
-    withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return response.data.result;
+  try {
+    const response = await axios.get(url, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (err) {
+    console.log('테스트', err);
+    return err;
+  }
 };
 
 /**
