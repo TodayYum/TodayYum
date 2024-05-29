@@ -12,7 +12,6 @@ import { IPolaroidFilm } from '../types/organisms/PolaroidFilm.types';
 import { fetchGetBoardList } from '../services/boardService';
 import useInfiniteQueryProduct from '../util/useInfiniteQueryProduct';
 import { IPageableResponse } from '../types/services/boardService';
-import { fetchPostRefreshToken } from '../services/userService';
 
 function MainPage() {
   const [isShowModal, setIsShowModal] = useState(false);
@@ -22,8 +21,15 @@ function MainPage() {
     {},
   );
 
+  if (!localStorage.getItem('recentSearch')) {
+    const emptyList: string[] = [];
+    localStorage.setItem('recentSearch', JSON.stringify(emptyList));
+  }
+
   const convertedResponse = useMemo(() => {
     const output: IPolaroidFilm[] = [];
+    console.log('fdsaf', data);
+    if (!data || !data[0]) return [];
     (data as IPageableResponse[])?.forEach(page =>
       (page.content as IPolaroidFilm[]).forEach(element =>
         output.push(element),
@@ -35,14 +41,6 @@ function MainPage() {
   return (
     <div className="bg-background  py-3">
       <SelectSearch />
-      <button
-        type="button"
-        onClick={() => {
-          fetchPostRefreshToken();
-        }}
-      >
-        테스트
-      </button>
       <TodayYum
         closeModal={() => setIsShowModal(false)}
         openModal={() => setIsShowModal(true)}

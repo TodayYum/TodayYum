@@ -32,6 +32,7 @@ function MyFilmsPage() {
   );
 
   const product: IPolaroidFilm[] = useMemo(() => {
+    if (!data || !data[0]) return [];
     const output: IPolaroidFilm[] = [];
     (data as IPageableResponse[])?.forEach(page =>
       (page.content as IPolaroidFilm[]).forEach(element =>
