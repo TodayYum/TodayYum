@@ -36,7 +36,7 @@ function UserProfilePage() {
   });
 
   if (isProfileSuccess) {
-    setProfile(userProfile);
+    setProfile(userProfile.result);
   }
   const { data: yummyList, isSuccess: isYummySuccess } = useQuery({
     queryKey: ['yummyBoardList', locationState.memberId],
