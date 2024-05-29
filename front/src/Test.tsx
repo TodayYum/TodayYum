@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 // import Header from './atoms/Header';
 import Navbar from './atoms/Navbar';
 import RectangleButton from './atoms/RectangleButton';
+import RegistNickname from './organisms/RegistNickname';
 
 function Test() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ function Test() {
         isCancle
         onClick={() => navigate('login')}
       />
+      <RegistNickname />
     </div>
   );
 }

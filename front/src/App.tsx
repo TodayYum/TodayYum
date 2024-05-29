@@ -17,15 +17,26 @@ import HeaderLayout from './layout/HeaderLayout';
 import MyFilmsPage from './pages/MyFilmsPage';
 import UserListPage from './pages/UserListPage';
 import EditDetailPage from './pages/EditDetailPage';
+import CheckAuthRoute from './organisms/CheckAuthRoute';
+import Test from './Test';
 
 function App() {
   return (
     <Routes>
       <Route element={<NavBarLayout />}>
-        <Route path="/" element={<MainPage />} />
+        {/* <Route path="/" element={<MainPage />} /> */}
         <Route path="/board/:boardId" element={<FilmDetailPage />} />
         <Route path="/edit-film" element={<EditDetailPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
+      </Route>
+      <Route element={<CheckAuthRoute />}>
+        <Route path="/test" element={<Test />} />
+        <Route element={<NavBarLayout />}>
+          <Route path="/" element={<MainPage />} />
+          {/* <Route path="/board/:boardId" element={<FilmDetailPage />} />
+          <Route path="/edit-film" element={<EditDetailPage />} />
+          <Route path="/profile" element={<UserProfilePage />} /> */}
+        </Route>
       </Route>
       <Route path="/create-board" element={<NavBarLayout />}>
         <Route path="select-fictures" element={<UploadFicturesPage />} />
