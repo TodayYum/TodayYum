@@ -2,6 +2,7 @@ package com.todayyum.board.application;
 
 import com.todayyum.board.application.repository.*;
 import com.todayyum.board.domain.*;
+import com.todayyum.board.dto.request.BoardSearchRequest;
 import com.todayyum.board.dto.response.BoardDetailResponse;
 import com.todayyum.board.dto.response.BoardListResponse;
 import com.todayyum.member.application.repository.MemberRepository;
@@ -37,8 +38,8 @@ public class FindBoardUseCase {
         return createBoardListResponse(boardRepository.findByMemberIdAndYummy(pageable, memberId));
     }
 
-    public Page<BoardListResponse> listBoard(Pageable pageable) {
-        return createBoardListResponse(boardRepository.findList(pageable));
+    public Page<BoardListResponse> listBoard(Pageable pageable, BoardSearchRequest boardSearchRequest) {
+        return createBoardListResponse(boardRepository.findList(pageable, boardSearchRequest));
     }
 
     public BoardDetailResponse findBoard(UUID memberId, Long boardId) {

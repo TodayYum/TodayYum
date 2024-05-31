@@ -3,10 +3,7 @@ package com.todayyum.board;
 import com.todayyum.board.application.*;
 import com.todayyum.board.application.repository.*;
 import com.todayyum.board.domain.*;
-import com.todayyum.board.dto.request.BoardAddRequest;
-import com.todayyum.board.dto.request.BoardModifyRequest;
-import com.todayyum.board.dto.request.CommentAddRequest;
-import com.todayyum.board.dto.request.CommentModifyRequest;
+import com.todayyum.board.dto.request.*;
 import com.todayyum.board.dto.response.BoardDetailResponse;
 import com.todayyum.board.dto.response.BoardListResponse;
 import com.todayyum.board.dto.response.CommentListResponse;
@@ -203,6 +200,10 @@ public class BoardUseCaseTest {
         //given
         Long boardId = 100000L;
 
+        BoardSearchRequest boardSearchRequest = BoardSearchRequest.builder()
+                .sortBy("yummy")
+                .build();
+
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
                 boardId, 0F, 3L, Category.KOREAN_FOOD);
@@ -214,17 +215,17 @@ public class BoardUseCaseTest {
 
         Pageable pageable = Pageable.ofSize(10);
 
-        when(boardRepository.findList(any(Pageable.class)))
+        when(boardRepository.findList(any(Pageable.class), any(BoardSearchRequest.class)))
                 .thenReturn(boardListResponses);
 
         //when
-        boardListResponses = findBoardUseCase.listBoard(pageable);
+        boardListResponses = findBoardUseCase.listBoard(pageable, boardSearchRequest);
 
         //then
         assertEquals(boardListResponse.getId(), boardListResponses.getContent().get(0).getId());
 
         verify(boardRepository, times(1))
-                .findList(any(Pageable.class));
+                .findList(any(Pageable.class), any(BoardSearchRequest.class));
     }
 
     @Test

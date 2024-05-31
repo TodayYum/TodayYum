@@ -1,9 +1,15 @@
 package com.todayyum.board.infra.database;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.todayyum.board.application.repository.BoardRepository;
 import com.todayyum.board.domain.Board;
+import com.todayyum.board.dto.request.BoardSearchRequest;
 import com.todayyum.board.dto.response.BoardListResponse;
 import com.todayyum.board.infra.entity.BoardEntity;
+import com.todayyum.board.infra.entity.QBoardEntity;
 import com.todayyum.global.dto.response.ResponseCode;
 import com.todayyum.global.exception.CustomException;
 import com.todayyum.member.infra.database.JpaMemberRepository;
@@ -11,6 +17,7 @@ import com.todayyum.member.infra.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +32,7 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     private final JpaBoardRepository jpaBoardRepository;
     private final JpaMemberRepository jpaMemberRepository;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public Board save(Board board) {
@@ -63,8 +71,39 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public Page<BoardListResponse> findList(Pageable pageable) {
-        return jpaBoardRepository.findList(pageable);
+    public Page<BoardListResponse> findList(Pageable pageable, BoardSearchRequest boardSearchRequest) {
+        QBoardEntity board = QBoardEntity.boardEntity;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        if(boardSearchRequest.getCategory() != null) {
+            booleanBuilder.and(board.category.eq(boardSearchRequest.getCategory()));
+        }
+
+        List<BoardListResponse> boardListResponses = queryFactory
+                .select(Projections.constructor(BoardListResponse.class,
+                        board.id,
+                        board.totalScore,
+                        board.yummyCount,
+                        board.category))
+                .from(board)
+                .where(booleanBuilder)
+                .orderBy(getOrderSpecifier(boardSearchRequest.getSortBy(), board))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(boardListResponses, pageable, boardListResponses.size());
+    }
+
+    private OrderSpecifier<?>[] getOrderSpecifier(String sortBy, QBoardEntity board) {
+        switch (sortBy) {
+            case "rating":
+                return new OrderSpecifier[]{board.totalScore.desc(), board.createdAt.desc()};
+            case "yummy":
+                return new OrderSpecifier[]{board.yummyCount.desc(), board.createdAt.desc()};
+            default:
+                return new OrderSpecifier[]{board.createdAt.desc()};
+        }
     }
 
     @Override

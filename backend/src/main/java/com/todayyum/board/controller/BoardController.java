@@ -2,10 +2,7 @@ package com.todayyum.board.controller;
 
 import com.todayyum.auth.userDetails.CustomUserDetails;
 import com.todayyum.board.application.*;
-import com.todayyum.board.dto.request.BoardAddRequest;
-import com.todayyum.board.dto.request.BoardModifyRequest;
-import com.todayyum.board.dto.request.CommentAddRequest;
-import com.todayyum.board.dto.request.CommentModifyRequest;
+import com.todayyum.board.dto.request.*;
 import com.todayyum.global.dto.response.BaseResponse;
 import com.todayyum.global.dto.response.ResponseCode;
 import jakarta.validation.Valid;
@@ -129,8 +126,10 @@ public class BoardController {
     }
 
     @GetMapping
-    public ResponseEntity<?> boardList(@PageableDefault(sort = "createdAt") Pageable pageable) {
-        return BaseResponse.createResponseEntity(ResponseCode.OK, findBoardUseCase.listBoard(pageable));
+    public ResponseEntity<?> boardList(@PageableDefault(sort = "createdAt") Pageable pageable,
+                                       @Valid BoardSearchRequest boardSearchRequest) {
+        return BaseResponse.createResponseEntity(ResponseCode.OK,
+                findBoardUseCase.listBoard(pageable, boardSearchRequest));
     }
 
     @GetMapping("/search")

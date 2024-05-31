@@ -1,6 +1,7 @@
 package com.todayyum.board.application.repository;
 
 import com.todayyum.board.domain.Board;
+import com.todayyum.board.dto.request.BoardSearchRequest;
 import com.todayyum.board.dto.response.BoardListResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,7 @@ public interface BoardRepository {
     Page<BoardListResponse> findByMemberId(Pageable pageable, UUID memberId);
     void deleteById(Long id);
     Board findById(Long id);
-    Page<BoardListResponse> findList(Pageable pageable);
+    Page<BoardListResponse> findList(Pageable pageable, BoardSearchRequest boardSearchRequest);
     List<BoardListResponse> findTopByYummy();
     List<BoardListResponse> findTopListByYummy();
     Page<BoardListResponse> findListByTag(Pageable pageable, String content);
