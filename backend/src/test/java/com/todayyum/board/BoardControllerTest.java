@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todayyum.board.application.*;
 import com.todayyum.board.controller.BoardController;
 import com.todayyum.board.domain.Category;
-import com.todayyum.board.dto.request.BoardAddRequest;
-import com.todayyum.board.dto.request.BoardModifyRequest;
-import com.todayyum.board.dto.request.CommentAddRequest;
-import com.todayyum.board.dto.request.CommentModifyRequest;
+import com.todayyum.board.dto.request.*;
 import com.todayyum.board.dto.response.BoardDetailResponse;
 import com.todayyum.board.dto.response.BoardListResponse;
 import com.todayyum.board.dto.response.CommentListResponse;
@@ -545,7 +542,9 @@ public class BoardControllerTest {
     void boardList() throws Exception {
         //given
         Long boardId = 100000L;
-        UUID memberId = UUID.randomUUID();
+        BoardSearchRequest boardSearchRequest = BoardSearchRequest.builder()
+                .sortBy("yummy")
+                .build();
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
@@ -556,13 +555,14 @@ public class BoardControllerTest {
 
         Page<BoardListResponse> boardListResponses = new PageImpl<>(boardListResponseList, pageRequest, 1);
 
-        when(findBoardUseCase.listBoard(any(Pageable.class)))
+        when(findBoardUseCase.listBoard(any(Pageable.class), any(BoardSearchRequest.class)))
                 .thenReturn(boardListResponses);
 
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/boards")
-                        .param("page", "0"));
+                        .param("page", "0")
+                        .param("sortBy", "yummy"));
 
         //then
         resultActions.andExpect(status().isOk())

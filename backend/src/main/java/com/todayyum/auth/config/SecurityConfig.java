@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -66,12 +67,13 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/members", "post").permitAll()
                         .requestMatchers("/api/auth/verify-password").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/members/nicknames/validations").permitAll()
-                        .requestMatchers("/api/members/emails/validations").permitAll()
-                        .requestMatchers("/api/members/").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/members").permitAll()
+                        .requestMatchers("/api/members/passwords").permitAll()
+                        .requestMatchers("api/members/nicknames/validations").permitAll()
+                        .requestMatchers("api/members/emails/validations").permitAll()
+                        .requestMatchers("/api/members/**").authenticated()
                         .anyRequest().authenticated());
 
         http

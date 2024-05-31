@@ -2,6 +2,7 @@ package com.todayyum.board;
 
 import com.todayyum.board.application.repository.*;
 import com.todayyum.board.domain.*;
+import com.todayyum.board.dto.request.BoardSearchRequest;
 import com.todayyum.board.dto.response.BoardListResponse;
 import com.todayyum.board.dto.response.CommentListResponse;
 import com.todayyum.global.dto.response.ResponseCode;
@@ -147,10 +148,13 @@ public class BoardRepositoryTest {
     void findBoardList() {
         //given
         Pageable pageable = Pageable.ofSize(10);
+        BoardSearchRequest boardSearchRequest = BoardSearchRequest.builder()
+                .sortBy("yummy")
+                .build();
 
         //when
         Page<BoardListResponse> boardListResponses = boardRepository
-                .findList(pageable);
+                .findList(pageable, boardSearchRequest);
 
         //then
         assertEquals(board.getCategory().name(), boardListResponses.getContent()
@@ -213,13 +217,13 @@ public class BoardRepositoryTest {
     @DisplayName("Board Repo - 태그 조회 테스트(내용)")
     void findTagByContent() {
         //given
-        String content = "가성비";
+        String tagContent = "태그태그태그";
 
         //when
-        Tag tag = tagRepository.findByContent(content);
+        Tag tag = tagRepository.findByContent(tagContent);
 
         //then
-        assertEquals(content, tag.getContent());
+        assertEquals(tagContent, tag.getContent());
     }
 
     @Test
