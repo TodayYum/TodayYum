@@ -16,8 +16,12 @@ import { fetchPatchPassword } from '../services/userService';
 function ResetPassword(props: IResetPassword) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { mutate } = useMutation({
-    mutationFn: (request: string) => fetchPatchPassword(request),
+  const { mutate: resetPassword } = useMutation({
+    mutationFn: () =>
+      fetchPatchPassword({
+        email: 'funcodezune@gmail.com',
+        password,
+      }),
     onSuccess: res => {
       if (res) {
         props.setModalLevel(0);
@@ -50,8 +54,8 @@ function ResetPassword(props: IResetPassword) {
       });
       return;
     }
-    // 다음 단께로 넘어가는 작업
-    mutate(password);
+    // 변경할 비밀번호 제출
+    resetPassword();
   };
 
   return (

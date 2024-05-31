@@ -5,6 +5,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useMutation } from '@tanstack/react-query';
 import InputPassword from '../atoms/InputPassword';
 import InputText from '../atoms/InputText';
 import RectangleButton from '../atoms/RectangleButton';
@@ -16,6 +17,7 @@ import {
   useSignUpDataAtom,
 } from '../jotai/signUpData';
 import { IRegistPassword } from '../types/organisms/RegistPassword.types';
+import { fetchPatchPassword } from '../services/userService';
 
 function RegistPassword(props: IRegistPassword) {
   const registData = useSignUpDataAtom();
@@ -23,6 +25,17 @@ function RegistPassword(props: IRegistPassword) {
   const setConfirmPassword = useSetConfirmPasswordAtom();
   const plusSignUpLevelAtom = usePlusSignUpLevelAtom();
   const navigate = useNavigate();
+  const { mutate: resetPassword } = useMutation({
+    mutationFn: (password: string) =>
+      fetchPatchPassword({ email: registData.email, password }),
+    onSuccess: () => {
+      navigate('/login');
+    },
+    onError: err => {
+      console.log('에러', err);
+    },
+  });
+
   const handleNextButton = () => {
     // 비밀번호 체크
     if (!isRightPassword(registData.password)) {
@@ -51,10 +64,11 @@ function RegistPassword(props: IRegistPassword) {
       });
       return;
     }
+    // 회원가입이면 다음 단계로, 비밀번호 초기화면 요청 보내기
     if (props.isSignUp) {
       plusSignUpLevelAtom();
     } else {
-      navigate('/login');
+      resetPassword(registData.password);
     }
   };
   return (
