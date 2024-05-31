@@ -5,25 +5,45 @@ import axios from 'axios';
 import {
   IGetFollowingListRequest,
   IPostCodeRequest,
+  IResetPassword,
   ISignUpRequest,
   ISigninRequest,
 } from '../types/services/userService';
+import EmailCheck from '../constant/enums';
 
 const API_URL = process.env.REACT_APP_LOCAL_URL;
 // const url = process.env.REACT_APP_SERVER_URL;
 
+interface AxiosErr {
+  response: { data: { message: string } };
+}
+/**
+ * fetchCheckEmailDuplicate : 이메일 중복 체크 확인
+ * @param email
+ * @returns
+ */
 export const fetchCheckEmailDuplicate = async (email: string) => {
   if (email.length === 0) return { input: email, result: -1 };
 
   const url = `${API_URL}/api/members/emails/validations`;
 
+  // err.response.data.message "이미 사용 중인 이메일입니다." err.message "Request failed with status code 409"
+  // '유효하지 않은 이메일입니다.'  Request failed with status code 409"
   try {
-    const response = await axios.get(url, {
+    await axios.get(url, {
       params: { email },
     });
-    return { input: email, result: response.data };
+
+    return { input: email, result: EmailCheck.VALID };
   } catch (err) {
-    return { input: email, result: false };
+    switch ((err as AxiosErr).response.data.message) {
+      case '이미 사용 중인 이메일입니다.':
+        return { input: email, result: EmailCheck.DUPLICATE };
+      case '유효하지 않은 이메일입니다.':
+        return { input: email, result: EmailCheck.INVALID };
+      default:
+        return { input: email, result: EmailCheck.INTERNAL_ERROR };
+    }
   }
 };
 
@@ -73,17 +93,12 @@ export const fetchPostEmailCodeForResetPassword = async (email: string) => {
  * @returns
  */
 export const fetchPostEmailCodeCheck = async (request: IPostCodeRequest) => {
-  // 경로 문제 해결해야 함
-  const url = `${API_URL}/api/auth/verify-verification-code`;
-  // const url = `${API_URL}/api/auth/verify/password`;
-  // const url = `${API_URL}/api/auth/code-check/verification-code`;
-  // const url = `${API_URL}/api/auth/code-check/password`;
+  const url = `${API_URL}/api/auth/verify/verification-code`;
 
-  const bodyData = new FormData();
-  bodyData.append('email', request.email);
-  bodyData.append('code', request.code);
-
-  const response = await axios.post(url, bodyData);
+  const response = await axios.post(url, {
+    email: request.email,
+    code: request.code,
+  });
   return response.data;
 };
 
@@ -167,8 +182,12 @@ export const fetchPostRefreshToken = async () => {
 
   const params = new URLSearchParams();
   params.append('memberId', localStorage.getItem('memberId') ?? '');
+  // axios.defaults.headers.common.Authorization = '';
   const response = await axios.post(url, null, {
     params,
+    // headers: {
+    //   Authorization: '',
+    // },
     withCredentials: true,
   });
   console.log('넘어감', response);
@@ -209,26 +228,6 @@ export const fetchPostSignOut = async () => {
   });
 
   localStorage.clear();
-  return response.data;
-};
-
-/**
- * fetchPostResetPassword : 비밀번호 잊어버렸을 경우 비밀번호 재설정 요청
- * 현재 API 미구현이라 보류
- * @param request
- * @returns
- */
-export const fetchPostResetPassword = async (request: string) => {
-  // 브라우저에 저장된 memberId 날아갔을 경우 함수 종료
-  if (!localStorage.getItem('memberId')) return false;
-
-  const url = `${API_URL}/api/members/password`;
-
-  const params = new URLSearchParams();
-  params.append('password', request);
-
-  const response = await axios.post(url, request);
-  console.log('로그아웃 결과', response);
   return response.data;
 };
 
@@ -298,9 +297,9 @@ export const fetchPatchEditIntroduction = async (introduction: string) => {
     { introduction },
     {
       withCredentials: true,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${accessToken}`,
+      // },
     },
   );
 
@@ -345,12 +344,16 @@ export const fetchPostConfirmPassword = async (password: string) => {
   const formData = new FormData();
   formData.append('password', password);
 
-  const response = await axios.post(url, formData, {
-    withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
+  const response = await axios.post(
+    url,
+    { password },
+    {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     },
-  });
+  );
 
   return response.data.message === '요청이 완료되었습니다.';
 };
@@ -360,7 +363,7 @@ export const fetchPostConfirmPassword = async (password: string) => {
  * @param password: 변경된 비밀번호
  * @returns
  */
-export const fetchPatchPassword = async (password: string) => {
+export const fetchPatchPassword = async (request: IResetPassword) => {
   const accessToken = localStorage.getItem('token');
   if (!accessToken) return false;
 
@@ -368,11 +371,17 @@ export const fetchPatchPassword = async (password: string) => {
 
   const response = await axios.patch(
     url,
-    { password },
+    {
+      email: request.email,
+      password: request.password,
+    },
     {
       withCredentials: true,
+      // headers: {
+      //   Authorization: `Bearer ${accessToken}`,
+      // },
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: ``,
       },
     },
   );

@@ -18,3 +18,8 @@ export interface IGetFollowingListRequest {
   pageParam: number;
   content: string;
 }
+
+export interface IResetPassword {
+  email: string;
+  password: string;
+}
