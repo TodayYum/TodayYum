@@ -10,14 +10,17 @@ import {
   useSignUpDataAtom,
 } from '../jotai/signUpData';
 import { IRegistEmail } from '../types/organisms/RegistEmail.types';
-import { isValidEmailByNumber, isValidEmail } from '../util/emailCheck';
+import { isValidEmail } from '../util/emailCheck';
 import {
   fetchCheckEmailDuplicate,
   fetchPostEmailCodeForSignup,
   fetchPostEmailCodeCheck,
+  fetchPostEmailCodeForResetPassword,
 } from '../services/userService';
 import { IPostCodeRequest } from '../types/services/userService';
 import { swalFail, swalSuccess } from '../constant/swalConstant';
+import EmailCheck from '../constant/enums';
+import setSwalText from '../util/swalUtil';
 
 function Basebold({ text }: { text: string }) {
   return <p className="font-bold text-base mb-[18px] ml-1">{text}</p>;
@@ -40,12 +43,15 @@ function RegistEmail(props: IRegistEmail) {
     staleTime: 500000,
   });
   const { mutate: makeEmailCode } = useMutation({
-    mutationFn: (email: string) => fetchPostEmailCodeForSignup(email),
-    onSuccess: () => {
-      plusSignUpLevel();
-    },
-    onError: err => {
-      console.log('ㅇ이잉', err);
+    mutationFn: (email: string) =>
+      props.isSignUp
+        ? fetchPostEmailCodeForSignup(email)
+        : fetchPostEmailCodeForResetPassword(email),
+    // onSuccess: () => {
+    //   plusSignUpLevel();
+    // },
+    onError: () => {
+      Swal.fire(setSwalText(swalFail, '인증 코드 생성에 실패했습니다.'));
     },
   });
   const { mutate: validateEmailCode } = useMutation({
@@ -69,14 +75,19 @@ function RegistEmail(props: IRegistEmail) {
     }
 
     // 이메일 중복 체크 성공한 상태에서 nextButton 눌렀을 경우 code 생성
-    if (emailCheckResponse && emailCheckResponse.result) {
+    if (
+      emailCheckResponse &&
+      emailCheckResponse.result ===
+        (props.isSignUp ? EmailCheck.VALID : EmailCheck.DUPLICATE)
+    ) {
       makeEmailCode(emailQuery);
+      plusSignUpLevel();
     }
   };
 
-  const handlePasswordResetNextButton = () => {
-    makeEmailCode(emailQuery);
-  };
+  // const handlePasswordResetNextButton = () => {
+  //   makeEmailCode(emailQuery);
+  // };
 
   const handleOverlapCheck = () => {
     if (!isValidEmail(registData.email)) return;
@@ -84,17 +95,31 @@ function RegistEmail(props: IRegistEmail) {
   };
 
   useEffect(() => {
+    console.log(emailCheckResponse);
     if (emailCheckResponse === undefined || emailCheckResponse.result === -1)
       return;
-    if (emailCheckResponse.result) {
-      // API 성공
-      swalSuccess.text = '사용 가능한 이메일입니다.';
-      Swal.fire(swalSuccess);
-    } else {
-      // API 실패
-      swalFail.text = '사용 불가능한 이메일입니다.';
-      Swal.fire(swalFail);
+    let swalOptionObj;
+    switch (emailCheckResponse.result) {
+      case EmailCheck.VALID:
+        swalOptionObj = props.isSignUp
+          ? setSwalText(swalSuccess, '사용 가능한 이메일입니다.')
+          : setSwalText(swalFail, '존재하지 않는 이메일입니다.');
+        break;
+      case EmailCheck.DUPLICATE:
+        swalOptionObj = props.isSignUp
+          ? setSwalText(swalFail, '이미 존재하는 이메일입니다.')
+          : setSwalText(swalSuccess, '확인이 완료되었습니다.');
+        break;
+      case EmailCheck.INVALID:
+        swalOptionObj = setSwalText(swalFail, '올바르지 않은 이메일입니다.');
+        break;
+      default:
+        swalOptionObj = setSwalText(
+          swalFail,
+          '알 수 없는 오류가 발생했습니다.',
+        );
     }
+    Swal.fire(swalOptionObj);
   }, [emailCheckResponse]);
 
   return (
@@ -103,21 +128,15 @@ function RegistEmail(props: IRegistEmail) {
       <div className="flex gap-4">
         <InputText
           type="email"
-          hasSupport
+          hasSupport={false}
           placeholder="이메일"
           setValue={setEmail}
           customClass="mb-10 flex-[1_1_content]"
           value={registData.email}
           disabled={registData.signUpLevel > 0}
-          isSuccess={
-            emailCheckResponse?.result === false
-              ? 0
-              : isValidEmailByNumber(registData.email)
-          }
-          successText={
-            registData.signUpLevel === 0 ? '올바른 형식의 이메일입니다.' : ''
-          }
-          failText="사용중이거나 잘못된 입력값입니다."
+          isSuccess={0}
+          successText=""
+          failText=""
         />
         {registData.signUpLevel === 0 && (
           <RectangleButton
@@ -142,9 +161,10 @@ function RegistEmail(props: IRegistEmail) {
 
       <RectangleButton
         text="다음 단계로"
-        onClick={
-          props.isSignUp ? handleNextButton : handlePasswordResetNextButton
-        }
+        // onClick={
+        //   props.isSignUp ? handleNextButton : handlePasswordResetNextButton
+        // }
+        onClick={handleNextButton}
         customClass="fixed bottom-20 w-[calc(100%-60px)]"
       />
     </div>
