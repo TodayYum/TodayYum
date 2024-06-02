@@ -11,9 +11,11 @@ import EditProfileModal from './EditProfileModal';
 import { userProfileAtom } from '../jotai/userProfile';
 import { fetchDeleteFollow, fetchPostAddFollow } from '../services/userService';
 import { IUserPofileContainer } from '../types/organisms/UserProfileContainer.types';
+import useSignInDataAtom from '../jotai/signInData';
 
 function UserProfileContainer(props: IUserPofileContainer) {
   const [isOnEdit, setIsOnEdit] = useState(false);
+  const [signInData] = useSignInDataAtom();
   const userProfile = userProfileAtom();
   const navigate = useNavigate();
   const { mutate: handleFollow } = useMutation({
@@ -61,7 +63,7 @@ function UserProfileContainer(props: IUserPofileContainer) {
           <p className="font-bold mb-2">{userProfile.nickname}</p>
           <p className="h-6">{userProfile.introduction}</p>
         </div>
-        {userProfile.memberId === localStorage.getItem('memberId') ? (
+        {userProfile.memberId === signInData.memberId ? (
           <FontAwesomeIcon
             icon={faPencil}
             className="text-gray-dark mx-1 text-xl"

@@ -29,9 +29,11 @@ import { ICommentReponse } from '../types/organisms/CommentList.types';
 import { IPageableResponse } from '../types/services/boardService';
 import { TIME_LIST, TIME_MAP } from '../constant/createFilmConstant';
 import { useInitFilmAtom } from '../jotai/updateFilm';
+import useSignInDataAtom from '../jotai/signInData';
 
 function FilmDetailPage() {
   const queryClient = useQueryClient();
+  const [signInData] = useSignInDataAtom();
   const fixedContentsRef = useRef<HTMLDivElement>(null);
   const { boardId } = useParams();
   const [height, setHeight] = useState(490);
@@ -146,7 +148,7 @@ function FilmDetailPage() {
               onClick={handleClickYummy}
             />
             <span className="text-base">{data.yummyCount}</span>
-            {data.memberId === localStorage.getItem('memberId') && (
+            {data.memberId === signInData.memberId && (
               <FontAwesomeIcon
                 icon={faPencil}
                 className="ml-2 text-gray-dark"
@@ -156,7 +158,7 @@ function FilmDetailPage() {
                 }}
               />
             )}
-            {data.memberId === localStorage.getItem('memberId') && (
+            {data.memberId === signInData.memberId && (
               <FontAwesomeIcon
                 icon={faClose}
                 className="ml-2 text-gray-dark text-xl"
