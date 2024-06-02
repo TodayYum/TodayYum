@@ -62,6 +62,7 @@ function CategoryBottomSheet(props: ISortBottomSheet) {
               text={element}
               onClick={() => handleClickChip(idx)}
               isClick={searchData.category[idx]}
+              key={element}
             />
           ))}
         </div>

@@ -49,7 +49,6 @@ function MainPage() {
 
   const convertedResponse = useMemo(() => {
     const output: IPolaroidFilm[] = [];
-    console.log('fdsaf', data);
     if (!data || !data[0]) return [];
     (data as IPageableResponse[])?.forEach(page =>
       (page.content as IPolaroidFilm[]).forEach(element =>

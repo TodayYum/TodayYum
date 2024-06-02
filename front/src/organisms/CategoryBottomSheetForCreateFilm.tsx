@@ -45,6 +45,7 @@ function CategoryBottomSheetForCreateFilm(props: ISortBottomSheet) {
                   text={element}
                   onClick={() => handleClickChip(idx)}
                   isClick={createFilm.category === idx}
+                  key={element}
                 />
               ),
           )}

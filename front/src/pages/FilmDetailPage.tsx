@@ -75,8 +75,7 @@ function FilmDetailPage() {
 
   const { mutate: deleteFilm } = useMutation({
     mutationFn: () => fetchDeleteFilm(boardId ?? '0'),
-    onSuccess: res => {
-      console.log('삭제 성공', res);
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['boardList'] });
       navigate('/');
     },
@@ -173,7 +172,9 @@ function FilmDetailPage() {
         <div className="bg-white p-[15px]" style={{ marginTop: height }}>
           <p className="text-base my-[15px]">{data.content}</p>
           {data.tags.map((element: string) => (
-            <span className="text-base mr-2"># {element}</span>
+            <span className="text-base mr-2" key={element}>
+              # {element}
+            </span>
           ))}
           <div className="flex flex-row justify-between mt-[15px]">
             {/* <p className="text-base my-5">서울특별시 강남구 테헤란로 212</p> */}

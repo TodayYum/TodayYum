@@ -43,6 +43,7 @@ function MealTimeBottomSheet(props: IDateBottomSheet) {
               role="button"
               onKeyUp={() => {}}
               className={`${selectedIdx === idx && 'font-bold'} w-1/2 border-b-[1px] border-gray text-center`}
+              key={element.en}
             >
               <p className="text-xl">{element.kr}</p>
             </div>

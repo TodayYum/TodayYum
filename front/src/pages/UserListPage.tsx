@@ -25,7 +25,6 @@ function UserListPage() {
   );
 
   const product: IUserThumbnail[] = useMemo(() => {
-    console.log('우에에에', data, locationState);
     const result: IUserThumbnail[] = [];
     (data as IPageableResponse[])?.forEach(page =>
       (page.content as IUserThumbnail[]).forEach(user => result.push(user)),

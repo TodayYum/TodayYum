@@ -23,8 +23,7 @@ function EditDetailPage() {
   const navigate = useNavigate();
   const { mutate } = useMutation({
     mutationFn: () => fetchPatchFilm(updateFilm),
-    onSuccess: res => {
-      console.log('글 수정 성공 메시지', res);
+    onSuccess: () => {
       queryClient.removeQueries({
         queryKey: ['boardDetail', String(boardDetail.id)],
         exact: true,

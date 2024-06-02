@@ -22,7 +22,6 @@ const useSignInData = atom(
     return status;
   },
   (get, set, input: SignInData) => {
-    console.log('before', signInDataAtom, 'after', input);
     const newData = { ...get(signInDataAtom) };
     Object.entries(input).forEach(([keyName, value]) => {
       if (value) {

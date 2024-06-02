@@ -113,8 +113,7 @@ export const fetchGetNicknameDuplicate = async (nickname: string) => {
       params: { nickname },
     });
     return response.data.message.length;
-  } catch (err) {
-    console.log('닉 검증 실패', err);
+  } catch {
     return 0;
   }
 };
@@ -196,7 +195,6 @@ export const fetchPostRefreshToken = async (memberId: string) => {
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     response.data.token = accessToken;
   }
-  console.log('리프레시 API 호출 여부 확인', response);
   return response;
 };
 
@@ -212,7 +210,6 @@ export const setRefreshInterceptor = () => {
       if (error.response.status === 401) {
         await fetchPostRefreshToken('test');
       }
-      console.log('인터셉터가 감지한 에러', error);
     },
   );
 };
@@ -244,7 +241,6 @@ export const fetchPostSignOut = async (memberId: string) => {
  */
 export const fetchGetUserInfo = async (memberId: string) => {
   // const accessToken = localStorage.getItem('token');
-  console.log('들어와ㅏㅅ니');
   // if (!accessToken) return false;
   const url = `${API_URL}/api/members/${memberId}`;
   try {
@@ -256,7 +252,6 @@ export const fetchGetUserInfo = async (memberId: string) => {
     });
     return response.data;
   } catch (err) {
-    console.log('테스트', err);
     return err;
   }
 };
@@ -433,7 +428,6 @@ export const fetchGetFollowingList = async (
 
   const url = `${API_URL}/api/members/${request.content}/followings`;
 
-  console.log('리퀘ㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔ스트', url);
   const response = await axios.get(url, {
     withCredentials: true,
     // headers: {
@@ -443,7 +437,6 @@ export const fetchGetFollowingList = async (
       page: request.pageParam,
     },
   });
-  console.log('요청 결곽ㄱㄱㄱㄱㄱ', response);
   return response.data.result;
 };
 
@@ -503,7 +496,6 @@ export const fetchGetSearchUsers = async (request: {
   const params = new URLSearchParams();
   params.append('nickname', request.content);
 
-  console.log('유저검색', request);
   const response = await axios.get(url, {
     // headers: {
     //   Authorization: `Bearer ${accessToken}`,

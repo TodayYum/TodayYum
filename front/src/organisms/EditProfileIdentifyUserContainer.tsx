@@ -18,7 +18,6 @@ function EditProfileIdentifyUserContainer(
   const { mutate } = useMutation({
     mutationFn: (request: string) => fetchPostConfirmPassword(request),
     onSuccess: response => {
-      console.log('비밀번호 확인 결과', response);
       if (response) {
         props.goNextLevel();
       }

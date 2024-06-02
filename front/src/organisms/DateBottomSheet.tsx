@@ -45,6 +45,7 @@ function DateBottomSheet(props: IDateBottomSheet) {
               role="button"
               onKeyUp={() => {}}
               className="text-xl w-[45%] font-ggTitle border-b-[1px] border-gray pl-3"
+              key={element}
             >
               <span className={`${selectedIdx === idx && 'font-bold'} text-xl`}>
                 {`${element} `}

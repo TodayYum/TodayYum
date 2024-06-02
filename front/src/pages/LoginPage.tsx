@@ -24,7 +24,6 @@ function LoginPage() {
         nickname: response.nickname,
         token: response.token,
       });
-      console.log(response);
       navigate('/');
     },
     onError: () => {

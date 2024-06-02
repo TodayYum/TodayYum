@@ -14,8 +14,7 @@ function CommentList(props: ICommentList) {
   const [idxOfEditComment, setIdxOfEditComment] = useState(-1);
   const { mutate: deleteComment } = useMutation({
     mutationFn: (commentId: number) => fetchDeleteComment(commentId),
-    onSuccess: res => {
-      console.log('댓글 삭제 확인', res);
+    onSuccess: () => {
       props.refetch();
     },
   });
@@ -23,8 +22,7 @@ function CommentList(props: ICommentList) {
   const { mutate: editComment } = useMutation({
     mutationFn: (request: { commentId: number; content: string }) =>
       fetchPatchEditComment(request),
-    onSuccess: res => {
-      console.log('댓글 수정 확인', res);
+    onSuccess: () => {
       props.refetch();
     },
   });
@@ -51,6 +49,7 @@ function CommentList(props: ICommentList) {
               exitEdit={() => setIdxOfEditComment(-1)}
               comment={comment.content}
               editComment={editComment}
+              key={comment.id}
             />
           ) : (
             <CommentContainer
@@ -62,6 +61,7 @@ function CommentList(props: ICommentList) {
               nickname={comment.nickname}
               setEdit={() => setIdxOfEditComment(idx)}
               deleteComment={deleteComment}
+              key={comment.id}
             />
           ),
         )}
