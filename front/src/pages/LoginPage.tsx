@@ -7,16 +7,24 @@ import RectangleButton from '../atoms/RectangleButton';
 
 import { fetchPostSignin } from '../services/userService';
 import { ISigninRequest } from '../types/services/userService';
+import useSignInDataAtom from '../jotai/signInData';
 
 function LoginPage() {
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isFailed, setIsFailed] = useState<boolean>(false);
+  const [, setSignInData] = useSignInDataAtom();
   const navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationFn: (request: ISigninRequest) => fetchPostSignin(request),
-    onSuccess: () => {
+    onSuccess: response => {
+      setSignInData({
+        memberId: response.memberId,
+        nickname: response.nickname,
+        token: response.token,
+      });
+      console.log(response);
       navigate('/');
     },
     onError: () => {
