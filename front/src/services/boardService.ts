@@ -2,11 +2,12 @@ import axios from 'axios';
 import { ICreateFilm } from '../types/jotai/createFile.types';
 import {
   IAddBoard,
+  IGetBoardListParams,
   IGetBoardListRequest,
   IGetPageableListRequest,
   // IGetWrittenBoardListRequest,
 } from '../types/services/boardService';
-import { CATEGORY_LIST } from '../constant/searchConstant';
+import { CATEGORY_LIST, SORT_LIST_EN } from '../constant/searchConstant';
 import { TIME_LIST } from '../constant/createFilmConstant';
 import {
   IUpdateBoardRequest,
@@ -36,8 +37,8 @@ const DEFAULT_CREATE_BOARD: IAddBoard = {
  * @returns
  */
 export const fetchPostAddBoard = async (input: ICreateFilm) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/boards`;
   const request: IAddBoard = { ...DEFAULT_CREATE_BOARD };
@@ -74,7 +75,7 @@ export const fetchPostAddBoard = async (input: ICreateFilm) => {
 
   const response = await axios.post(url, request, {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      // Authorization: `Bearer ${accessToken}`,
       'Content-Type': "'multipart/form-data'",
     },
     withCredentials: true,
@@ -88,16 +89,16 @@ export const fetchPostAddBoard = async (input: ICreateFilm) => {
  * @returns
  */
 export const fetchGetBoardDetail = async (boardId: string) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/boards/${boardId}`;
 
   const response = await axios.get(url, {
     withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
   });
 
   console.log('글 상세 조회 결과', response, boardId);
@@ -106,21 +107,34 @@ export const fetchGetBoardDetail = async (boardId: string) => {
 
 /**
  * fetchGetBoardList : 메인 화면 게시글 목록, 현재 분류 조건에 따른 결과가 백API로 미구현임
- * @param boardId
+ * @param variables : 카테고리 목록, content : 정렬기준
  * @returns
  */
 export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/boards`;
   console.log('이거외않변함', request.pageParam);
+  const params: IGetBoardListParams = {
+    page: 0,
+    category: CATEGORY_LIST.en[0],
+    sortBy: SORT_LIST_EN[0],
+  };
+
+  params.page = request.pageParam;
+  if (request.variables) {
+    params.category = CATEGORY_LIST.en[request.variables[0]];
+  }
+  if (request.content) {
+    params.sortBy = request.content;
+  }
   const response = await axios.get(url, {
     withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    params: { page: request.pageParam },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
+    params,
   });
 
   console.log('글 목록 조회 결과', response, request);
@@ -133,15 +147,15 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
  * @returns
  */
 export const fetchGetSearchBoard = async (request: IGetPageableListRequest) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
   console.log('리퀘스트 확인', request);
   const url = `${API_URL}/api/boards/search`;
   const response = await axios.get(url, {
     withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     params: { page: request.pageParam, content: request.content },
   });
 
@@ -158,15 +172,15 @@ export const fetchGetSearchBoard = async (request: IGetPageableListRequest) => {
 export const fetchGetWrittenBoard = async (
   request: IGetPageableListRequest,
 ) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
   console.log('리퀘스트 확인', request);
   const url = `${API_URL}/api/boards/members/${request.content}`;
   const response = await axios.get(url, {
     withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     params: { page: request.pageParam },
   });
 
@@ -181,15 +195,15 @@ export const fetchGetWrittenBoard = async (
  * @returns
  */
 export const fetchGetYummyBoard = async (request: IGetPageableListRequest) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
   console.log('리퀘스트 확인', request);
   const url = `${API_URL}/api/boards/members/${request.content}/yummys`;
   const response = await axios.get(url, {
     withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     params: { page: request.pageParam },
   });
 
@@ -203,15 +217,15 @@ export const fetchGetYummyBoard = async (request: IGetPageableListRequest) => {
  * @returns
  */
 export const fetchGetTodayYummys = async (isTop: boolean) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/boards/yummys${isTop ? '/top' : ''}`;
   const response = await axios.get(url, {
     withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
   });
 
   if (isTop) {
@@ -228,15 +242,15 @@ export const fetchGetTodayYummys = async (isTop: boolean) => {
  * @returns
  */
 export const fetchPostAddYummy = async (boardId: string) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/boards/${boardId}/yummys`;
 
   const response = await axios.post(url, null, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     withCredentials: true,
   });
   return response.data;
@@ -248,15 +262,15 @@ export const fetchPostAddYummy = async (boardId: string) => {
  * @returns
  */
 export const fetchDeleteYummy = async (boardId: string) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/boards/${boardId}/yummys`;
 
   const response = await axios.delete(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     withCredentials: true,
   });
   return response.data;
@@ -268,8 +282,8 @@ export const fetchDeleteYummy = async (boardId: string) => {
  * @returns
  */
 export const fetchPatchFilm = async (input: IUpdateBoardRequest) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/boards/${input.boardId}`;
   const request: IUpdateBoardRequestBody = { ...input };
@@ -287,24 +301,24 @@ export const fetchPatchFilm = async (input: IUpdateBoardRequest) => {
   });
 
   const response = await axios.post(url, body, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     withCredentials: true,
   });
   return response.data;
 };
 
 export const fetchDeleteFilm = async (boardId: string) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/boards/${boardId}`;
 
   const response = await axios.delete(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     withCredentials: true,
   });
   return response.data;
