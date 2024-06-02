@@ -148,7 +148,7 @@ export const fetchPostSignin = async (request: ISigninRequest) => {
   const bodyData = new FormData();
   bodyData.append('email', request.email);
   bodyData.append('password', request.password);
-
+  let accessToken = '';
   const response = await axios.post(url, bodyData, {
     withCredentials: true,
   });
@@ -157,41 +157,47 @@ export const fetchPostSignin = async (request: ISigninRequest) => {
     response.headers.getAuthorization &&
     typeof response.headers.getAuthorization === 'function'
   ) {
-    const accessToken = response.headers
-      .getAuthorization()
-      ?.toString()
-      .split(' ')[1];
-    localStorage.setItem('token', accessToken ?? '');
+    accessToken =
+      response.headers.getAuthorization()?.toString().split(' ')[1] ?? '';
+    // localStorage.setItem('token', accessToken ?? '');
 
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    response.data.result.token = accessToken;
   }
 
   localStorage.setItem('memberId', response.data.result.memberId);
-  localStorage.setItem('nickname', response.data.result.nickname);
-  return response.data;
+  return response.data.result;
 };
 
 /**
  * fetchPostRefreshToken : 토큰 재발급후 localStorage에 저장하는 함수
  */
-export const fetchPostRefreshToken = async () => {
-  // 브라우저에 저장된 memberId 날아갔을 경우 함수 종료
-  if (!localStorage.getItem('memberId')) return false;
-
+export const fetchPostRefreshToken = async (memberId: string) => {
   const url = `${API_URL}/api/auth/refresh`;
 
   const params = new URLSearchParams();
-  params.append('memberId', localStorage.getItem('memberId') ?? '');
-  // axios.defaults.headers.common.Authorization = '';
+  params.append('memberId', memberId);
   const response = await axios.post(url, null, {
     params,
-    // headers: {
-    //   Authorization: '',
-    // },
+    headers: {
+      Authorization: '',
+    },
     withCredentials: true,
   });
-  console.log('넘어감', response);
-  return response.data;
+
+  let accessToken = '';
+  if (
+    response.headers.getAuthorization &&
+    typeof response.headers.getAuthorization === 'function'
+  ) {
+    accessToken =
+      response.headers.getAuthorization()?.toString().split(' ')[1] ?? '';
+
+    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    response.data.token = accessToken;
+  }
+  console.log('리프레시 API 호출 여부 확인', response);
+  return response;
 };
 
 /**
@@ -204,7 +210,7 @@ export const setRefreshInterceptor = () => {
     async error => {
       // NOTICE! 토큰 만료 시, 에러가 어떻게 오는지 확인해야 함
       if (error.response.status === 401) {
-        await fetchPostRefreshToken();
+        await fetchPostRefreshToken('test');
       }
       console.log('인터셉터가 감지한 에러', error);
     },
@@ -214,14 +220,13 @@ export const setRefreshInterceptor = () => {
 /**
  * fetchPostSignOut : 로그아웃 함수
  */
-export const fetchPostSignOut = async () => {
+export const fetchPostSignOut = async (memberId: string) => {
   // 브라우저에 저장된 memberId 날아갔을 경우 함수 종료
-  if (!localStorage.getItem('memberId')) return false;
 
   const url = `${API_URL}/api/auth/logout`;
 
   const params = new URLSearchParams();
-  params.append('memberId', localStorage.getItem('memberId') ?? '');
+  params.append('memberId', memberId);
 
   const response = await axios.post(url, null, {
     withCredentials: true,
@@ -238,16 +243,16 @@ export const fetchPostSignOut = async () => {
  * @returns
  */
 export const fetchGetUserInfo = async (memberId: string) => {
-  const accessToken = localStorage.getItem('token');
+  // const accessToken = localStorage.getItem('token');
   console.log('들어와ㅏㅅ니');
-  if (!accessToken) return false;
+  // if (!accessToken) return false;
   const url = `${API_URL}/api/members/${memberId}`;
   try {
     const response = await axios.get(url, {
       withCredentials: true,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${accessToken}`,
+      // },
     });
     return response.data;
   } catch (err) {
@@ -262,8 +267,8 @@ export const fetchGetUserInfo = async (memberId: string) => {
  * @returns
  */
 export const fetchPatchEditNickname = async (nickname: string) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
   const url = `${API_URL}/api/members/nicknames`;
 
   const formData = new FormData();
@@ -273,9 +278,9 @@ export const fetchPatchEditNickname = async (nickname: string) => {
     { nickname },
     {
       withCredentials: true,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${accessToken}`,
+      // },
     },
   );
 
@@ -288,8 +293,8 @@ export const fetchPatchEditNickname = async (nickname: string) => {
  * @returns
  */
 export const fetchPatchEditIntroduction = async (introduction: string) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
   const url = `${API_URL}/api/members/introductions`;
 
   const response = await axios.patch(
@@ -312,8 +317,8 @@ export const fetchPatchEditIntroduction = async (introduction: string) => {
  * @returns
  */
 export const fetchPostEditProfileImg = async (profile: File) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/members/profiles`;
 
@@ -322,9 +327,9 @@ export const fetchPostEditProfileImg = async (profile: File) => {
 
   const response = await axios.post(url, formData, {
     withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
   });
 
   return response.data.message === '요청이 완료되었습니다.';
@@ -336,8 +341,8 @@ export const fetchPostEditProfileImg = async (profile: File) => {
  * @returns
  */
 export const fetchPostConfirmPassword = async (password: string) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/auth/verify/password`;
 
@@ -349,9 +354,9 @@ export const fetchPostConfirmPassword = async (password: string) => {
     { password },
     {
       withCredentials: true,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${accessToken}`,
+      // },
     },
   );
 
@@ -364,8 +369,8 @@ export const fetchPostConfirmPassword = async (password: string) => {
  * @returns
  */
 export const fetchPatchPassword = async (request: IResetPassword) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/members/passwords`;
 
@@ -397,16 +402,16 @@ export const fetchPatchPassword = async (request: IResetPassword) => {
 export const fetchGetFollowerList = async (
   request: IGetFollowingListRequest,
 ) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/members/${request.content}/followers`;
 
   const response = await axios.get(url, {
     withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     params: {
       page: request.pageParam,
     },
@@ -423,17 +428,17 @@ export const fetchGetFollowerList = async (
 export const fetchGetFollowingList = async (
   request: IGetFollowingListRequest,
 ) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/members/${request.content}/followings`;
 
   console.log('리퀘ㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔ스트', url);
   const response = await axios.get(url, {
     withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     params: {
       page: request.pageParam,
     },
@@ -448,15 +453,15 @@ export const fetchGetFollowingList = async (
  * @returns
  */
 export const fetchPostAddFollow = async (memberId: string) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/members/${memberId}/follow`;
 
   const response = await axios.post(url, null, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     withCredentials: true,
   });
   return response.data;
@@ -468,15 +473,15 @@ export const fetchPostAddFollow = async (memberId: string) => {
  * @returns
  */
 export const fetchDeleteFollow = async (memberId: string) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/members/${memberId}/follow`;
 
   const response = await axios.delete(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     withCredentials: true,
   });
   return response.data;
@@ -491,8 +496,8 @@ export const fetchGetSearchUsers = async (request: {
   pageParam: number;
   content: string;
 }) => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/members/search`;
   const params = new URLSearchParams();
@@ -500,9 +505,9 @@ export const fetchGetSearchUsers = async (request: {
 
   console.log('유저검색', request);
   const response = await axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     withCredentials: true,
     params: {
       page: request.pageParam,
@@ -517,15 +522,15 @@ export const fetchGetSearchUsers = async (request: {
  * @returns
  */
 export const fetchDeleteUser = async () => {
-  const accessToken = localStorage.getItem('token');
-  if (!accessToken) return false;
+  // const accessToken = localStorage.getItem('token');
+  // if (!accessToken) return false;
 
   const url = `${API_URL}/api/members`;
 
   const response = await axios.delete(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${accessToken}`,
+    // },
     withCredentials: true,
   });
   return response.data.result;
