@@ -22,3 +22,4 @@ export const CATEGORY_MAP: { [key: string]: any } = {
 };
 
 export const SORT_LIST = ['최신순', '평점순', 'Yummy순'];
+export const SORT_LIST_EN = ['new', 'rating', 'yummy'];

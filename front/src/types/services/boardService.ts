@@ -14,8 +14,14 @@ export interface IAddBoard {
 
 export interface IGetBoardListRequest {
   pageParam: number;
-  categories?: number[];
-  sort?: number;
+  variables?: number[];
+  content?: string;
+}
+
+export interface IGetBoardListParams {
+  page: number;
+  category: string;
+  sortBy: string;
 }
 
 export interface IGetPageableListRequest {

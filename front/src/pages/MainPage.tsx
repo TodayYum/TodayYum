@@ -12,11 +12,32 @@ import { IPolaroidFilm } from '../types/organisms/PolaroidFilm.types';
 import { fetchGetBoardList } from '../services/boardService';
 import useInfiniteQueryProduct from '../util/useInfiniteQueryProduct';
 import { IPageableResponse } from '../types/services/boardService';
+import useSearchDataAtom from '../jotai/searchData';
+import { SORT_LIST_EN } from '../constant/searchConstant';
+// import { fetchPostRefreshToken } from '../services/userService';
+
+const getCategories = (input: boolean[]) => {
+  const categories: number[] = [];
+  input.forEach((element, idx) => {
+    if (element) {
+      categories.push(idx);
+    }
+  });
+  if (categories.length === 0) {
+    categories.push(0);
+  }
+  return categories;
+};
 
 function MainPage() {
   const [isShowModal, setIsShowModal] = useState(false);
+  const [searchData] = useSearchDataAtom();
   const [, setRef, data] = useInfiniteQueryProduct(
-    { constant: 'boardList', variables: [] },
+    {
+      constant: 'boardList',
+      variables: getCategories(searchData.category),
+      stringVariables: [SORT_LIST_EN[searchData.sort]],
+    },
     () => fetchGetBoardList,
     {},
   );
@@ -41,6 +62,9 @@ function MainPage() {
   return (
     <div className="bg-background  py-3">
       <SelectSearch />
+      {/* <button type="button" onClick={() => fetchPostRefreshToken()}>
+        test
+      </button> */}
       <TodayYum
         closeModal={() => setIsShowModal(false)}
         openModal={() => setIsShowModal(true)}
