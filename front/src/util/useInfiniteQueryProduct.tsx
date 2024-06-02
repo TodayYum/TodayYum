@@ -33,7 +33,11 @@ const useInfiniteQueryProduct = (
         queryKey.stringVariables,
       ],
       queryFn: ({ pageParam }) =>
-        queryFunction({ pageParam, content: queryKey.stringVariables?.[0] }),
+        queryFunction({
+          pageParam,
+          content: queryKey.stringVariables?.[0],
+          variables: queryKey.variables,
+        }),
       initialPageParam: 0,
       getNextPageParam: lastPage => {
         return lastPage.last ? null : lastPage.number + 1;
