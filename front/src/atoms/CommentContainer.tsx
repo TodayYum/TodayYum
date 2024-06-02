@@ -3,8 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { ICommentContainer } from '../types/components/CommentContainer.types';
 import { getTimeBefore } from '../util/dateUtil';
+import useSignInDataAtom from '../jotai/signInData';
 
 function CommentContainer(props: ICommentContainer) {
+  const [signInData] = useSignInDataAtom();
   const handleEditComment = () => {
     if (!props.setEdit) return;
     props.setEdit();
@@ -40,21 +42,20 @@ function CommentContainer(props: ICommentContainer) {
               {getTimeBefore(props.modifiedAt)}
             </p>
           )}
-          {!props.isPreview &&
-            props.memberId === localStorage.getItem('memberId') && (
-              <div>
-                <FontAwesomeIcon
-                  icon={faPencil}
-                  className="text-gray-dark mr-2"
-                  onClick={handleEditComment}
-                />
-                <FontAwesomeIcon
-                  icon={faClose}
-                  className="text-gray-dark text-xl"
-                  onClick={handleDeleteComment}
-                />
-              </div>
-            )}
+          {!props.isPreview && props.memberId === signInData.memberId && (
+            <div>
+              <FontAwesomeIcon
+                icon={faPencil}
+                className="text-gray-dark mr-2"
+                onClick={handleEditComment}
+              />
+              <FontAwesomeIcon
+                icon={faClose}
+                className="text-gray-dark text-xl"
+                onClick={handleDeleteComment}
+              />
+            </div>
+          )}
         </div>
         <span className={`text-sm  ${props.isPreview && 'line-clamp-1'}`}>
           {props.comment}
