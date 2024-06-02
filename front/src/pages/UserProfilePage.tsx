@@ -10,6 +10,7 @@ import {
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import Header from '../atoms/Header';
 import UserProfileContainer from '../organisms/UserProfileContainer';
 import PolaroidFilm from '../organisms/PolaroidFilm';
@@ -20,9 +21,11 @@ import {
 } from '../services/boardService';
 import { fetchGetUserInfo, fetchPostSignOut } from '../services/userService';
 import { useSetProfileAtom } from '../jotai/userProfile';
+import useSignInDataAtom from '../jotai/signInData';
 
 function UserProfilePage() {
   const locationState = useLocation().state;
+  const [signInData] = useSignInDataAtom();
   const setProfile = useSetProfileAtom();
   const navigate = useNavigate();
   const {
@@ -35,10 +38,13 @@ function UserProfilePage() {
     staleTime: 500000,
   });
 
-  if (isProfileSuccess && userProfile) {
-    console.log('test', userProfile);
-    setProfile(userProfile.result);
-  }
+  useEffect(() => {
+    console.log('test', userProfile, locationState);
+    if (isProfileSuccess && userProfile && userProfile.result) {
+      setProfile(userProfile.result);
+    }
+  }, [isProfileSuccess]);
+
   const { data: yummyList, isSuccess: isYummySuccess } = useQuery({
     queryKey: ['yummyBoardList', locationState?.memberId],
     queryFn: () =>
@@ -53,7 +59,7 @@ function UserProfilePage() {
   });
 
   const { mutate: signOut } = useMutation({
-    mutationFn: () => fetchPostSignOut(),
+    mutationFn: () => fetchPostSignOut(signInData.memberId),
     onSuccess: () => {
       navigate('/login');
     },
@@ -63,7 +69,7 @@ function UserProfilePage() {
     navigate('/write-list', {
       state: {
         title: '작성한 글',
-        memberId: '80ad8672-3501-431f-8a9a-0d0f1c02f2c3',
+        memberId: locationState?.memberId,
         type: 'written',
       },
     });
@@ -73,7 +79,7 @@ function UserProfilePage() {
     navigate('/write-list', {
       state: {
         title: 'Yummy 목록',
-        memberId: '80ad8672-3501-431f-8a9a-0d0f1c02f2c3',
+        memberId: locationState?.memberId,
         type: 'yummy',
       },
     });
@@ -82,9 +88,9 @@ function UserProfilePage() {
   return (
     <div className="relative">
       <Header
-        title={`${localStorage.getItem('memberId') === locationState?.memberId ? '마이페이지' : '프로필페이지'}`}
+        title={`${signInData.memberId === locationState?.memberId ? '마이페이지' : '프로필페이지'}`}
       />
-      {localStorage.getItem('memberId') === locationState?.memberId && (
+      {signInData.memberId === locationState?.memberId && (
         <FontAwesomeIcon
           icon={faRightFromBracket}
           onClick={() => signOut()}
