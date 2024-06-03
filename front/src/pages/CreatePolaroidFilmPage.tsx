@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import Header from '../atoms/Header';
 import ThumbnailList from '../organisms/ThumbnailList';
 import CreateFilmFirstData from '../organisms/CreateFilmFirstData';
@@ -10,9 +11,15 @@ import { fetchPostAddBoard } from '../services/boardService';
 
 function CreatePolaroidFilmPage() {
   const [isFirst, setIsFirst] = useState(true);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [createFilm] = useCreateFilmAtom();
   const { mutate } = useMutation({
     mutationFn: () => fetchPostAddBoard(createFilm),
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ['boardList'] });
+      navigate('/');
+    },
   });
   const handleFirstNextButton = () => {
     if (!createFilm.images.length || createFilm.category === -1) {
@@ -32,7 +39,7 @@ function CreatePolaroidFilmPage() {
   };
 
   return (
-    <div>
+    <div className="min-w-[393px]">
       <Header title="글 작성" />
       <ThumbnailList />
       {isFirst ? <CreateFilmFirstData /> : <CreateFilmSecondData />}

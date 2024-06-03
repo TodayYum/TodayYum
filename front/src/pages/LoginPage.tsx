@@ -36,9 +36,9 @@ function LoginPage() {
   };
 
   return (
-    <div className="px-[45px] flex items-center flex-col h-screen justify-center bg-background">
+    <div className="px-[45px] flex items-center flex-col h-screen justify-center bg-background min-w-[393px]">
       <img
-        src="logo.svg"
+        src="logo.png"
         alt="logo img"
         className="w-[100px] h-[100px] mb-[90px]"
       />

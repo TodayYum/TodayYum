@@ -47,16 +47,16 @@ function CategoryBottomSheet(props: ISortBottomSheet) {
   }, []);
 
   return (
-    <div className="bg-black/30 w-screen h-[100%] absolute top-0 left-0">
+    <div className="bg-black/30 sm:w-[393px] w-screen h-[100%] absolute top-0 left-0">
       <div
         ref={modalRef}
-        className="rounded-t-[40px] bg-white pt-2 pb-5 fixed bottom-0 z-10 w-screen"
+        className="rounded-t-[40px]  sm:w-[393px] bg-white pt-2 pb-5 fixed bottom-0 z-10 w-screen"
       >
         <p className="text-center text-xl font-bold text-gray-dark mb-4">
           카테고리 선택
         </p>
         <div className="flex px-[30px] flex-wrap gap-4 ">
-          {CATEGORY_LIST.en.map((element, idx) => (
+          {CATEGORY_LIST.kr.map((element, idx) => (
             <ToggleChip
               dataId={`${idx}`}
               text={element}
