@@ -4,6 +4,9 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   mode: 'jit',
   theme: {
+    screens: {
+      sm: { max: '393px' },
+    },
     colors: {
       black: '#001F2A',
       blue: '#1fb6ff',
