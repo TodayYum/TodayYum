@@ -62,7 +62,7 @@ function YumList(props: IYumList) {
         </div>
         <div className="flex-wrap flex gap-y-8">
           {props.todayYummys.map(element => (
-            <YumByCategoy board={element} />
+            <YumByCategoy board={element} key={element.id} />
           ))}
         </div>
       </div>

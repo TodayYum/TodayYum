@@ -13,8 +13,6 @@ function CreatePolaroidFilmPage() {
   const [createFilm] = useCreateFilmAtom();
   const { mutate } = useMutation({
     mutationFn: () => fetchPostAddBoard(createFilm),
-    onSuccess: data => console.log('등록 확인', data),
-    onError: err => console.log('에러 괗ㄱ이', err),
   });
   const handleFirstNextButton = () => {
     if (!createFilm.images.length || createFilm.category === -1) {

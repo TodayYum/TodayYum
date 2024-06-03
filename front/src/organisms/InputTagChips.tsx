@@ -19,7 +19,6 @@ function InputTagChips() {
     setUpdateAtom({ tags: prevTags });
     setTagName('');
   };
-  console.log('왜안보임', updateAtom);
   const handleDeleteTag = (index: number) => {
     const tags = [...updateAtom.tags];
     tags.splice(index, 1);
@@ -49,6 +48,7 @@ function InputTagChips() {
             deleteSearchWord={() => handleDeleteTag(idx)}
             text={`# ${element}`}
             onSelectClick={() => {}}
+            key={element}
           />
         ))}
       </div>

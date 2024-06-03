@@ -39,7 +39,6 @@ function UserProfilePage() {
   });
 
   useEffect(() => {
-    console.log('test', userProfile, locationState);
     if (isProfileSuccess && userProfile && userProfile.result) {
       setProfile(userProfile.result);
     }
@@ -119,6 +118,7 @@ function UserProfilePage() {
               totalScore={element.totalScore}
               yummyCount={element.yummyCount}
               category={element.category}
+              key={element.id}
             />
           ))}
       </div>
@@ -143,6 +143,7 @@ function UserProfilePage() {
               totalScore={element.totalScore}
               yummyCount={element.yummyCount}
               category={element.category}
+              key={element.id}
             />
           ))}
       </div>

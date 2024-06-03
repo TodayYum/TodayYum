@@ -63,8 +63,7 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
   });
   const { mutate: signOut } = useMutation({
     mutationFn: () => fetchDeleteUser(),
-    onSuccess: res => {
-      console.log('탈퇴 결과', res);
+    onSuccess: () => {
       nagivate('/login');
     },
   });

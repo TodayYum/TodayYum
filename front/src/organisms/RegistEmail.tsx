@@ -85,17 +85,12 @@ function RegistEmail(props: IRegistEmail) {
     }
   };
 
-  // const handlePasswordResetNextButton = () => {
-  //   makeEmailCode(emailQuery);
-  // };
-
   const handleOverlapCheck = () => {
     if (!isValidEmail(registData.email)) return;
     setEmailQuery(registData.email);
   };
 
   useEffect(() => {
-    console.log(emailCheckResponse);
     if (emailCheckResponse === undefined || emailCheckResponse.result === -1)
       return;
     let swalOptionObj;

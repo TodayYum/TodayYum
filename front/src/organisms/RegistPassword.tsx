@@ -31,9 +31,6 @@ function RegistPassword(props: IRegistPassword) {
     onSuccess: () => {
       navigate('/login');
     },
-    onError: err => {
-      console.log('에러', err);
-    },
   });
 
   const handleNextButton = () => {

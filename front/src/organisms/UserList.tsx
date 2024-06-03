@@ -9,6 +9,7 @@ function UserList(props: IUserList) {
           comment={element.comment}
           imgSrc={element.profile}
           nickname={element.nickname}
+          key={element.nickname}
         />
       ))}
       <div ref={props.setRef} className="opacity-0">

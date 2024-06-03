@@ -11,7 +11,6 @@ function CreateFilmSecondData() {
     if (e.target.value.length > 100) return;
     setCreateFilm({ content: e.target.value });
   };
-  console.log(tagName);
   const handleTagInput = (input: string) => {
     setTagName(input);
   };
@@ -63,6 +62,7 @@ function CreateFilmSecondData() {
             deleteSearchWord={() => handleDeleteTag(idx)}
             text={`# ${element}`}
             onSelectClick={() => {}}
+            key={element}
           />
         ))}
       </div>

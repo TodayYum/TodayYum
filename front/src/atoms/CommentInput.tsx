@@ -8,8 +8,7 @@ function CommentInput(props: ICommentInput) {
   const { mutate: addComent } = useMutation({
     mutationFn: (request: { content: string; boardId: string }) =>
       fetchPostAddComment(request),
-    onSuccess: res => {
-      console.log(res);
+    onSuccess: () => {
       props.refetch();
     },
   });
