@@ -68,6 +68,7 @@ function SortCriteria() {
                 isClick={category}
                 text={CATEGORY_LIST.kr[idx]}
                 onClick={() => {}}
+                key={CATEGORY_LIST.kr[idx]}
               />
             ),
         )}
