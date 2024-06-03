@@ -15,7 +15,7 @@ function PolaroidList(props: IPolaroidList) {
           category={polaroid.category}
         />
       ))}
-      <div ref={props.setRef} className="opacity-00">
+      <div ref={props.setRef} className="opacity-0">
         now loading
       </div>
     </div>
