@@ -47,7 +47,7 @@ function YumList(props: IYumList) {
   }, []);
 
   return (
-    <div className="bg-black/30 w-screen h-screen absolute top-0 left-0">
+    <div className="bg-black/30 sm:w-[393px] w-screen h-screen absolute top-0 left-0">
       <div
         className="bg-white rounded mx-[30px] mt-[30px] px-2 py-[30px] h-[85%] overflow-auto"
         ref={modalRef}
