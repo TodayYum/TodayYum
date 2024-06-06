@@ -73,7 +73,7 @@ public class LoginLogoutTest {
     public void loginFailByEmail() throws Exception {
         //given
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("email", "test2@test.com");
+        formData.add("email", "test4@test.com");
         formData.add("password", "a123456789");
 
         //when

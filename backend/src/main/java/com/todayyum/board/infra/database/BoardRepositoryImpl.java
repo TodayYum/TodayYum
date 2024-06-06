@@ -57,7 +57,7 @@ public class BoardRepositoryImpl implements BoardRepository {
     @Override
     public void deleteById(Long id) {
         BoardEntity boardEntity = jpaBoardRepository.findById(id)
-                        .orElseThrow(() -> new CustomException(ResponseCode.BOARD_ID_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ResponseCode.BOARD_ID_NOT_FOUND));
 
         jpaBoardRepository.delete(boardEntity);
     }
@@ -75,8 +75,8 @@ public class BoardRepositoryImpl implements BoardRepository {
         QBoardEntity board = QBoardEntity.boardEntity;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if(boardSearchRequest.getCategory() != null) {
-            booleanBuilder.and(board.category.eq(boardSearchRequest.getCategory()));
+        if (boardSearchRequest.getCategories() != null && !boardSearchRequest.getCategories().isEmpty()) {
+            booleanBuilder.and(board.category.in(boardSearchRequest.getCategories()));
         }
 
         List<BoardListResponse> boardListResponses = queryFactory
