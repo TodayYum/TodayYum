@@ -47,7 +47,7 @@ function CategoryBottomSheet(props: ISortBottomSheet) {
   }, []);
 
   return (
-    <div className="bg-black/30 w-screen h-[100%] absolute top-0 left-0">
+    <div className="bg-black/30 w-screen absolute top-0 left-0 h-[100%]">
       <div
         ref={modalRef}
         className="rounded-t-[40px] bg-white pt-2 pb-5 fixed bottom-0 z-10 w-screen"
