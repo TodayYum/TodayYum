@@ -36,7 +36,7 @@ function EditProfileModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="bg-black/30 w-screen h-[100%] absolute top-0 left-0"
+      className="bg-black/30 sm:w-[393px] w-screen h-[100%] absolute top-0 left-0"
       ref={modal2Ref}
     >
       <div

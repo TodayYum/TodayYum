@@ -19,7 +19,7 @@ function CommentContainer(props: ICommentContainer) {
 
   return (
     <div
-      className={`flex justify-between p-3 pl-0 gap-2 bg-white rounded w-[calc(100vw-30px)] ${props.isPreview && 'shadow-lg fixed bottom-20 mx-[15px] '}`}
+      className={`flex justify-between p-3 pl-0 gap-2 bg-white rounded w-[calc(100vw-30px)] sm:w-[363px]  ${props.isPreview && 'shadow-lg fixed bottom-20 mx-[15px] '}`}
     >
       <Link
         to="/profile"

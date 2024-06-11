@@ -67,8 +67,6 @@ export const fetchPostAddBoard = async (input: ICreateFilm) => {
   currentDate.setDate(currentDate.getDate() - (request.ateAt as number));
   [request.ateAt] = new Date(currentDate).toISOString().split('T');
 
-  console.log('인풋 테스트', request);
-
   const bodyData = new FormData();
   Object.entries(request).forEach(([keyName, value]) => {
     bodyData.append(keyName, value);
@@ -102,7 +100,6 @@ export const fetchGetBoardDetail = async (boardId: string) => {
     // },
   });
 
-  console.log('글 상세 조회 결과', response, boardId);
   return response.data.result;
 };
 
@@ -116,7 +113,6 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
   // if (!accessToken) return false;
 
   const url = `${API_URL}/api/boards`;
-  console.log('이거외않변함', request.pageParam);
   const params: IGetBoardListParams = {
     page: 0,
     categories: [CATEGORY_LIST.en[0]],
@@ -142,7 +138,6 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
     },
   });
 
-  console.log('글 목록 조회 결과', response, request);
   return response.data.result;
 };
 
@@ -154,7 +149,6 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
 export const fetchGetSearchBoard = async (request: IGetPageableListRequest) => {
   // const accessToken = localStorage.getItem('token');
   // if (!accessToken) return false;
-  console.log('리퀘스트 확인', request);
   const url = `${API_URL}/api/boards/search`;
   const response = await axios.get(url, {
     withCredentials: true,
@@ -164,7 +158,6 @@ export const fetchGetSearchBoard = async (request: IGetPageableListRequest) => {
     params: { page: request.pageParam, content: request.content },
   });
 
-  console.log('검색 글 목록 조회 결과', response, request);
   return response.data.result;
 };
 
@@ -179,7 +172,7 @@ export const fetchGetWrittenBoard = async (
 ) => {
   // const accessToken = localStorage.getItem('token');
   // if (!accessToken) return false;
-  console.log('리퀘스트 확인', request);
+
   const url = `${API_URL}/api/boards/members/${request.content}`;
   const response = await axios.get(url, {
     withCredentials: true,
@@ -189,7 +182,6 @@ export const fetchGetWrittenBoard = async (
     params: { page: request.pageParam },
   });
 
-  console.log('작성 글 목록 조회 결과', response, request);
   return response.data.result.content;
 };
 
@@ -202,7 +194,6 @@ export const fetchGetWrittenBoard = async (
 export const fetchGetYummyBoard = async (request: IGetPageableListRequest) => {
   // const accessToken = localStorage.getItem('token');
   // if (!accessToken) return false;
-  console.log('리퀘스트 확인', request);
   const url = `${API_URL}/api/boards/members/${request.content}/yummys`;
   const response = await axios.get(url, {
     withCredentials: true,
@@ -212,7 +203,6 @@ export const fetchGetYummyBoard = async (request: IGetPageableListRequest) => {
     params: { page: request.pageParam },
   });
 
-  console.log('야미 글 목록 조회 결과', response, request);
   return response.data.result.content;
 };
 
@@ -232,12 +222,10 @@ export const fetchGetTodayYummys = async (isTop: boolean) => {
     //   Authorization: `Bearer ${accessToken}`,
     // },
   });
-
+  console.log('오늘얌 결과값', response);
   if (isTop) {
-    console.log('야미 xkq 목록 조회 결과', response);
     return response.data.result[0];
   }
-  console.log('야미 글 목록 조회 결과', response);
   return response.data.result;
 };
 

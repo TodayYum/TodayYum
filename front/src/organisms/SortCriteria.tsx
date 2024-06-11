@@ -67,6 +67,7 @@ function SortCriteria(props: ISortCriteria) {
                 isClick={category}
                 text={CATEGORY_LIST.kr[idx]}
                 onClick={() => {}}
+                key={CATEGORY_LIST.kr[idx]}
               />
             ),
         )}

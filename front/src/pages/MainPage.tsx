@@ -64,7 +64,7 @@ function MainPage() {
   }, [data]);
 
   return (
-    <div className="bg-background  py-3 h-[100%] relative">
+    <div className="bg-background py-3 min-w-[393px] relative">
       <SelectSearch />
       {/* <button type="button" onClick={() => fetchPostRefreshToken()}>
         test

@@ -114,14 +114,14 @@ function FilmDetailPage() {
   if (!isSuccess) return <div>로오딩</div>;
 
   return (
-    <div>
+    <div className="sm:w-[393px]">
       <Header
         title={CATEGORY_LIST.kr[CATEGORY_MAP[data.category]]}
         ateAt={`${ISOtoLocal(data.ateAt)} ${TIME_LIST[TIME_MAP[data.mealTime]].kr}`}
       />
       {/* 상단부 */}
       <div className="fixed overflow-hidden top-[58px]" ref={fixedContentsRef}>
-        <DetailPageCarousel imgs={data.images} />
+        <DetailPageCarousel imgs={data.images} imgWidth={height} />
         {/* 프로필 */}
         <div className="bg-white flex justify-between p-[15px]">
           <div
@@ -169,7 +169,10 @@ function FilmDetailPage() {
       </div>
       {/* 하단부 */}
       {isMainContents ? (
-        <div className="bg-white p-[15px]" style={{ marginTop: height }}>
+        <div
+          className="bg-white p-[15px] !sm:mt-[450px]"
+          style={{ marginTop: height }}
+        >
           <p className="text-base my-[15px]">{data.content}</p>
           {data.tags.map((element: string) => (
             <span className="text-base mr-2" key={element}>
@@ -212,10 +215,7 @@ function FilmDetailPage() {
         >
           <CommentContainer
             commentId={0}
-            nickname={
-              data.commentWriter ??
-              `${localStorage.getItem('nickname') ?? ''} 님`
-            }
+            nickname={data.commentWriter ?? `${signInData.nickname} 님`}
             memberId=""
             modifiedAt=""
             profile=""

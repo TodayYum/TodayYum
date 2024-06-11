@@ -3,7 +3,7 @@ import {
   faMagnifyingGlass,
   faCirclePlus,
   faUser,
-  faBell,
+  // faBell,
 } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import useSignInDataAtom from '../jotai/signInData';
@@ -21,9 +21,9 @@ function Navbar() {
       <Link to="/profile" state={{ memberId: signInData.memberId }}>
         <FontAwesomeIcon icon={faUser} />
       </Link>
-      <Link to="/">
+      {/* <Link to="/">
         <FontAwesomeIcon icon={faBell} />
-      </Link>
+      </Link> */}
     </div>
   );
 }

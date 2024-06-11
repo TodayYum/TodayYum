@@ -14,8 +14,8 @@ function UploadFicturesPage() {
     useRef<HTMLDivElement>(null),
     useRef<HTMLDivElement>(null),
   ];
-
   const [height, setHeight] = useState(490);
+
   const resizeObserver = new ResizeObserver(entries => {
     if (entries[0].target === carouselRef.current) {
       setHeight(entries[0].contentRect.height + 58);
@@ -52,11 +52,12 @@ function UploadFicturesPage() {
       <HasNextHeader isActive={createFilmData.imagesURL.length > 0} />
       {createFilmData.imagesURL.length === 0 && (
         <div
-          className="fixed top-[58px] w-full bg-white h-[110vw] flex justify-center"
+          className="fixed top-[58px] w-full min-w-[393px] bg-white max-h-[473px] h-[110vw] flex justify-center"
           onClick={handleClickUploadButton}
           tabIndex={0}
           onKeyUp={() => {}}
           role="button"
+          ref={carouselRef}
         >
           <div className="flex flex-col justify-center items-center">
             <FontAwesomeIcon
@@ -71,7 +72,6 @@ function UploadFicturesPage() {
         <DetailPageCarousel
           imgs={createFilmData.imagesURL}
           customCSS="fixed top-[58px]"
-          divRef={carouselRef}
         />
       )}
       <label htmlFor="tete">
@@ -79,7 +79,7 @@ function UploadFicturesPage() {
           <RectangleButton
             onClick={handleClickUploadButton}
             text="업로드할 사진 선택하기"
-            customClass="w-[calc(100%-60px)] m-[30px]"
+            customClass="w-[calc(100%-60px)] m-[30px] min-w-[333px]"
           />
         </div>
         <input
