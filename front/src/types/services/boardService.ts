@@ -20,7 +20,7 @@ export interface IGetBoardListRequest {
 
 export interface IGetBoardListParams {
   page: number;
-  category: string;
+  categories: string[];
   sortBy: string;
 }
 

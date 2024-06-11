@@ -15,6 +15,8 @@ import { IPageableResponse } from '../types/services/boardService';
 import useSearchDataAtom from '../jotai/searchData';
 import { SORT_LIST_EN } from '../constant/searchConstant';
 // import { fetchPostRefreshToken } from '../services/userService';
+import CategoryBottomSheet from '../organisms/CategoryBottomSheet';
+import SortBottomSheet from '../organisms/SortBottomSheet';
 
 const getCategories = (input: boolean[]) => {
   const categories: number[] = [];
@@ -29,8 +31,11 @@ const getCategories = (input: boolean[]) => {
   return categories;
 };
 
+const [SELECT_NONE, SELECT_SORT, SELECT_CATEGORY] = [0, 1, 2];
+
 function MainPage() {
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isSelect, setIsSelect] = useState(SELECT_NONE);
   const [searchData] = useSearchDataAtom();
   const [, setRef, data] = useInfiniteQueryProduct(
     {
@@ -59,7 +64,7 @@ function MainPage() {
   }, [data]);
 
   return (
-    <div className="bg-background py-3 min-w-[393px]">
+    <div className="bg-background py-3 min-w-[393px] relative">
       <SelectSearch />
       {/* <button type="button" onClick={() => fetchPostRefreshToken()}>
         test
@@ -69,9 +74,15 @@ function MainPage() {
         openModal={() => setIsShowModal(true)}
         isShowModal={isShowModal}
       />
-      <SortCriteria />
+      <SortCriteria isSelect={isSelect} setIsSelect={setIsSelect} />
       {!isShowModal && (
         <PolaroidList polaroidList={convertedResponse} setRef={setRef} />
+      )}
+      {isSelect === SELECT_CATEGORY && (
+        <CategoryBottomSheet onClose={() => setIsSelect(SELECT_NONE)} />
+      )}
+      {isSelect === SELECT_SORT && (
+        <SortBottomSheet onClose={() => setIsSelect(SELECT_NONE)} />
       )}
     </div>
   );
