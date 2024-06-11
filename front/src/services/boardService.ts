@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as qs from 'qs';
 import { ICreateFilm } from '../types/jotai/createFile.types';
 import {
   IAddBoard,
@@ -118,13 +119,14 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
   console.log('이거외않변함', request.pageParam);
   const params: IGetBoardListParams = {
     page: 0,
-    category: CATEGORY_LIST.en[0],
+    categories: [CATEGORY_LIST.en[0]],
     sortBy: SORT_LIST_EN[0],
   };
 
   params.page = request.pageParam;
   if (request.variables) {
-    params.category = CATEGORY_LIST.en[request.variables[0]];
+    params.categories = request.variables.map(idx => CATEGORY_LIST.en[idx]);
+    console.log('확인인인인인인인', params.categories);
   }
   if (request.content) {
     params.sortBy = request.content;
@@ -135,6 +137,9 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
     //   Authorization: `Bearer ${accessToken}`,
     // },
     params,
+    paramsSerializer: param => {
+      return qs.stringify(param);
+    },
   });
 
   console.log('글 목록 조회 결과', response, request);
