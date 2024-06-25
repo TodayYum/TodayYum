@@ -122,7 +122,6 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
   params.page = request.pageParam;
   if (request.variables) {
     params.categories = request.variables.map(idx => CATEGORY_LIST.en[idx]);
-    console.log('확인인인인인인인', params.categories);
   }
   if (request.content) {
     params.sortBy = request.content;
@@ -222,7 +221,6 @@ export const fetchGetTodayYummys = async (isTop: boolean) => {
     //   Authorization: `Bearer ${accessToken}`,
     // },
   });
-  console.log('오늘얌 결과값', response);
   if (isTop) {
     return response.data.result[0];
   }

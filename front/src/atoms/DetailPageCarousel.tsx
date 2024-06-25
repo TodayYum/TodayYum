@@ -27,7 +27,6 @@ function DetailPageCarousel(props: IDetailPageCarousel) {
   });
 
   const getCarouselWidth = () => {
-    console.log('변화감지', props.imgWidth);
     if (width <= 393) {
       return `${393 * carouselIdx}px`;
     }

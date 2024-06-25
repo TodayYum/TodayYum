@@ -24,7 +24,8 @@ function CreatePolaroidFilmPage() {
   const handleFirstNextButton = () => {
     if (!createFilm.images.length || createFilm.category === -1) {
       // Swal 자리
-      console.log('선택하지 않은 항목이 있습니다.');
+      // !NOTICE 선택한게 없을때
+
       return;
     }
     setIsFirst(false);
@@ -33,7 +34,7 @@ function CreatePolaroidFilmPage() {
   const handleSecondNextButton = () => {
     if (!createFilm.content.length || !createFilm.tags.length) {
       // Swal 자리
-      console.log('선택하지 않은 항목이 있습니다.');
+      // !NOTICE 실패할 경우?
     }
     mutate();
   };
