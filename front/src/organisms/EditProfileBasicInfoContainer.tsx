@@ -33,9 +33,8 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
     onSuccess: response => {
       if (response) {
         setNicknameAtom(nickname);
-      } else {
-        console.log('닉설정 실패');
       }
+      // !NOTICE 실패할 경우?
     },
   });
   const { mutate: patchIntroduction } = useMutation({
@@ -43,9 +42,8 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
     onSuccess: response => {
       if (response) {
         setCommentAtom(comment);
-      } else {
-        console.log('소개글 실패');
       }
+      // !NOTICE 실패할 경우?
     },
   });
   const { mutate: postEditProfile } = useMutation({
@@ -56,9 +54,8 @@ function EditProfileBasicInfoContainer(props: IEditProfileBasicInfoContainer) {
           profileFile: input,
           profile: window.URL.createObjectURL(input),
         });
-      } else {
-        console.log('소개글 실패');
       }
+      // !NOTICE 실패할 경우?
     },
   });
   const { mutate: signOut } = useMutation({
