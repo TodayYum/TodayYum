@@ -7,25 +7,25 @@
  * minusSignUpLevel : signUp 단계 하향
  */
 
-import { atom, useAtomValue, useSetAtom } from 'jotai';
-import { ISignUpPage } from '../types/pages/SignUpPage.types';
+import { atom, useAtomValue, useSetAtom } from "jotai";
+import { ISignUpPage } from "../types/pages/SignUpPage.types";
 
 const signUpDataAtom = atom<ISignUpPage>({
-  email: '',
-  password: '',
-  confirmPassword: '',
-  code: '',
-  nickname: '',
+  email: "",
+  password: "",
+  confirmPassword: "",
+  code: "",
+  nickname: "",
   signUpLevel: 0,
 });
 
-const initsignUpDataAtom = atom(null, (get, set) => {
+const initsignUpDataAtom = atom(null, (_get, set) => {
   set(signUpDataAtom, {
-    email: '',
-    password: '',
-    confirmPassword: '',
-    code: '',
-    nickname: '',
+    email: "",
+    password: "",
+    confirmPassword: "",
+    code: "",
+    nickname: "",
     signUpLevel: 0,
   });
 });

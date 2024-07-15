@@ -1,8 +1,7 @@
-import axios from 'axios';
-import { IGetPageableListRequest } from '../types/services/boardService';
+import axios from "axios";
+import { IGetPageableListRequest } from "../types/services/boardService";
 
-const API_URL = process.env.REACT_APP_LOCAL_URL;
-// const url = process.env.REACT_APP_SERVER_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const fetchGetCommentList = async (request: IGetPageableListRequest) => {
   // const accessToken = localStorage.getItem('token');
@@ -33,7 +32,7 @@ export const fetchPostAddComment = async (request: {
   const url = `${API_URL}/api/boards/${request.boardId}/comments`;
 
   const body = new FormData();
-  body.append('content', request.content);
+  body.append("content", request.content);
 
   const response = await axios.post(
     url,
@@ -43,7 +42,7 @@ export const fetchPostAddComment = async (request: {
       // headers: {
       //   Authorization: `Bearer ${accessToken}`,
       // },
-    },
+    }
   );
 
   return response.data.result;
@@ -82,7 +81,7 @@ export const fetchPatchEditComment = async (request: {
       // headers: {
       //   Authorization: `Bearer ${accessToken}`,
       // },
-    },
+    }
   );
 
   return response.data;

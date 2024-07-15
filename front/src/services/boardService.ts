@@ -1,26 +1,25 @@
-import axios from 'axios';
-import * as qs from 'qs';
-import { ICreateFilm } from '../types/jotai/createFile.types';
+import axios from "axios";
+import * as qs from "qs";
+import { ICreateFilm } from "../types/jotai/createFile.types";
 import {
   IAddBoard,
   IGetBoardListParams,
   IGetBoardListRequest,
   IGetPageableListRequest,
   // IGetWrittenBoardListRequest,
-} from '../types/services/boardService';
-import { CATEGORY_LIST, SORT_LIST_EN } from '../constant/searchConstant';
-import { TIME_LIST } from '../constant/createFilmConstant';
+} from "../types/services/boardService";
+import { CATEGORY_LIST, SORT_LIST_EN } from "../constant/searchConstant";
+import { TIME_LIST } from "../constant/createFilmConstant";
 import {
   IUpdateBoardRequest,
   IUpdateBoardRequestBody,
-} from '../types/jotai/updateFilm.types';
+} from "../types/jotai/updateFilm.types";
 
-const API_URL = process.env.REACT_APP_LOCAL_URL;
-// const url = process.env.REACT_APP_SERVER_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 const DEFAULT_CREATE_BOARD: IAddBoard = {
   images: [],
-  content: '',
+  content: "",
   tags: [],
   category: 0,
   tasteScore: 0,
@@ -28,7 +27,7 @@ const DEFAULT_CREATE_BOARD: IAddBoard = {
   moodScore: 0,
   totalScore: 0,
   ateAt: 0,
-  mealTime: '',
+  mealTime: "",
 };
 
 /**
@@ -45,14 +44,14 @@ export const fetchPostAddBoard = async (input: ICreateFilm) => {
   const request: IAddBoard = { ...DEFAULT_CREATE_BOARD };
 
   // 프론트 데이터를 백에서 다룰 데이터로 변환하는 작업. score만 프로퍼티 이름이 달라 분기 처리
-  Object.entries(input).forEach(entry => {
+  Object.entries(input).forEach((entry) => {
     const [keyName, value] = entry;
     if (!Object.hasOwn(request, keyName)) {
-      if (keyName === 'imagesURL') return;
+      if (keyName === "imagesURL") return;
       [request.tasteScore, request.priceScore, request.moodScore] = value;
       request.totalScore =
         Math.round(
-          (10 * value.reduce((prev: number, curr: number) => prev + curr)) / 3,
+          (10 * value.reduce((prev: number, curr: number) => prev + curr)) / 3
         ) / 10;
       return;
     }
@@ -65,7 +64,7 @@ export const fetchPostAddBoard = async (input: ICreateFilm) => {
   // 프론트 데이터에서 백의 LocalDate 형식으로 변환시키기 위함
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() - (request.ateAt as number));
-  [request.ateAt] = new Date(currentDate).toISOString().split('T');
+  [request.ateAt] = new Date(currentDate).toISOString().split("T");
 
   const bodyData = new FormData();
   Object.entries(request).forEach(([keyName, value]) => {
@@ -75,7 +74,7 @@ export const fetchPostAddBoard = async (input: ICreateFilm) => {
   const response = await axios.post(url, request, {
     headers: {
       // Authorization: `Bearer ${accessToken}`,
-      'Content-Type': "'multipart/form-data'",
+      "Content-Type": "'multipart/form-data'",
     },
     withCredentials: true,
   });
@@ -121,7 +120,7 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
 
   params.page = request.pageParam;
   if (request.variables) {
-    params.categories = request.variables.map(idx => CATEGORY_LIST.en[idx]);
+    params.categories = request.variables.map((idx) => CATEGORY_LIST.en[idx]);
   }
   if (request.content) {
     params.sortBy = request.content;
@@ -132,7 +131,7 @@ export const fetchGetBoardList = async (request: IGetBoardListRequest) => {
     //   Authorization: `Bearer ${accessToken}`,
     // },
     params,
-    paramsSerializer: param => {
+    paramsSerializer: (param) => {
       return qs.stringify(param);
     },
   });
@@ -167,7 +166,7 @@ export const fetchGetSearchBoard = async (request: IGetPageableListRequest) => {
  * @returns
  */
 export const fetchGetWrittenBoard = async (
-  request: IGetPageableListRequest,
+  request: IGetPageableListRequest
 ) => {
   // const accessToken = localStorage.getItem('token');
   // if (!accessToken) return false;
@@ -214,7 +213,7 @@ export const fetchGetTodayYummys = async (isTop: boolean) => {
   // const accessToken = localStorage.getItem('token');
   // if (!accessToken) return false;
 
-  const url = `${API_URL}/api/boards/yummys${isTop ? '/top' : ''}`;
+  const url = `${API_URL}/api/boards/yummys${isTop ? "/top" : ""}`;
   const response = await axios.get(url, {
     withCredentials: true,
     // headers: {
@@ -283,7 +282,7 @@ export const fetchPatchFilm = async (input: IUpdateBoardRequest) => {
   request.mealTime = TIME_LIST[request.mealTime as number].en;
   // 원래 리무브대그에는 있는데  지금 태그스에 없는 애들
   request.removedTags = request.removedTags.filter(
-    element => !request.tags.includes(element),
+    (element) => !request.tags.includes(element)
   );
 
   const body = new FormData();

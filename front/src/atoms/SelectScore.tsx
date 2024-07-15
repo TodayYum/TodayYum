@@ -1,17 +1,17 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHotdog,
   faStar,
   faMoneyBill1Wave,
   faChampagneGlasses,
-} from '@fortawesome/free-solid-svg-icons';
+} from "@fortawesome/free-solid-svg-icons";
 import {
   IScoreStar,
   ISelectScore,
-} from '../types/components/SelectScore.types';
+} from "../types/components/SelectScore.types";
 
 const ScoreStar = (props: IScoreStar) => {
-  const scoreStar = Array.from({ length: 5 }, (v, i) => i < props.score);
+  const scoreStar = Array.from({ length: 5 }, (_v, i) => i < props.score);
 
   const handleClickStar = (input: number) => {
     if (!props.setScore) return;
@@ -27,7 +27,7 @@ const ScoreStar = (props: IScoreStar) => {
       {scoreStar.map((element, idx) => (
         <FontAwesomeIcon
           icon={faStar}
-          className={`${element ? 'text-error' : 'text-gray-dark'}`}
+          className={`${element ? "text-error" : "text-gray-dark"}`}
           onClick={() => handleClickStar(idx + 1)}
         />
       ))}
