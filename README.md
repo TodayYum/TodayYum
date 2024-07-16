@@ -15,9 +15,9 @@
 |             [김용균](https://github.com/DeadBBall)              |              [김봉준](https://github.com/hehezune)               |
 |                               BE                                |                                FE                                |
 
-## 아키텍쳐
+## 시스템 아키텍쳐
 
-아키텍쳐 이미지
+![아키텍쳐](/readmeSrc/시스템아키텍처.PNG)
 
 ## 기술 스택
 
