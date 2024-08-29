@@ -7,6 +7,11 @@ import com.todayyum.global.exception.CustomException;
 public enum Category {
     KOREAN_FOOD,
     JAPANESE_FOOD,
+    CHINESE_FOOD,
+    ASIAN_FOOD,
+    WESTERN_FOOD,
+    INDIAN_FOOD,
+    MEXICAN_FOOD,
     ;
 
     @JsonCreator
