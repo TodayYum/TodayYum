@@ -151,7 +151,7 @@ public class BoardRepositoryTest {
         //given
         Pageable pageable = Pageable.ofSize(10);
         BoardSearchRequest boardSearchRequest = BoardSearchRequest.builder()
-                .sortBy("yummy")
+                .sortBy("new")
                 .build();
 
         //when
@@ -160,7 +160,7 @@ public class BoardRepositoryTest {
 
         //then
         assertEquals(board.getCategory().name(), boardListResponses.getContent()
-                .get(boardListResponses.getContent().size() - 1).getCategory());
+                .get(0).getCategory());
     }
 
     @Test
