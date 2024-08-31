@@ -571,6 +571,20 @@ public class BoardUseCaseTest {
         Long boardId = 100000L;
         Long id = 100000L;
 
+        Board board = Board.builder()
+                .id(boardId)
+                .memberId(memberId)
+                .mealTime(MealTime.LUNCH)
+                .ateAt(LocalDate.now())
+                .yummyCount(0L)
+                .totalScore(3F)
+                .moodScore(3)
+                .tasteScore(3)
+                .priceScore(3)
+                .category(Category.JAPANESE_FOOD)
+                .content("호구마 맛있다~")
+                .build();
+
         Yummy yummy = Yummy.createYummy(memberId, boardId);
 
         yummy.changeId(id);
@@ -580,6 +594,9 @@ public class BoardUseCaseTest {
 
         when(yummyRepository.save(any(Yummy.class)))
                 .thenReturn(yummy);
+
+        when(boardRepository.findById(boardId))
+                .thenReturn(board);
 
         //when
         Long savedId = addYummyUseCase.addYummy(memberId, boardId);
@@ -597,12 +614,29 @@ public class BoardUseCaseTest {
         Long boardId = 100000L;
         Long id = 100000L;
 
+        Board board = Board.builder()
+                .id(boardId)
+                .memberId(memberId)
+                .mealTime(MealTime.LUNCH)
+                .ateAt(LocalDate.now())
+                .yummyCount(0L)
+                .totalScore(3F)
+                .moodScore(3)
+                .tasteScore(3)
+                .priceScore(3)
+                .category(Category.JAPANESE_FOOD)
+                .content("호구마 맛있다~")
+                .build();
+
         Yummy yummy = Yummy.createYummy(memberId, boardId);
 
         yummy.changeId(id);
 
         when(yummyRepository.existsByMemberIdAndBoardId(any(Yummy.class)))
                 .thenReturn(true);
+
+        when(boardRepository.findById(boardId))
+                .thenReturn(board);
 
         doNothing()
                 .when(yummyRepository).delete(any(Yummy.class));
