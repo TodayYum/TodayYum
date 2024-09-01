@@ -117,7 +117,7 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public List<BoardListResponse> findTopListByYummy() {
-        Query nativeQuery = em.createNativeQuery("SELECT b.id, b.total_score, b.yummy_count, b.category " +
+        Query nativeQuery = em.createNativeQuery("SELECT b.id, b.yummy_count, b.total_score, null, null, b.category " +
             "FROM boards b " +
             "LEFT JOIN boards sub " +
             "ON b.category = sub.category " +

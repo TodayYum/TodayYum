@@ -1,11 +1,13 @@
 package com.todayyum.board.dto.response;
 
 import com.todayyum.board.domain.Category;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@AllArgsConstructor
 public class BoardListResponse {
 
     private Long id;
