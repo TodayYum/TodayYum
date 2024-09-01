@@ -59,7 +59,7 @@ public class BoardEntity {
     @Column(name = "total_score", nullable = false)
     @Min(0)
     @Max(5)
-    private Float totalScore;
+    private Double totalScore;
 
     @Enumerated(EnumType.STRING)
     private Category category;

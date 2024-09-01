@@ -85,7 +85,7 @@ public class BoardUseCaseTest {
                 .tasteScore(3)
                 .moodScore(3)
                 .priceScore(3)
-                .totalScore(3F)
+                .totalScore(3D)
                 .ateAt(LocalDate.now())
                 .build();
 
@@ -142,7 +142,7 @@ public class BoardUseCaseTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -172,7 +172,7 @@ public class BoardUseCaseTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -206,7 +206,7 @@ public class BoardUseCaseTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -248,7 +248,7 @@ public class BoardUseCaseTest {
                 .mealTime(MealTime.LUNCH)
                 .ateAt(LocalDate.now())
                 .yummyCount(0L)
-                .totalScore(3F)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)
@@ -280,7 +280,7 @@ public class BoardUseCaseTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         when(boardRepository.findTopByYummy())
@@ -304,7 +304,7 @@ public class BoardUseCaseTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         when(boardRepository.findTopListByYummy())
@@ -329,7 +329,7 @@ public class BoardUseCaseTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -364,7 +364,7 @@ public class BoardUseCaseTest {
                 .mealTime(MealTime.LUNCH)
                 .ateAt(LocalDate.now())
                 .yummyCount(0L)
-                .totalScore(3F)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)
@@ -377,7 +377,7 @@ public class BoardUseCaseTest {
                 .memberId(memberId)
                 .mealTime(MealTime.LUNCH)
                 .ateAt(LocalDate.now())
-                .totalScore(3F)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)
@@ -414,7 +414,7 @@ public class BoardUseCaseTest {
                 .mealTime(MealTime.LUNCH)
                 .ateAt(LocalDate.now())
                 .yummyCount(0L)
-                .totalScore(3F)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)
@@ -577,7 +577,7 @@ public class BoardUseCaseTest {
                 .mealTime(MealTime.LUNCH)
                 .ateAt(LocalDate.now())
                 .yummyCount(0L)
-                .totalScore(3F)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)
@@ -620,7 +620,7 @@ public class BoardUseCaseTest {
                 .mealTime(MealTime.LUNCH)
                 .ateAt(LocalDate.now())
                 .yummyCount(0L)
-                .totalScore(3F)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)

@@ -22,7 +22,7 @@ public class Board {
     private Integer tasteScore;
     private Integer priceScore;
     private Integer moodScore;
-    private Float totalScore;
+    private Double totalScore;
     private Category category;
     private LocalDate ateAt;
     private MealTime mealTime;

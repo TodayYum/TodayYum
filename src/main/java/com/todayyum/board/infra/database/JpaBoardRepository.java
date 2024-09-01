@@ -57,13 +57,13 @@ public interface JpaBoardRepository extends JpaRepository<BoardEntity, Long> {
 //            "    ) " +
 //            ")")
 
-    @Query(value = "SELECT b.id, b.yummy_count, b.total_score, b.category " +
-            "FROM boards b " +
-            "LEFT JOIN boards sub " +
-            "ON b.category = sub.category " +
-            "AND (b.yummy_count < sub.yummy_count OR (b.yummy_count = sub.yummy_count AND b.id > sub.id)) " +
-            "WHERE sub.id IS NULL AND b.ate_at = :today;", nativeQuery = true)
-    List<BoardListResponse> findTopListByYummyCount(LocalDate today);
+//    @Query(value = "SELECT b.id, b.total_score, b.yummy_count, b.category " +
+//            "FROM boards b " +
+//            "LEFT JOIN boards sub " +
+//            "ON b.category = sub.category " +
+//            "AND (b.yummy_count < sub.yummy_count OR (b.yummy_count = sub.yummy_count AND b.id > sub.id)) " +
+//            "WHERE sub.id IS NULL AND b.ate_at = :today", nativeQuery = true)
+//    List<BoardListResponse> findTopListByYummyCount(LocalDate today);
 
     @Query("SELECT new com.todayyum.board.dto.response.BoardListResponse(b.id, b.totalScore, b.yummyCount, b.category) " +
             "FROM BoardEntity b JOIN b.boardTags bt JOIN bt.tag t " +

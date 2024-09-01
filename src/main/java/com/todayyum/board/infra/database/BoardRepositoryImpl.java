@@ -14,8 +14,11 @@ import com.todayyum.global.dto.response.ResponseCode;
 import com.todayyum.global.exception.CustomException;
 import com.todayyum.member.infra.database.JpaMemberRepository;
 import com.todayyum.member.infra.entity.MemberEntity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +36,7 @@ public class BoardRepositoryImpl implements BoardRepository {
     private final JpaBoardRepository jpaBoardRepository;
     private final JpaMemberRepository jpaMemberRepository;
     private final JPAQueryFactory queryFactory;
+    private final EntityManager em;
 
     @Override
     public Board save(Board board) {
@@ -113,7 +117,19 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public List<BoardListResponse> findTopListByYummy() {
-        return jpaBoardRepository.findTopListByYummyCount(LocalDate.now());
+        Query nativeQuery = em.createNativeQuery("SELECT b.id, b.total_score, b.yummy_count, b.category " +
+            "FROM boards b " +
+            "LEFT JOIN boards sub " +
+            "ON b.category = sub.category " +
+            "AND (b.yummy_count < sub.yummy_count OR (b.yummy_count = sub.yummy_count AND b.id > sub.id)) " +
+            "WHERE sub.id IS NULL AND b.ate_at = :today")
+                .setParameter("today", LocalDate.now());
+
+        JpaResultMapper jpaResultMapper = new JpaResultMapper();
+
+        return jpaResultMapper.list(nativeQuery, BoardListResponse.class);
+
+//        return jpaBoardRepository.findTopListByYummyCount(LocalDate.now());
     }
 
     @Override

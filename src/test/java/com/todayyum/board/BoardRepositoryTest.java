@@ -64,7 +64,7 @@ public class BoardRepositoryTest {
                 .mealTime(MealTime.LUNCH)
                 .ateAt(LocalDate.now())
                 .yummyCount(0L)
-                .totalScore(3F)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)
@@ -88,7 +88,7 @@ public class BoardRepositoryTest {
                 .mealTime(MealTime.LUNCH)
                 .ateAt(LocalDate.now())
                 .yummyCount(0L)
-                .totalScore(3F)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)
@@ -177,12 +177,12 @@ public class BoardRepositoryTest {
     @Test
     @DisplayName("Board Repo - 오늘의 얌 목록 조회 테스트")
     void findTopBoardListByYummy() {
-//        //when
-//        List<BoardListResponse> boardListResponses = boardRepository
-//                .findTopListByYummy();
-//
-//        //then
-//        assertEquals(board.getCategory().name(), boardListResponses.get(0).getCategory());
+        //when
+        List<BoardListResponse> boardListResponses = boardRepository
+                .findTopListByYummy();
+
+        //then
+        assertEquals(board.getCategory().name(), boardListResponses.get(0).getCategory());
     }
 
     @Test

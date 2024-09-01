@@ -132,7 +132,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -438,7 +438,7 @@ public class BoardControllerTest {
                 .priceScore(3)
                 .moodScore(3)
                 .tasteScore(3)
-                .totalScore(3F)
+                .totalScore(3D)
                 .yummyCount(0L)
                 .ateAt(LocalDate.now())
                 .mealTime("LUNCH")
@@ -548,7 +548,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -580,7 +580,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponse.changeTag("가성비");
         boardListResponseList.add(boardListResponse);
 
@@ -613,7 +613,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         when(findBoardUseCase.listBoardByYummy())
@@ -638,7 +638,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         when(findBoardUseCase.boardByYummy())
@@ -663,7 +663,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);

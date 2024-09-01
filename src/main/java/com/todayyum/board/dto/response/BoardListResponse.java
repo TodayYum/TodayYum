@@ -10,12 +10,12 @@ public class BoardListResponse {
 
     private Long id;
     private Long yummyCount;
-    private Float totalScore;
+    private Double totalScore;
     private String thumbnail;
     private String tag;
     private String category;
 
-    public BoardListResponse(Long id, Float totalScore, Long yummyCount, Category category) {
+    public BoardListResponse(Long id, Double totalScore, Long yummyCount, Category category) {
         this.id = id;
         this.yummyCount = yummyCount;
         this.totalScore = totalScore;
