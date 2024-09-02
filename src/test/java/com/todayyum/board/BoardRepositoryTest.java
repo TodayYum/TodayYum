@@ -182,7 +182,7 @@ public class BoardRepositoryTest {
                 .findTopListByYummy();
 
         //then
-        assertEquals(board.getCategory().name(), boardListResponses.get(1).getCategory());
+        assertEquals(board.getCategory().name(), boardListResponses.get(0).getCategory());
     }
 
     @Test
