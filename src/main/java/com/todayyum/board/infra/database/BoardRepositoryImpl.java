@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,19 +118,23 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public List<BoardListResponse> findTopListByYummy() {
-        Query nativeQuery = em.createNativeQuery("SELECT b.id, b.yummy_count, b.total_score, null, null, b.category " +
-            "FROM boards b " +
-            "LEFT JOIN boards sub " +
-            "ON b.category = sub.category " +
-            "AND (b.yummy_count < sub.yummy_count OR (b.yummy_count = sub.yummy_count AND b.id > sub.id)) " +
-            "WHERE sub.id IS NULL AND b.ate_at = :today")
-                .setParameter("today", LocalDate.now());
+        Query nativeQuery = em.createNativeQuery("SELECT a.id, a.yummy_count, a.total_score, NULL, NULL, a.category " +
+                        "FROM (SELECT " +
+                        "b.id, b.yummy_count, b.total_score, b.category, " +
+                        "ROW_NUMBER() OVER (" +
+                        "PARTITION BY b.category " +
+                        "ORDER BY b.yummy_count DESC, b.id ASC" +
+                        ") AS 'rank'" +
+                        "FROM " +
+                        "boards b " +
+                        "WHERE " +
+                        "b.ate_at = :today) as a " +
+                        "WHERE a.rank = 1")
+                .setParameter("today", LocalDate.now(ZoneId.of("Asia/Seoul")));
 
         JpaResultMapper jpaResultMapper = new JpaResultMapper();
 
         return jpaResultMapper.list(nativeQuery, BoardListResponse.class);
-
-//        return jpaBoardRepository.findTopListByYummyCount(LocalDate.now());
     }
 
     @Override

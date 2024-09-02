@@ -63,7 +63,7 @@ public class BoardRepositoryTest {
                 .memberId(member.getId())
                 .mealTime(MealTime.LUNCH)
                 .ateAt(LocalDate.now())
-                .yummyCount(0L)
+                .yummyCount(10000L)
                 .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
@@ -151,7 +151,7 @@ public class BoardRepositoryTest {
         //given
         Pageable pageable = Pageable.ofSize(10);
         BoardSearchRequest boardSearchRequest = BoardSearchRequest.builder()
-                .sortBy("new")
+                .sortBy("yummy")
                 .build();
 
         //when
@@ -182,7 +182,7 @@ public class BoardRepositoryTest {
                 .findTopListByYummy();
 
         //then
-        assertEquals(board.getCategory().name(), boardListResponses.get(0).getCategory());
+        assertEquals(board.getCategory().name(), boardListResponses.get(1).getCategory());
     }
 
     @Test
