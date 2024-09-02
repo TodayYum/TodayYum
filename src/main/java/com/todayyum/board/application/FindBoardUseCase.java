@@ -9,6 +9,7 @@ import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -73,6 +74,8 @@ public class FindBoardUseCase {
         return createBoardListResponse(boardRepository.findTopByYummy());
     }
 
+
+    @Cacheable(value = "yummyList")
     public List<BoardListResponse> listBoardByYummy() {
         return createBoardListResponse(boardRepository.findTopListByYummy());
     }
