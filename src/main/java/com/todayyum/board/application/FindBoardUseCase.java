@@ -75,7 +75,7 @@ public class FindBoardUseCase {
     }
 
 
-    @Cacheable(value = "yummyList")
+    @Cacheable(value = "yummyList", key = "key")
     public List<BoardListResponse> listBoardByYummy() {
         return createBoardListResponse(boardRepository.findTopListByYummy());
     }
