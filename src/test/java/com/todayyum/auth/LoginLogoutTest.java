@@ -44,6 +44,9 @@ public class LoginLogoutTest {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @MockBean
+    private CacheManager cacheManager;
+
     @BeforeEach
     public void init() {
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
