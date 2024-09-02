@@ -34,7 +34,7 @@ public class EhCacheConfig {
         javax.cache.configuration.Configuration<String, Object> cacheConfiguration
                 = Eh107Configuration.fromEhcacheCacheConfiguration(configuration);
 
-        cacheManager.createCache("schedules", cacheConfiguration);
+        cacheManager.createCache("yummyList", cacheConfiguration);
 
         return cacheManager;
     }

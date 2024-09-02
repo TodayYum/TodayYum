@@ -4,6 +4,7 @@ import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
 import com.todayyum.member.dto.request.MemberAddRequest;
 import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import javax.cache.CacheManager;
+import javax.cache.Caching;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,6 +53,12 @@ public class LoginLogoutTest {
         Member member = Member.createMember(memberAddRequest);
 
         memberRepository.save(member);
+    }
+
+    @AfterEach
+    public void clearCache() {
+        CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
+        cacheManager.destroyCache("yummyList");
     }
 
     @Test
