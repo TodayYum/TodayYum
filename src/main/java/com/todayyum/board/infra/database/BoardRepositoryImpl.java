@@ -113,7 +113,7 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public List<BoardListResponse> findTopByYummy() {
-        return jpaBoardRepository.findTopByYummyCount(LocalDate.now());
+        return jpaBoardRepository.findTopByYummyCount(LocalDate.now(ZoneId.of("Asia/Seoul")));
     }
 
     @Override

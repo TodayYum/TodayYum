@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class BoardRepositoryTest {
         board = Board.builder()
                 .memberId(member.getId())
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .yummyCount(10000L)
                 .totalScore(3D)
                 .moodScore(3)
@@ -86,7 +87,7 @@ public class BoardRepositoryTest {
         Board board = Board.builder()
                 .memberId(member.getId())
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .yummyCount(0L)
                 .totalScore(3D)
                 .moodScore(3)
@@ -268,9 +269,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         //when
@@ -287,9 +288,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         comment = commentRepository.save(comment);
@@ -312,9 +313,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         comment = commentRepository.save(comment);
@@ -335,9 +336,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         comment = commentRepository.save(comment);
@@ -357,9 +358,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         comment = commentRepository.save(comment);

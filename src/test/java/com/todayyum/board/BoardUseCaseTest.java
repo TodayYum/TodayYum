@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -86,7 +87,7 @@ public class BoardUseCaseTest {
                 .moodScore(3)
                 .priceScore(3)
                 .totalScore(3D)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         Board board = Board.createBoard(boardAddRequest);
@@ -246,7 +247,7 @@ public class BoardUseCaseTest {
                 .id(boardId)
                 .memberId(memberId)
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .yummyCount(0L)
                 .totalScore(3D)
                 .moodScore(3)
@@ -362,7 +363,7 @@ public class BoardUseCaseTest {
                 .id(boardId)
                 .memberId(memberId)
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .yummyCount(0L)
                 .totalScore(3D)
                 .moodScore(3)
@@ -376,7 +377,7 @@ public class BoardUseCaseTest {
                 .id(boardId)
                 .memberId(memberId)
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
@@ -412,7 +413,7 @@ public class BoardUseCaseTest {
                 .id(boardId)
                 .memberId(memberId)
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .yummyCount(0L)
                 .totalScore(3D)
                 .moodScore(3)
@@ -475,7 +476,7 @@ public class BoardUseCaseTest {
                 .boardId(boardId)
                 .memberId(memberId)
                 .nickname("yonggkim")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
         commentListResponseList.add(commentListResponse);
 
@@ -510,8 +511,8 @@ public class BoardUseCaseTest {
                 .boardId(boardId)
                 .memberId(memberId)
                 .content("맛있당")
-                .modifiedAt(LocalDateTime.now())
-                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .id(id)
                 .build();
 
@@ -548,8 +549,8 @@ public class BoardUseCaseTest {
                 .memberId(memberId)
                 .content("맛있당")
                 .id(id)
-                .createdAt(LocalDateTime.now())
-                .modifiedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         when(commentRepository.findById(id))
@@ -575,7 +576,7 @@ public class BoardUseCaseTest {
                 .id(boardId)
                 .memberId(memberId)
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .yummyCount(0L)
                 .totalScore(3D)
                 .moodScore(3)
@@ -618,7 +619,7 @@ public class BoardUseCaseTest {
                 .id(boardId)
                 .memberId(memberId)
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .yummyCount(0L)
                 .totalScore(3D)
                 .moodScore(3)
