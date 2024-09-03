@@ -11,7 +11,7 @@
     </service>
     <cache alias="yummyList">
         <key-type>java.lang.String</key-type>
-        <value-type>com.todayyum.board.dto.response.BoardListResponse</value-type>
+        <value-type>java.util.ArrayList</value-type>
         <expiry>
             <ttl unit="seconds">300</ttl>
         </expiry>
