@@ -48,6 +48,8 @@ public class BoardRepositoryTest {
     private CommentRepository commentRepository;
     @Autowired
     private YummyRepository yummyRepository;
+    @MockBean
+    private CacheManager cacheManager;
     private Member member;
     private Board board;
     private String content = "태그태그태그";

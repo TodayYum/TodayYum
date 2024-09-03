@@ -7,8 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.cache.CacheManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +22,8 @@ public class AuthRepositoryTest {
 
     @Autowired
     private VerificationCodeRepository verificationCodeRepository;
+    @MockBean
+    private CacheManager cacheManager;
 
     @Test
     @DisplayName("Auth Repo - 이메일 발송 테스트")
