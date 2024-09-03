@@ -15,11 +15,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.cache.CacheManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -183,7 +185,7 @@ public class BoardRepositoryTest {
                 .findTopListByYummy();
 
         //then
-        assertEquals(board.getCategory().name(), boardListResponses.get(0).getCategory());
+        assertEquals(board.getYummyCount(), boardListResponses.get(1).getYummyCount());
     }
 
     @Test
