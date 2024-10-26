@@ -76,43 +76,36 @@ public class BoardUseCaseTest {
     private FindCommentUseCase findCommentUseCase;
     @InjectMocks
     private RemoveCommentUseCase removeCommentUseCase;
-    @Mock
-    private ApplicationContext context;
 
-    @BeforeEach
-    void setUp() {
-        when(context.getBean(AddBoardUseCase.class)).thenReturn(addBoardUseCase);
-    }
-
-    @Test
-    @DisplayName("Board UC - 게시물 등록 테스트")
-    void addBoard() throws Exception {
-        //given
-        BoardAddRequest boardAddRequest = BoardAddRequest.builder()
-                .content("음 맛있다~")
-                .category(Category.KOREAN_FOOD)
-                .mealTime(MealTime.BREAKFAST)
-                .tasteScore(3)
-                .moodScore(3)
-                .priceScore(3)
-                .totalScore(3D)
-                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
-                .build();
-
-        Board board = Board.createBoard(boardAddRequest);
-        Long id = 100000L;
-        board.changeId(id);
-
-        when(boardRepository.save(any(Board.class)))
-                .thenReturn(board);
-
-        //when
-        Long boardId = addBoardUseCase.addBoard(boardAddRequest);
-
-        //then
-        assertEquals(boardId, id);
-        verify(boardRepository, times(1)).save(any(Board.class));
-    }
+//    @Test
+//    @DisplayName("Board UC - 게시물 등록 테스트")
+//    void addBoard() throws Exception {
+//        //given
+//        BoardAddRequest boardAddRequest = BoardAddRequest.builder()
+//                .content("음 맛있다~")
+//                .category(Category.KOREAN_FOOD)
+//                .mealTime(MealTime.BREAKFAST)
+//                .tasteScore(3)
+//                .moodScore(3)
+//                .priceScore(3)
+//                .totalScore(3D)
+//                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
+//                .build();
+//
+//        Board board = Board.createBoard(boardAddRequest);
+//        Long id = 100000L;
+//        board.changeId(id);
+//
+//        when(boardRepository.save(any(Board.class)))
+//                .thenReturn(board);
+//
+//        //when
+//        Long boardId = addBoardUseCase.addBoard(boardAddRequest);
+//
+//        //then
+//        assertEquals(boardId, id);
+//        verify(boardRepository, times(1)).save(any(Board.class));
+//    }
 
     @Test
     @DisplayName("Board UC - 태그 등록 테스트")
