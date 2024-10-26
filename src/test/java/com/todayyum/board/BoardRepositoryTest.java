@@ -187,7 +187,7 @@ public class BoardRepositoryTest {
                 .findTopListByYummy();
 
         //then
-        assertEquals(board.getYummyCount(), boardListResponses.get(1).getYummyCount());
+        assertEquals(board.getYummyCount(), boardListResponses.get(0).getYummyCount());
     }
 
     @Test

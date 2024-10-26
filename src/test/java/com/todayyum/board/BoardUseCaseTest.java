@@ -81,7 +81,7 @@ public class BoardUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        addBoardUseCase.setApplicationContext(context);
+        when(context.getBean(AddBoardUseCase.class)).thenReturn(addBoardUseCase);
     }
 
     @Test

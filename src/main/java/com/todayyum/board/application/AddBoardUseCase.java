@@ -114,8 +114,4 @@ public class AddBoardUseCase {
 
         boardImageRepository.saveAll(boardImages);
     }
-
-    public void setApplicationContext(ApplicationContext context) {
-        this.context = context;
-    }
 }
