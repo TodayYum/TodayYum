@@ -65,7 +65,6 @@ public class AddBoardUseCase {
                 addBoardImage(boardId, links);
             }
         }).exceptionally(ex -> {
-            // 예외 발생 시 처리
             boardRepository.deleteById(boardId);
 
             throw new CustomException(ResponseCode.S3_UPLOAD_FAILED);
@@ -93,15 +92,12 @@ public class AddBoardUseCase {
     public CompletableFuture<List<String>> uploadImage(List<MultipartFile> images) {
         if(images == null || images.isEmpty()) return CompletableFuture.completedFuture(Collections.emptyList());
 
-        List<CompletableFuture<String>> uploadFutures = images.stream()
-                .map(image -> CompletableFuture.supplyAsync(() -> s3Util.uploadFile(image), threadPoolTaskExecutor))
-                .toList();
+        List<String> imageUrls = images.stream()
+                .map(s3Util::uploadFile)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
-        return CompletableFuture.allOf(uploadFutures.toArray(new CompletableFuture[0]))
-                .thenApply(v -> uploadFutures.stream()
-                        .map(CompletableFuture::join)
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList()));
+        return CompletableFuture.completedFuture(imageUrls);
     }
 
     @Transactional
