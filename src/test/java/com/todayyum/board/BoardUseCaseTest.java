@@ -11,12 +11,14 @@ import com.todayyum.global.util.S3Util;
 import com.todayyum.member.application.repository.MemberRepository;
 import com.todayyum.member.domain.Member;
 import com.todayyum.member.domain.Role;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -74,6 +76,13 @@ public class BoardUseCaseTest {
     private FindCommentUseCase findCommentUseCase;
     @InjectMocks
     private RemoveCommentUseCase removeCommentUseCase;
+    @Mock
+    private ApplicationContext context;
+
+    @BeforeEach
+    void setUp() {
+        addBoardUseCase.setApplicationContext(context);
+    }
 
     @Test
     @DisplayName("Board UC - 게시물 등록 테스트")
