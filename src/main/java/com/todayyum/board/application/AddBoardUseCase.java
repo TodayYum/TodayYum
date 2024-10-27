@@ -65,8 +65,8 @@ public class AddBoardUseCase {
                 addBoardImage(boardId, links);
             }
         }).exceptionally(ex -> {
-            boardRepository.deleteById(boardId);
-
+//            boardRepository.deleteById(boardId);
+            log.info(ex.getMessage());
             throw new CustomException(ResponseCode.S3_UPLOAD_FAILED);
         });
 
