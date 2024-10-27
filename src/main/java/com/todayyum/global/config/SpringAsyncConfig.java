@@ -15,7 +15,7 @@ public class SpringAsyncConfig {
     public Executor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(1);
-        taskExecutor.setMaxPoolSize(5);
+        taskExecutor.setMaxPoolSize(3);
         taskExecutor.setQueueCapacity(10);
         taskExecutor.setThreadNamePrefix("Executor-");
         return taskExecutor;
