@@ -49,7 +49,7 @@ public class BoardAddRequest {
     @NotNull(message = "총점을 입력해주세요.")
     @Min(value = 0, message = "총점은 최소 0점입니다.")
     @Max(value = 5, message = "총점은 최대 5점입니다.")
-    private Float totalScore;
+    private Double totalScore;
 
     @NotNull(message = "날짜를 입력해주세요.")
     private LocalDate ateAt;

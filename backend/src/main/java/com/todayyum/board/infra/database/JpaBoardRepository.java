@@ -35,28 +35,35 @@ public interface JpaBoardRepository extends JpaRepository<BoardEntity, Long> {
 //            "WHERE b2.ateAt = :today AND b2.yummyCount = (" +
 //            "SELECT MAX(b3.yummyCount) FROM BoardEntity b3 WHERE b3.category = b2.category AND b3.ateAt = :today)) " +
 //            "ORDER BY b.yummyCount DESC")
-    @Query("SELECT new com.todayyum.board.dto.response.BoardListResponse(b.id, b.totalScore, b.yummyCount, b.category) " +
-            "FROM BoardEntity b " +
-            "WHERE b.ateAt = :today " +
-            "AND b.id IN ( " +
-            "    SELECT sub.id " +
-            "    FROM BoardEntity sub " +
-            "    WHERE sub.ateAt = :today " +
-            "    AND sub.yummyCount = ( " +
-            "        SELECT MAX(sub2.yummyCount) " +
-            "        FROM BoardEntity sub2 " +
-            "        WHERE sub2.category = sub.category " +
-            "        AND sub2.ateAt = :today " +
-            "    ) " +
-            "    AND sub.createdAt = ( " +
-            "        SELECT MAX(sub3.createdAt) " +
-            "        FROM BoardEntity sub3 " +
-            "        WHERE sub3.category = sub.category " +
-            "        AND sub3.ateAt = :today " +
-            "        AND sub3.yummyCount = sub.yummyCount " +
-            "    ) " +
-            ")")
-    List<BoardListResponse> findTopListByYummyCount(LocalDate today);
+
+//    @Query("SELECT new com.todayyum.board.dto.response.BoardListResponse(b.id, b.totalScore, b.yummyCount, b.category) " +
+//            "FROM BoardEntity b " +
+//            "WHERE b.id IN ( " +
+//            "    SELECT sub.id " +
+//            "    FROM BoardEntity sub " +
+//            "    WHERE sub.ateAt = :today " +
+//            "    AND sub.yummyCount = ( " +
+//            "        SELECT MAX(sub2.yummyCount) " +
+//            "        FROM BoardEntity sub2 " +
+//            "        WHERE sub2.category = sub.category " +
+//            "        AND sub2.ateAt = :today " +
+//            "    ) " +
+//            "    AND sub.createdAt = ( " +
+//            "        SELECT MAX(sub3.createdAt) " +
+//            "        FROM BoardEntity sub3 " +
+//            "        WHERE sub3.category = sub.category " +
+//            "        AND sub3.ateAt = :today " +
+//            "        AND sub3.yummyCount = sub.yummyCount " +
+//            "    ) " +
+//            ")")
+
+//    @Query(value = "SELECT b.id, b.total_score, b.yummy_count, b.category " +
+//            "FROM boards b " +
+//            "LEFT JOIN boards sub " +
+//            "ON b.category = sub.category " +
+//            "AND (b.yummy_count < sub.yummy_count OR (b.yummy_count = sub.yummy_count AND b.id > sub.id)) " +
+//            "WHERE sub.id IS NULL AND b.ate_at = :today", nativeQuery = true)
+//    List<BoardListResponse> findTopListByYummyCount(LocalDate today);
 
     @Query("SELECT new com.todayyum.board.dto.response.BoardListResponse(b.id, b.totalScore, b.yummyCount, b.category) " +
             "FROM BoardEntity b JOIN b.boardTags bt JOIN bt.tag t " +

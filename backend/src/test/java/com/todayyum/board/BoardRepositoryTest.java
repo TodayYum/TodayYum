@@ -15,12 +15,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.cache.CacheManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @WithMockMember
+@ActiveProfiles("local")
 public class BoardRepositoryTest {
 
     @Autowired
@@ -43,6 +48,8 @@ public class BoardRepositoryTest {
     private CommentRepository commentRepository;
     @Autowired
     private YummyRepository yummyRepository;
+    @MockBean
+    private CacheManager cacheManager;
     private Member member;
     private Board board;
     private String content = "태그태그태그";
@@ -60,9 +67,9 @@ public class BoardRepositoryTest {
         board = Board.builder()
                 .memberId(member.getId())
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
-                .yummyCount(0L)
-                .totalScore(3F)
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
+                .yummyCount(10000L)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)
@@ -84,9 +91,9 @@ public class BoardRepositoryTest {
         Board board = Board.builder()
                 .memberId(member.getId())
                 .mealTime(MealTime.LUNCH)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .yummyCount(0L)
-                .totalScore(3F)
+                .totalScore(3D)
                 .moodScore(3)
                 .tasteScore(3)
                 .priceScore(3)
@@ -158,7 +165,7 @@ public class BoardRepositoryTest {
 
         //then
         assertEquals(board.getCategory().name(), boardListResponses.getContent()
-                .get(boardListResponses.getContent().size() - 1).getCategory());
+                .get(0).getCategory());
     }
 
     @Test
@@ -180,7 +187,7 @@ public class BoardRepositoryTest {
                 .findTopListByYummy();
 
         //then
-        assertEquals(board.getCategory().name(), boardListResponses.get(0).getCategory());
+        assertEquals(board.getYummyCount(), boardListResponses.get(0).getYummyCount());
     }
 
     @Test
@@ -266,9 +273,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         //when
@@ -285,9 +292,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         comment = commentRepository.save(comment);
@@ -310,9 +317,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         comment = commentRepository.save(comment);
@@ -333,9 +340,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         comment = commentRepository.save(comment);
@@ -355,9 +362,9 @@ public class BoardRepositoryTest {
         Comment comment = Comment.builder()
                 .boardId(board.getId())
                 .content("맛있다잉")
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .memberId(member.getId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         comment = commentRepository.save(comment);

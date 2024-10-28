@@ -31,6 +31,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -132,7 +133,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -302,7 +303,7 @@ public class BoardControllerTest {
                 .nickname("yonggkim")
                 .profile("image.jpg")
                 .id(10000L)
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
         commentListResponseList.add(commentListResponse);
 
@@ -438,9 +439,9 @@ public class BoardControllerTest {
                 .priceScore(3)
                 .moodScore(3)
                 .tasteScore(3)
-                .totalScore(3F)
+                .totalScore(3D)
                 .yummyCount(0L)
-                .ateAt(LocalDate.now())
+                .ateAt(LocalDate.now(ZoneId.of("Asia/Seoul")))
                 .mealTime("LUNCH")
                 .nickname("test")
                 .build();
@@ -548,7 +549,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -580,7 +581,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponse.changeTag("가성비");
         boardListResponseList.add(boardListResponse);
 
@@ -613,7 +614,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         when(findBoardUseCase.listBoardByYummy())
@@ -638,7 +639,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         when(findBoardUseCase.boardByYummy())
@@ -663,7 +664,7 @@ public class BoardControllerTest {
 
         List<BoardListResponse> boardListResponseList = new ArrayList<>();
         BoardListResponse boardListResponse = new BoardListResponse(
-                boardId, 0F, 3L, Category.KOREAN_FOOD);
+                boardId, 0D, 3L, Category.KOREAN_FOOD);
         boardListResponseList.add(boardListResponse);
 
         PageRequest pageRequest = PageRequest.of(0, 10);

@@ -1,6 +1,8 @@
 package com.todayyum.board.application;
 
+import com.todayyum.board.application.repository.BoardRepository;
 import com.todayyum.board.application.repository.YummyRepository;
+import com.todayyum.board.domain.Board;
 import com.todayyum.board.domain.Yummy;
 import com.todayyum.global.dto.response.ResponseCode;
 import com.todayyum.global.exception.CustomException;
@@ -16,6 +18,7 @@ import java.util.UUID;
 @Slf4j
 public class AddYummyUseCase {
     private final YummyRepository yummyRepository;
+    private final BoardRepository boardRepository;
 
     @Transactional
     public Long addYummy(UUID memberId, Long boardId) {
@@ -25,6 +28,14 @@ public class AddYummyUseCase {
             throw new CustomException(ResponseCode.DUPLICATE_YUMMY);
         }
 
-        return yummyRepository.save(yummy).getId();
+        Long yummyId = yummyRepository.save(yummy).getId();
+
+        Board board = boardRepository.findById(boardId);
+
+        board.changeYummyCount(board.getYummyCount() + 1);
+
+        boardRepository.save(board);
+
+        return yummyId;
     }
 }

@@ -21,7 +21,7 @@ public class BoardDetailResponse {
     private Integer tasteScore; //
     private Integer priceScore; //
     private Integer moodScore; //
-    private Float totalScore; //
+    private Double totalScore; //
     private LocalDate ateAt; //
     private Long yummyCount; //
     private List<String> images;

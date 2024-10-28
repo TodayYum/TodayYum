@@ -1,21 +1,25 @@
 package com.todayyum.board.dto.response;
 
 import com.todayyum.board.domain.Category;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
-public class BoardListResponse {
+@AllArgsConstructor
+public class BoardListResponse implements Serializable {
 
     private Long id;
     private Long yummyCount;
-    private Float totalScore;
+    private Double totalScore;
     private String thumbnail;
     private String tag;
     private String category;
 
-    public BoardListResponse(Long id, Float totalScore, Long yummyCount, Category category) {
+    public BoardListResponse(Long id, Double totalScore, Long yummyCount, Category category) {
         this.id = id;
         this.yummyCount = yummyCount;
         this.totalScore = totalScore;

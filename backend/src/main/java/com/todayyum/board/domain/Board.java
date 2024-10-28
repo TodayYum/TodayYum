@@ -22,7 +22,7 @@ public class Board {
     private Integer tasteScore;
     private Integer priceScore;
     private Integer moodScore;
-    private Float totalScore;
+    private Double totalScore;
     private Category category;
     private LocalDate ateAt;
     private MealTime mealTime;
@@ -41,6 +41,7 @@ public class Board {
                 .category(boardAddRequest.getCategory())
                 .ateAt(boardAddRequest.getAteAt())
                 .mealTime(boardAddRequest.getMealTime())
+                .yummyCount(0L)
                 .build();
     }
 
@@ -75,6 +76,7 @@ public class Board {
                 .mealTime(this.getMealTime())
                 .createdAt(this.getCreatedAt())
                 .modifiedAt(this.getModifiedAt())
+                .yummyCount(this.getYummyCount())
                 .build();
     }
 
@@ -109,4 +111,5 @@ public class Board {
         this.id = id;
     }
 
+    public void changeYummyCount(Long yummyCount) { this.yummyCount = yummyCount; }
 }
